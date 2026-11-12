@@ -24,7 +24,7 @@ export const manifest = {
       key: 'perfil',
       type: 'select',
       title: 'Perfil de catálogos',
-      options: ['Completo', 'Personalizado'],
+      options: ['Completo'],
       default: 'Completo',
     },
   ],

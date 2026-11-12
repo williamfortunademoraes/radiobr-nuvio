@@ -29,12 +29,14 @@
 ### Task 1: Modelo e dados editoriais
 
 **Files:**
+
 - Create: `src/editorial/types.ts`
 - Create: `src/editorial/radios-em-destaque.ts`
 - Modify: `src/stations/types.ts`
 - Test: `tests/editorial/radios-em-destaque.test.ts`
 
 **Interfaces:**
+
 - Produces `EditorialCollection`, `EditorialRadio`, `radiosEmDestaque` e `findEditorialRadioById`.
 - `EditorialRadio` inclui ID estável, nome, category, logoUrl/logoSource, websiteUrl, frequency, city/state, sourceUrl, stationId opcional e streamUrl opcional.
 
@@ -46,10 +48,12 @@
 ### Task 2: Resolução editorial sobre estações existentes
 
 **Files:**
+
 - Create: `src/editorial/resolve.ts`
 - Test: `tests/editorial/resolve.test.ts`
 
 **Interfaces:**
+
 - Consumes `EditorialRadio` e `Station`.
 - Produces `resolveEditorialStations(editorial, stations): ResolvedEditorialRadio[]`, com estação opcional e `playable` booleano.
 
@@ -60,6 +64,7 @@
 ### Task 3: Catálogo, metadata e streams
 
 **Files:**
+
 - Modify: `src/catalog/catalog.ts`
 - Modify: `src/metadata/metadata.ts`
 - Modify: `src/streams/streams.ts`
@@ -69,6 +74,7 @@
 - Test: `tests/streams/streams.test.ts`
 
 **Interfaces:**
+
 - Mantém os handlers atuais e adiciona apenas o ID `radios-em-destaque`.
 - Reutiliza `RadioBrowserClient.searchStations()` e a resolução editorial da Task 2.
 
@@ -81,6 +87,7 @@
 ### Task 4: Documentação e verificação final
 
 **Files:**
+
 - Modify: `README.md`
 - Create: `docs/RADIOS_EM_DESTAQUE.md`
 

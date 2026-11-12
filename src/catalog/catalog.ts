@@ -19,7 +19,11 @@ export interface CatalogArgs {
   config?: unknown
 }
 
-export function stationPreview(station: Station, showLogos = true, fallbackPoster?: string) {
+export function stationPreview(
+  station: Station,
+  showLogos = true,
+  fallbackPoster?: string,
+) {
   return {
     id: station.id,
     type: 'tv',
@@ -30,13 +34,29 @@ export function stationPreview(station: Station, showLogos = true, fallbackPoste
   }
 }
 
-function editorialPreview(item: ReturnType<typeof resolveEditorialStations>[number]) {
+function editorialPreview(
+  item: ReturnType<typeof resolveEditorialStations>[number],
+  showLogos = true,
+) {
   return {
     id: `radio-br:editorial:${item.editorial.id}`,
     type: 'tv',
     name: item.editorial.name,
-    ...(item.editorial.logoUrl || item.station?.favicon ? { poster: item.editorial.logoUrl || item.station?.favicon, posterShape: 'square' } : {}),
-    description: [item.editorial.city && item.editorial.state ? `${item.editorial.city}/${item.editorial.state}` : 'Rede nacional', item.editorial.category, item.playable ? 'Disponível para reprodução' : 'Indisponível para reprodução'].join(' · '),
+    ...(showLogos && (item.editorial.logoUrl || item.station?.favicon)
+      ? {
+          poster: item.editorial.logoUrl || item.station?.favicon,
+          posterShape: 'square',
+        }
+      : {}),
+    description: [
+      item.editorial.city && item.editorial.state
+        ? `${item.editorial.city}/${item.editorial.state}`
+        : 'Rede nacional',
+      item.editorial.category,
+      item.playable
+        ? 'Disponível para reprodução'
+        : 'Indisponível para reprodução',
+    ].join(' · '),
   }
 }
 
@@ -62,7 +82,10 @@ function requestedGenres(config: AddonConfig) {
   return config.g
 }
 
-export function createCatalogService(client: RadioBrowserClient, fallbackPoster?: string) {
+export function createCatalogService(
+  client: RadioBrowserClient,
+  fallbackPoster?: string,
+) {
   return {
     async getCatalog(args: CatalogArgs) {
       if (args.type !== 'tv') return { metas: [] }
@@ -73,7 +96,22 @@ export function createCatalogService(client: RadioBrowserClient, fallbackPoster?
         if (!catalogAllowed(args.id, config)) return { metas: [] }
         if (!radiosEmDestaque.enabled) return { metas: [] }
         const stations = await client.searchStations()
-        return { metas: resolveEditorialStations(radiosEmDestaque.items, stations).map(editorialPreview) }
+        const matchesState = stateFilter(config.s)
+        const search = args.extra?.search?.trim().toLocaleLowerCase('pt-BR')
+        return {
+          metas: resolveEditorialStations(radiosEmDestaque.items, stations)
+            .filter(
+              (item) =>
+                !config.s.length ||
+                (item.station && matchesState(item.station)),
+            )
+            .filter(
+              (item) =>
+                !search ||
+                item.editorial.name.toLocaleLowerCase('pt-BR').includes(search),
+            )
+            .map((item) => editorialPreview(item, config.o.logos)),
+        }
       }
       if (!catalogAllowed(args.id, config)) return { metas: [] }
 
@@ -83,7 +121,8 @@ export function createCatalogService(client: RadioBrowserClient, fallbackPoster?
       })
 
       const matchesState = stateFilter(config.s)
-      const preview = (station: Station) => stationPreview(station, config.o.logos, fallbackPoster)
+      const preview = (station: Station) =>
+        stationPreview(station, config.o.logos, fallbackPoster)
       const grouped = () => groupStationsByGenre(stations)
 
       const genreCollection = args.id.match(/^radio-br-genre-(.+)$/)?.[1]
@@ -98,7 +137,10 @@ export function createCatalogService(client: RadioBrowserClient, fallbackPoster?
       if (region)
         return {
           metas: stations
-            .filter((station) => normalizeState(station.state)?.toLowerCase() === region)
+            .filter(
+              (station) =>
+                normalizeState(station.state)?.toLowerCase() === region,
+            )
             .map(preview),
         }
 
@@ -147,9 +189,7 @@ export function createCatalogService(client: RadioBrowserClient, fallbackPoster?
             (genre) => groups[genre],
           )
           return {
-            metas: dedupeById(union)
-              .filter(matchesState)
-              .map(preview),
+            metas: dedupeById(union).filter(matchesState).map(preview),
           }
         }
 

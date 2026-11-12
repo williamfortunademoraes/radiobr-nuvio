@@ -73,9 +73,7 @@
   const generateButton = document.getElementById('generate-addon')
 
   function collectionInputs() {
-    return Array.from(
-      form.querySelectorAll('input[name="collections"]'),
-    )
+    return Array.from(form.querySelectorAll('input[name="collections"]'))
   }
 
   function genreInputs() {
@@ -87,7 +85,9 @@
   }
 
   function selectedNames(order, names, selected) {
-    return order.filter((id) => selected.has(id)).map((id) => names.get(id) || id)
+    return order
+      .filter((id) => selected.has(id))
+      .map((id) => names.get(id) || id)
   }
 
   function fillReviewList(element, items, emptyText) {
@@ -160,9 +160,7 @@
     if (summaryGenres)
       summaryGenres.textContent = genres.length ? genres.join(' · ') : 'Nenhum'
     if (summaryStates)
-      summaryStates.textContent = states.length
-        ? states.join(' · ')
-        : 'Nenhum'
+      summaryStates.textContent = states.length ? states.join(' · ') : 'Nenhum'
     if (summaryOptions) summaryOptions.textContent = options.join(' · ')
 
     const count = activeFilterCount()
@@ -181,6 +179,7 @@
   }
 
   function syncUi() {
+    if (result) result.hidden = true
     for (const input of collectionInputs())
       input.checked = selection.collections.has(input.value)
     for (const input of genreInputs())
@@ -269,7 +268,7 @@
     return payload
   }
 
-  function showResult(url, encoded, manifest) {
+  function showResult(url, manifest) {
     if (!result) return
     hideError()
 
@@ -278,7 +277,7 @@
       manifestJson.textContent = JSON.stringify(manifest, null, 2)
     if (openManifest) openManifest.href = url
     if (installStremio)
-      installStremio.href = `stremio://${window.location.host}/${encoded}/manifest.json`
+      installStremio.href = url.replace(/^https?:\/\//, 'stremio://')
 
     result.hidden = false
     result.scrollIntoView({
@@ -309,10 +308,13 @@
 
     try {
       const payload = buildPayload()
-      const encoded = encodeURIComponent(JSON.stringify(payload))
-      const url = `${window.location.origin}/${encoded}/manifest.json`
-      const response = await fetch(url, {
-        headers: { Accept: 'application/json' },
+      const response = await fetch('/api/configuration', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
         cache: 'no-store',
       })
       const body = await response.json().catch(() => null)
@@ -324,7 +326,7 @@
             'Não foi possível validar a configuração no servidor.',
         )
       }
-      showResult(url, encoded, body)
+      showResult(body.url, body.manifest)
     } catch (error) {
       showError(
         error instanceof Error

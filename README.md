@@ -13,7 +13,7 @@ Addon independente para Stremio e Nuvio que transforma o diretório público Rad
 - Mantém cache em memória com expiração configurável e reaproveita a mesma consulta entre os catálogos.
 - Entrega URLs diretas, sem proxy, retransmissão ou conversão de áudio.
 
-O projeto não possui frontend, painel administrativo ou banco de dados.
+O addon inclui página própria e central de personalização em cinco etapas. Coleções, gêneros, estados e envio de logotipos ficam em uma URL compartilhável, sem conta ou banco de dados.
 
 ## Executar localmente
 
@@ -23,7 +23,7 @@ copy .env.example .env
 npm run dev
 ```
 
-O manifest fica em `http://localhost:7000/manifest.json`. O addon não possui frontend, banco, proxy ou retransmissão de áudio.
+A página fica em `http://localhost:7000/`, o configurador em `/personalizar` e o manifesto padrão em `/manifest.json`. A personalização gera `/:config/manifest.json` usando o formato nativo do SDK. O addon não faz proxy ou retransmissão de áudio.
 
 Para testar em um perfil separado do Nuvio sem substituir a instalação existente:
 
@@ -41,9 +41,16 @@ npm test
 npm run build
 npm run lint
 npm run format:check
+npm run test:ui
 ```
 
-Os testes são determinísticos e usam fixture; não fazem chamadas à Radio Browser.
+Os testes do serviço usam fixtures, sem chamadas à Radio Browser. Os testes de interface usam Chrome instalado e o build de produção em uma porta isolada (7011).
+
+## Publicação no Render
+
+No serviço existente, use build `npm ci && npm run build`, start `npm start` (ou `node dist/src/index.js`) e `ADDON_BASE_URL=https://radiobr-nuvio.onrender.com`. O servidor usa `process.env.PORT`. Mantenha `assets/` junto do build e execute a partir da raiz do projeto. Não é necessário criar outro serviço ou banco.
+
+Após o deploy, verifique `/`, `/personalizar`, `/manifest.json` e gere uma URL pela interface. A URL deve usar HTTPS e o domínio público. Consulte [o relatório da central](docs/PERSONALIZATION_REPORT.md) para limitações e validação experimental.
 
 ## Configuração
 

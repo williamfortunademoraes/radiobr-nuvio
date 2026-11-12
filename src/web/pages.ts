@@ -35,7 +35,7 @@ const SHOWCASE = [
     name: 'Rádios em destaque',
     icon: 'star',
     tone: 'violet',
-    copy: 'Curadoria editorial e ranking de popularidade em uma só coleção.',
+    copy: 'Curadoria editorial e ranking de popularidade para descobrir emissoras.',
   },
   {
     name: 'Notícias',
@@ -252,7 +252,7 @@ ${header('inicio')}
           </div>
           <div class="floating-card floating-card--one">
             <span class="floating-icon tone-violet">${icon('star')}</span>
-            <span><strong>Destaques</strong><small>Curadoria diária</small></span>
+            <span><strong>Destaques</strong><small>Curadoria editorial</small></span>
           </div>
           <div class="floating-card floating-card--two">
             <span class="floating-icon tone-cyan">${icon('wave')}</span>
@@ -262,7 +262,7 @@ ${header('inicio')}
       </section>
 
       <section class="stats-band shell" aria-label="Números do RADIO BR">
-        <div class="stat"><strong>100</strong><span>estações por catálogo</span></div>
+        <div class="stat"><strong>Até 100</strong><span>estações no lote consultado</span></div>
         <div class="stat"><strong>13</strong><span>gêneros mapeados</span></div>
         <div class="stat"><strong>27</strong><span>estados brasileiros</span></div>
         <div class="stat"><strong>0</strong><span>contas ou cadastros</span></div>
@@ -400,7 +400,9 @@ function stateFields() {
           <div class="state-grid">
             ${states
               .map(
-                (state) => `<label class="state-chip" title="${escapeHtml(state.name)}">
+                (
+                  state,
+                ) => `<label class="state-chip" title="${escapeHtml(state.name)}">
               <input type="checkbox" name="states" value="${state.code}" disabled>
               <span>${state.code}</span>
             </label>`,
@@ -465,7 +467,7 @@ ${header('personalizar')}
             <div class="step-heading">
               <span class="step-kicker">Etapa B</span>
               <h2 id="step-2-title">Gêneros musicais</h2>
-              <p>Selecione quantos gêneros quiser. Eles aparecem como opções dentro do catálogo “Rádios por gênero”.</p>
+              <p>Selecione quantos gêneros quiser. Cada gênero ganha uma coleção e também aparece em “Rádios por gênero”. Destaques e catálogo geral mantêm sua seleção própria.</p>
             </div>
             <div class="bulk-actions">
               <button type="button" class="text-button" data-action="select-all-genres">Selecionar todos</button>

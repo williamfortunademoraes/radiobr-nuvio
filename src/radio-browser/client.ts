@@ -6,6 +6,7 @@ import { MemoryCache } from './cache.js'
 
 export type FetchLike = (input: string, init?: RequestInit) => Promise<Response>
 export class RadioBrowserClient {
+  private readonly inFlight = new Map<string, Promise<Station[]>>()
   constructor(
     private readonly config: AppConfig = loadConfig(),
     private readonly fetcher: FetchLike = fetch,
@@ -21,6 +22,27 @@ export class RadioBrowserClient {
     })
     const cached = this.cache.get(cacheKey)
     if (cached) return cached
+    const pending = this.inFlight.get(cacheKey)
+    if (pending) return pending
+    const request = this.fetchStations(options.search, limit, offset).then(
+      (stations) => {
+        this.cache.set(cacheKey, stations)
+        return stations
+      },
+    )
+    this.inFlight.set(cacheKey, request)
+    try {
+      return await request
+    } finally {
+      this.inFlight.delete(cacheKey)
+    }
+  }
+
+  private async fetchStations(
+    search: string | undefined,
+    limit: number,
+    offset: number,
+  ): Promise<Station[]> {
     const params = new URLSearchParams({
       countrycode: 'BR',
       hidebroken: 'true',
@@ -29,7 +51,7 @@ export class RadioBrowserClient {
       limit: String(limit),
       offset: String(offset),
     })
-    if (options.search?.trim()) params.set('name', options.search.trim())
+    if (search?.trim()) params.set('name', search.trim())
     const response = await this.fetcher(
       `${this.config.radioBrowserBaseUrl}/json/stations/search?${params}`,
       {
@@ -52,7 +74,6 @@ export class RadioBrowserClient {
     const stations = data
       .map((item) => normalizeStation(item as RadioBrowserStation))
       .filter((station): station is Station => station !== null)
-    this.cache.set(cacheKey, stations)
     return stations
   }
 }

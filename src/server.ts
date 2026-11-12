@@ -9,7 +9,11 @@ import express, {
 } from 'express'
 import { createAddon } from './addon/create-addon.js'
 import { createManifest } from './addon/manifest.js'
-import { parseConfigSegment } from './config/addon-config.js'
+import {
+  parseConfigSegment,
+  validateConfig,
+  encodeConfig,
+} from './config/addon-config.js'
 import { loadConfig, type AppConfig } from './config/index.js'
 import { RadioBrowserClient } from './radio-browser/client.js'
 import { renderConfigPage, renderLandingPage } from './web/pages.js'
@@ -77,6 +81,18 @@ export function createApp(options: CreateAppOptions = {}): Express {
   app.get('/config', (_req, res) => res.redirect(302, '/personalizar'))
   app.get('/sobre', (_req, res) => res.redirect(302, '/#sobre'))
 
+  app.post('/api/configuration', express.json({ limit: '2kb' }), (req, res) => {
+    const result = validateConfig(req.body)
+    if (!result.ok) {
+      res.status(400).json({ error: 'invalid_config', message: result.error })
+      return
+    }
+    const encoded = encodeConfig(result.config)
+    const url = new URL(`/${encoded}/manifest.json`, baseUrl).href
+    res.setHeader('Cache-Control', 'no-store')
+    res.json({ url, manifest: createManifest(baseUrl, result.config) })
+  })
+
   app.get('/manifest.json', (_req, res) =>
     sendManifest(res, createManifest(baseUrl)),
   )
@@ -106,6 +122,15 @@ export function createApp(options: CreateAppOptions = {}): Express {
   // The official SDK router handles /catalog, /meta and /stream, including the
   // native /:config/... prefix. The manifest routes above are RADIO BR-owned
   // because they need to build a different manifest for each configuration.
+  app.use('/:config/:resource(catalog|meta|stream)', (req, res, next) => {
+    const result = parseConfigSegment(req.params.config)
+    if (!result.ok) {
+      res.setHeader('Access-Control-Allow-Origin', '*')
+      res.status(400).json({ error: 'invalid_config', message: result.error })
+      return
+    }
+    next()
+  })
   app.use(getRouter(addon))
 
   app.use((_req, res) => {
@@ -114,8 +139,25 @@ export function createApp(options: CreateAppOptions = {}): Express {
 
   app.use(
     (error: unknown, _req: Request, res: Response, _next: NextFunction) => {
-      console.error(error)
+      void _next // Express identifies error middleware by its four arguments.
       if (res.headersSent) return
+      if (
+        error instanceof URIError ||
+        (error instanceof SyntaxError && 'body' in error)
+      ) {
+        res.status(400).json({ error: 'invalid_request' })
+        return
+      }
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'status' in error &&
+        error.status === 413
+      ) {
+        res.status(413).json({ error: 'configuration_too_large' })
+        return
+      }
+      console.error(error)
       res.status(500).json({ error: 'internal_error' })
     },
   )

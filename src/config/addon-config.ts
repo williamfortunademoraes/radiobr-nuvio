@@ -186,12 +186,12 @@ function readStateList(value: unknown): StateCode[] | null {
 /**
  * Validates and canonicalizes a configuration object.
  *
- * Only the known, enumerable keys are read. Unknown extra keys are ignored so
- * older or newer clients do not break. Arrays are de-duplicated and restored
+ * Unknown keys are rejected. Arrays are de-duplicated and restored
  * to the product's canonical order, which keeps the same choices reproducible.
  */
 export function validateConfig(value: unknown): ConfigValidation {
-  if (!isRecord(value)) return failure('A configuração deve ser um objeto JSON.')
+  if (!isRecord(value))
+    return failure('A configuração deve ser um objeto JSON.')
 
   let serializedLength = 0
   try {
@@ -213,7 +213,7 @@ export function validateConfig(value: unknown): ConfigValidation {
     if (
       keys.length === 1 &&
       keys[0] === 'perfil' &&
-      typeof value.perfil === 'string'
+      value.perfil === 'Completo'
     )
       return { ok: true, config: defaultConfig() }
     return failure('A configuração não contém opções reconhecidas.')
@@ -221,6 +221,9 @@ export function validateConfig(value: unknown): ConfigValidation {
 
   if (value.v !== undefined && value.v !== CONFIG_VERSION)
     return failure('Versão de configuração não suportada.')
+
+  if (keys.some((key) => !knownKeys.has(key)))
+    return failure('A configuração contém opções desconhecidas.')
 
   const collections = readEnumList(
     value.c,
@@ -238,6 +241,8 @@ export function validateConfig(value: unknown): ConfigValidation {
   let logos = true
   if (value.o !== undefined) {
     if (!isRecord(value.o)) return failure('Opções de experiência inválidas.')
+    if (Object.keys(value.o).some((key) => key !== 'logos'))
+      return failure('Opções de experiência desconhecidas.')
     if (value.o.logos !== undefined) {
       if (typeof value.o.logos !== 'boolean')
         return failure('Opção de logotipos inválida.')
@@ -416,7 +421,7 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
 
   if (STATE_CODES.length)
     catalogs.push(
-      ...STATE_CODES.map((state) => ({
+      ...(config.s.length ? config.s : STATE_CODES).map((state) => ({
         type: 'tv' as const,
         id: `radio-br-region-${state.toLowerCase()}`,
         name: `Rádios por região — ${state}`,
@@ -436,8 +441,12 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
 }
 
 export function catalogAllowed(id: string, config: AddonConfig): boolean {
-  if (id.startsWith('radio-br-genre-')) return config.g.length > 0
-  if (id.startsWith('radio-br-region-')) return true
+  if (id.startsWith('radio-br-genre-'))
+    return config.g.some((genre) => id === `radio-br-genre-${genre}`)
+  if (id.startsWith('radio-br-region-'))
+    return (config.s.length ? config.s : STATE_CODES).some(
+      (state) => id === `radio-br-region-${state.toLowerCase()}`,
+    )
   switch (id) {
     case 'radios-em-destaque':
       return config.c.includes('editorial')

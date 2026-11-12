@@ -10,4 +10,14 @@
 
 `addon` compõe esses serviços com `addonBuilder` do `stremio-addon-sdk` 1.6.10. O cliente recebe `fetch` e cache por injeção, permitindo testes sem rede.
 
-Não há frontend, banco, catálogo manual, proxy ou conversão de áudio.
+`server` compõe Express com `getRouter` oficial. A página própria (`web/pages`, `assets/site.css`, `assets/personalizar.js`) é parte do addon. O SDK 1.6.10 usa `manifest.config` para habilitar `/:config?` e entrega JSON decodificado em `args.config`. `behaviorHints.configurable` anuncia configuração ao cliente. `serveHTTP` não oferece manifesto dinâmico: o servidor intercepta os manifests e mantém os recursos no roteador oficial.
+
+`config/addon-config` valida versão, listas permitidas, quantidade, tamanho e opções; rejeita campos desconhecidos. Serializa em ordem canônica usando `encodeURIComponent(JSON.stringify(...))`. `POST /api/configuration` retorna a URL usando `ADDON_BASE_URL` e o manifesto correspondente. Não há registro por usuário.
+
+O manifesto padrão mantém os catálogos existentes, incluindo curadoria editorial. O personalizado inclui coleções e gêneros selecionados; regionais ficam limitados às UFs selecionadas ou às 27 UFs quando não há restrição. Metadados e catálogos omitem poster quando solicitado; o cliente pode exibir substitutos próprios. Streams e IDs permanecem iguais.
+
+Estados usam somente o campo `state` da fonte, normalizado por nomes e UFs explícitos. Cidades não estão no contrato v1; podem ser acrescentadas em versão futura quando houver dados confiáveis. Curadoria filtrada por estado exige estação resolvida com UF da fonte. Gêneros controlam as coleções musicais, sem restringir catálogo geral ou ranking por gênero.
+
+O cache TTL é compartilhado entre configurações e recursos. Requisições simultâneas da mesma consulta compartilham uma Promise; falhas liberam nova tentativa. Agrupamento por gênero continua memoizado por lote. Filtros locais operam no lote de até 100 estações; não representam cobertura integral do Brasil.
+
+Sem banco, conta, proxy ou conversão de áudio.
