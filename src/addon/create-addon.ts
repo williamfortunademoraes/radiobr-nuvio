@@ -13,7 +13,10 @@ export function createAddon(
   client = new RadioBrowserClient(),
   baseUrl?: string,
 ) {
-  const catalog = createCatalogService(client)
+  const fallbackPoster = baseUrl
+    ? new URL('/assets/logo.png', baseUrl).href
+    : undefined
+  const catalog = createCatalogService(client, fallbackPoster)
   const metadata = createMetadataService(client)
   const streams = createStreamService(client)
   const builder = new AddonBuilder(baseUrl ? createManifest(baseUrl) : manifest)

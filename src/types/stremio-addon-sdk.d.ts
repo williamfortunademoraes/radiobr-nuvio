@@ -20,4 +20,5 @@ declare module 'stremio-addon-sdk' {
     addon: AddonInterface,
     options: { port: number; static?: string },
   ): Promise<{ url: string; server: import('node:http').Server }>
+  export function getRouter(addon: AddonInterface): any
 }

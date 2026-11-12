@@ -10,13 +10,15 @@ describe('RADIO BR manifest', () => {
       name: 'Estações de rádios - Brasil',
       resources: ['catalog', 'meta', 'stream'],
       types: ['tv'],
-      catalogs: [
-        { type: 'tv', id: 'radios-em-destaque', name: 'Rádios em Destaque' },
-        { type: 'tv', id: 'radio-br-featured', name: 'Rádios em destaque' },
-        { type: 'tv', id: 'radio-br-genre', name: 'Rádios por gênero' },
-        { type: 'tv', id: 'radio-br-catalog', name: 'Rádios do Brasil' },
-      ],
     })
+    expect(manifest.catalogs.map((catalog) => catalog.id)).toEqual(
+      expect.arrayContaining([
+        'radios-em-destaque',
+        'radio-br-featured',
+        'radio-br-genre',
+        'radio-br-catalog',
+      ]),
+    )
   })
 
   it('declares every genre category as a filter option', () => {

@@ -19,13 +19,13 @@ export interface CatalogArgs {
   config?: unknown
 }
 
-export function stationPreview(station: Station, showLogos = true) {
+export function stationPreview(station: Station, showLogos = true, fallbackPoster?: string) {
   return {
     id: station.id,
     type: 'tv',
     name: station.name,
-    ...(showLogos && station.favicon
-      ? { poster: station.favicon, posterShape: 'square' }
+    ...(showLogos && (station.favicon || fallbackPoster)
+      ? { poster: station.favicon || fallbackPoster, posterShape: 'square' }
       : {}),
   }
 }
@@ -62,7 +62,7 @@ function requestedGenres(config: AddonConfig) {
   return config.g
 }
 
-export function createCatalogService(client: RadioBrowserClient) {
+export function createCatalogService(client: RadioBrowserClient, fallbackPoster?: string) {
   return {
     async getCatalog(args: CatalogArgs) {
       if (args.type !== 'tv') return { metas: [] }
@@ -70,6 +70,7 @@ export function createCatalogService(client: RadioBrowserClient) {
       const config = resolveHandlerConfig(args.config)
       if (!config) return { metas: [] }
       if (args.id === 'radios-em-destaque') {
+        if (!catalogAllowed(args.id, config)) return { metas: [] }
         if (!radiosEmDestaque.enabled) return { metas: [] }
         const stations = await client.searchStations()
         return { metas: resolveEditorialStations(radiosEmDestaque.items, stations).map(editorialPreview) }
@@ -82,8 +83,24 @@ export function createCatalogService(client: RadioBrowserClient) {
       })
 
       const matchesState = stateFilter(config.s)
-      const preview = (station: Station) => stationPreview(station, config.o.logos)
+      const preview = (station: Station) => stationPreview(station, config.o.logos, fallbackPoster)
       const grouped = () => groupStationsByGenre(stations)
+
+      const genreCollection = args.id.match(/^radio-br-genre-(.+)$/)?.[1]
+      if (genreCollection) {
+        const genre = resolveGenre(genreCollection)
+        return genre && config.g.includes(genre)
+          ? { metas: grouped()[genre].filter(matchesState).map(preview) }
+          : { metas: [] }
+      }
+
+      const region = args.id.match(/^radio-br-region-([a-z]{2})$/)?.[1]
+      if (region)
+        return {
+          metas: stations
+            .filter((station) => normalizeState(station.state)?.toLowerCase() === region)
+            .map(preview),
+        }
 
       switch (args.id) {
         case 'radio-br-featured':

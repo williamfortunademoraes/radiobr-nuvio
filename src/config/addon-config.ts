@@ -14,7 +14,7 @@ export const CONFIG_VERSION = 1
 export const MAX_CONFIG_LENGTH = 2048
 
 export interface CollectionDefinition {
-  id: 'featured' | 'all' | 'news' | 'sports' | 'unknown'
+  id: 'editorial' | 'featured' | 'all' | 'news' | 'sports' | 'unknown'
   name: string
   short: string
   description: string
@@ -24,11 +24,20 @@ export interface CollectionDefinition {
 
 export const COLLECTION_DEFINITIONS = [
   {
-    id: 'featured',
-    name: 'Rádios em destaque',
-    short: 'Destaques',
+    id: 'editorial',
+    name: 'Rádios em Destaque — curadoria',
+    short: 'Curadoria',
     description:
-      'Uma seleção das estações mais populares, completas e disponíveis do Brasil.',
+      'Treze emissoras escolhidas manualmente pela curadoria editorial do RADIO BR.',
+    catalogId: 'radios-em-destaque',
+    icon: 'star',
+  },
+  {
+    id: 'featured',
+    name: 'Rádios em destaque — ranking',
+    short: 'Ranking',
+    description:
+      'Uma seleção automática das estações mais populares, completas e disponíveis do Brasil.',
     catalogId: 'radio-br-featured',
     icon: 'star',
   },
@@ -123,7 +132,7 @@ export type ConfigValidation = ConfigValidationSuccess | ConfigValidationFailure
 export function defaultConfig(): AddonConfig {
   return {
     v: CONFIG_VERSION,
-    c: ['featured', 'all'],
+    c: ['editorial', 'featured', 'all'],
     g: [...GENRE_IDS],
     s: [],
     o: { logos: true },
@@ -340,12 +349,13 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
   const catalogs: ManifestCatalog[] = []
   const collections = new Set(config.c)
 
-  catalogs.push({
-    type: 'tv',
-    id: 'radios-em-destaque',
-    name: 'Rádios em Destaque',
-    extra: [searchExtra],
-  })
+  if (collections.has('editorial'))
+    catalogs.push({
+      type: 'tv',
+      id: 'radios-em-destaque',
+      name: 'Rádios em Destaque',
+      extra: [searchExtra],
+    })
 
   if (collections.has('featured'))
     catalogs.push({
@@ -394,6 +404,26 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
       ],
     })
 
+  if (config.g.length)
+    catalogs.push(
+      ...config.g.map((genre) => ({
+        type: 'tv' as const,
+        id: `radio-br-genre-${genre}`,
+        name: genreName(genre),
+        extra: [searchExtra],
+      })),
+    )
+
+  if (STATE_CODES.length)
+    catalogs.push(
+      ...STATE_CODES.map((state) => ({
+        type: 'tv' as const,
+        id: `radio-br-region-${state.toLowerCase()}`,
+        name: `Rádios por região — ${state}`,
+        extra: [searchExtra],
+      })),
+    )
+
   if (collections.has('all'))
     catalogs.push({
       type: 'tv',
@@ -406,7 +436,11 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
 }
 
 export function catalogAllowed(id: string, config: AddonConfig): boolean {
+  if (id.startsWith('radio-br-genre-')) return config.g.length > 0
+  if (id.startsWith('radio-br-region-')) return true
   switch (id) {
+    case 'radios-em-destaque':
+      return config.c.includes('editorial')
     case 'radio-br-featured':
       return config.c.includes('featured')
     case 'radio-br-catalog':
