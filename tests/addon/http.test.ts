@@ -9,7 +9,8 @@ const require = createRequire(import.meta.url)
 const { serveHTTP } =
   require('stremio-addon-sdk') as typeof import('stremio-addon-sdk')
 
-it('serves both catalogs and original streams through the SDK with shared cache and PNG assets', async () => {
+it('serves both catalogs, genre filters, streams and PNG assets through the SDK with shared cache', async () => {
+  const sertanejoUuid = '22222222-2222-4222-8222-222222222222'
   const fetcher = vi.fn().mockImplementation(() =>
     Promise.resolve(
       new Response(
@@ -17,7 +18,9 @@ it('serves both catalogs and original streams through the SDK with shared cache 
           validStation,
           {
             ...validStation,
-            stationuuid: '22222222-2222-4222-8222-222222222222',
+            stationuuid: sertanejoUuid,
+            name: 'Rádio Sertanejo',
+            tags: 'sertanejo, brazil',
             clickcount: 50,
           },
         ]),
@@ -36,8 +39,13 @@ it('serves both catalogs and original streams through the SDK with shared cache 
     const manifest = await manifestResponse.json()
     expect(manifest.catalogs.map((c: { id: string }) => c.id)).toEqual([
       'radio-br-featured',
+      'radio-br-genre',
       'radio-br-catalog',
     ])
+    expect(manifest.catalogs[1].extra[0]).toMatchObject({
+      name: 'genre',
+      options: expect.arrayContaining(['Sertanejo', 'Gênero não informado']),
+    })
     for (const [field, width, height] of [
       ['logo', 256, 256],
       ['background', 1600, 900],
@@ -57,9 +65,31 @@ it('serves both catalogs and original streams through the SDK with shared cache 
       await fetch(`${base}/catalog/tv/radio-br-featured.json`)
     ).json()
     expect(original.metas[0].id).toBe(`radio-br:${validStation.stationuuid}`)
-    expect(featured.metas[0].id).toBe(
-      'radio-br:22222222-2222-4222-8222-222222222222',
-    )
+    expect(featured.metas[0].id).toBe(`radio-br:${sertanejoUuid}`)
+
+    const genre = await (
+      await fetch(`${base}/catalog/tv/radio-br-genre/genre=Sertanejo.json`)
+    ).json()
+    expect(genre.metas.map((meta: { id: string }) => meta.id)).toEqual([
+      `radio-br:${sertanejoUuid}`,
+    ])
+    const noticias = await (
+      await fetch(
+        `${base}/catalog/tv/radio-br-genre/genre=${encodeURIComponent('Notícias')}.json`,
+      )
+    ).json()
+    expect(noticias.metas.map((meta: { id: string }) => meta.id)).toEqual([
+      `radio-br:${validStation.stationuuid}`,
+    ])
+    const unknownGenre = await (
+      await fetch(`${base}/catalog/tv/radio-br-genre/genre=Inexistente.json`)
+    ).json()
+    expect(unknownGenre.metas).toEqual([])
+    const unfilteredGenre = await (
+      await fetch(`${base}/catalog/tv/radio-br-genre.json`)
+    ).json()
+    expect(unfilteredGenre.metas).toHaveLength(2)
+
     expect(fetcher).toHaveBeenCalledTimes(1)
     const stream = await (
       await fetch(`${base}/stream/tv/radio-br:${validStation.stationuuid}.json`)
@@ -70,6 +100,7 @@ it('serves both catalogs and original streams through the SDK with shared cache 
     )
     expect(search.status).toBe(200)
     expect(fetcher.mock.calls[1][0]).toContain('name=Prova')
+    expect(fetcher).toHaveBeenCalledTimes(2)
   } finally {
     server.closeAllConnections()
     await new Promise<void>((resolve, reject) =>

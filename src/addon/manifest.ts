@@ -1,9 +1,11 @@
+import { GENRE_NAMES } from '../stations/tags.js'
+
 export const manifest = {
   id: 'com.williamfortuna.radio-br',
   version: '0.1.0',
   name: 'Estações de rádios - Brasil',
   description:
-    'RADIO BR reúne estações brasileiras com pesquisa, rádios em destaque e informações das emissoras para descobrir e reproduzir streams diretos no Nuvio.',
+    'RADIO BR reúne estações brasileiras com pesquisa, rádios em destaque, navegação por gênero e informações das emissoras para descobrir e reproduzir streams diretos no Nuvio.',
   resources: ['catalog', 'meta', 'stream'],
   types: ['tv'],
   catalogs: [
@@ -12,6 +14,15 @@ export const manifest = {
       id: 'radio-br-featured',
       name: 'Rádios em destaque',
       extra: [{ name: 'search', isRequired: false }],
+    },
+    {
+      type: 'tv',
+      id: 'radio-br-genre',
+      name: 'Rádios por gênero',
+      extra: [
+        { name: 'genre', isRequired: false, options: [...GENRE_NAMES] },
+        { name: 'search', isRequired: false },
+      ],
     },
     {
       type: 'tv',
