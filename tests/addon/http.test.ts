@@ -38,11 +38,12 @@ it('serves both catalogs, genre filters, streams and PNG assets through the SDK 
     expect(manifestResponse.status).toBe(200)
     const manifest = await manifestResponse.json()
     expect(manifest.catalogs.map((c: { id: string }) => c.id)).toEqual([
+      'radios-em-destaque',
       'radio-br-featured',
       'radio-br-genre',
       'radio-br-catalog',
     ])
-    expect(manifest.catalogs[1].extra[0]).toMatchObject({
+    expect(manifest.catalogs[2].extra[0]).toMatchObject({
       name: 'genre',
       options: expect.arrayContaining(['Sertanejo', 'Gênero não informado']),
     })

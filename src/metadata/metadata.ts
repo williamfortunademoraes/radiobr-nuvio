@@ -1,15 +1,35 @@
 import type { RadioBrowserClient } from '../radio-browser/client.js'
 import type { Station } from '../stations/types.js'
+import { radiosEmDestaque } from '../editorial/radios-em-destaque.js'
+import { resolveEditorialStations } from '../editorial/resolve.js'
 export function createMetadataService(client: RadioBrowserClient) {
   return {
     async getMetadata(args: { type: string; id: string }) {
       if (args.type !== 'tv' || !args.id.startsWith('radio-br:'))
         return { meta: {} }
       const stations = await client.searchStations()
+      if (args.id.startsWith('radio-br:editorial:')) {
+        const item = radiosEmDestaque.items.find((entry) => `radio-br:editorial:${entry.id}` === args.id)
+        if (!item) return { meta: {} }
+        const resolved = resolveEditorialStations([item], stations)[0]
+        return { meta: editorialMeta(resolved) }
+      }
       const station = stations.find((item) => item.id === args.id)
       if (!station) return { meta: {} }
       return { meta: stationMeta(station) }
     },
+  }
+}
+
+function editorialMeta(item: ReturnType<typeof resolveEditorialStations>[number]) {
+  const { editorial, playable } = item
+  return {
+    id: `radio-br:editorial:${editorial.id}`,
+    type: 'tv',
+    name: editorial.name,
+    ...(editorial.logoUrl || item.station?.favicon ? { poster: editorial.logoUrl || item.station?.favicon, posterShape: 'square' } : {}),
+    description: [editorial.frequency, editorial.city && editorial.state ? `${editorial.city}/${editorial.state}` : 'Rede nacional', editorial.category, playable ? 'Disponível para reprodução' : 'Indisponível para reprodução'].filter(Boolean).join(' · '),
+    ...(editorial.websiteUrl ? { website: editorial.websiteUrl } : {}),
   }
 }
 export function stationMeta(station: Station) {

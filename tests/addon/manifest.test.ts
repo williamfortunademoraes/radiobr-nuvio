@@ -11,6 +11,7 @@ describe('RADIO BR manifest', () => {
       resources: ['catalog', 'meta', 'stream'],
       types: ['tv'],
       catalogs: [
+        { type: 'tv', id: 'radios-em-destaque', name: 'Rádios em Destaque' },
         { type: 'tv', id: 'radio-br-featured', name: 'Rádios em destaque' },
         { type: 'tv', id: 'radio-br-genre', name: 'Rádios por gênero' },
         { type: 'tv', id: 'radio-br-catalog', name: 'Rádios do Brasil' },
