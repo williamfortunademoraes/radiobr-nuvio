@@ -20,6 +20,9 @@ export function normalizeStation(raw: RadioBrowserStation): Station | null {
     .map((tag) => tag.trim())
     .filter(Boolean)
   return {
+    clickcount: raw.clickcount,
+    lastcheckok: raw.lastcheckok,
+    sourceName: raw.name,
     id: stationId(uuid),
     stationUuid: uuid,
     name: raw.name?.trim() || 'Rádio sem nome',

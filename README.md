@@ -7,7 +7,7 @@ Addon independente para Stremio e Nuvio que transforma o diretório público Rad
 ## O que o RADIO BR faz
 
 - Consulta estações brasileiras dinamicamente no Radio Browser.
-- Expõe catálogo, pesquisa, metadados e streams pelo protocolo de addons do Stremio.
+- Expõe os catálogos Rádios em destaque e Rádios do Brasil, com pesquisa, metadados e streams pelo protocolo de addons do Stremio.
 - Usa IDs estáveis derivados do `stationuuid`.
 - Mantém cache em memória com expiração configurável.
 - Entrega URLs diretas, sem proxy, retransmissão ou conversão de áudio.
@@ -37,7 +37,7 @@ Os testes são determinísticos e usam fixture; não fazem chamadas à Radio Bro
 
 ## Configuração
 
-`RADIO_BROWSER_BASE_URL`, `RADIO_BROWSER_USER_AGENT`, `RADIO_BROWSER_CACHE_TTL_MS` e `PORT` estão descritos em `.env.example`.
+`RADIO_BROWSER_BASE_URL`, `RADIO_BROWSER_USER_AGENT`, `RADIO_BROWSER_CACHE_TTL_MS`, `PORT` e `ADDON_BASE_URL` estão descritos em `.env.example`. `ADDON_BASE_URL` define a origem pública usada nas imagens do manifest e, quando omitido, usa `http://127.0.0.1:PORT`.
 
 ## Compatibilidade
 

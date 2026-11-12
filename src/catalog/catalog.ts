@@ -1,5 +1,6 @@
 import type { RadioBrowserClient } from '../radio-browser/client.js'
 import type { Station } from '../stations/types.js'
+import { rankFeaturedStations } from './ranking.js'
 export interface CatalogArgs {
   type: string
   id: string
@@ -18,13 +19,21 @@ export function stationPreview(station: Station) {
 export function createCatalogService(client: RadioBrowserClient) {
   return {
     async getCatalog(args: CatalogArgs) {
-      if (args.type !== 'tv' || args.id !== 'radio-br-catalog')
+      if (
+        args.type !== 'tv' ||
+        !['radio-br-catalog', 'radio-br-featured'].includes(args.id)
+      )
         return { metas: [] }
       const stations = await client.searchStations({
         search: args.extra?.search,
         offset: args.extra?.skip ?? 0,
       })
-      return { metas: stations.map(stationPreview) }
+      return {
+        metas: (args.id === 'radio-br-featured'
+          ? rankFeaturedStations(stations)
+          : stations
+        ).map(stationPreview),
+      }
     },
   }
 }

@@ -1,4 +1,7 @@
 export interface Station {
+  clickcount?: number
+  lastcheckok?: number | string
+  sourceName?: string
   id: string
   stationUuid: string
   name: string

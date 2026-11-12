@@ -1,4 +1,5 @@
 export interface RadioBrowserStation {
+  clickcount?: number
   stationuuid?: string
   name?: string
   url?: string

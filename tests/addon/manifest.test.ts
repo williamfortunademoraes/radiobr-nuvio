@@ -6,10 +6,11 @@ describe('RADIO BR manifest', () => {
     expect(manifest).toMatchObject({
       id: 'com.williamfortuna.radio-br',
       version: '0.1.0',
-      name: 'RADIO BR',
+      name: 'Estações de rádios - Brasil',
       resources: ['catalog', 'meta', 'stream'],
       types: ['tv'],
       catalogs: [
+        { type: 'tv', id: 'radio-br-featured', name: 'Rádios em destaque' },
         { type: 'tv', id: 'radio-br-catalog', name: 'Rádios do Brasil' },
       ],
     })

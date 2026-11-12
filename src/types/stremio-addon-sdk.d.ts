@@ -18,6 +18,6 @@ declare module 'stremio-addon-sdk' {
   }
   export function serveHTTP(
     addon: AddonInterface,
-    options: { port: number },
-  ): void
+    options: { port: number; static?: string },
+  ): Promise<{ url: string; server: import('node:http').Server }>
 }

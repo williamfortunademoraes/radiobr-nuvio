@@ -9,6 +9,7 @@ Parâmetros enviados sempre: `countrycode=BR`, `hidebroken=true`, `order=clickco
 ## Addon Stremio
 
 - `GET /manifest.json`
+- `GET /catalog/tv/radio-br-featured.json` ou com `?search=...`
 - `GET /catalog/tv/radio-br-catalog.json` ou com `?search=...`
 - `GET /meta/tv/radio-br:{stationuuid}.json`
 - `GET /stream/tv/radio-br:{stationuuid}.json`
