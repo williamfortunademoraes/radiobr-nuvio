@@ -28,6 +28,20 @@
     "prettier": "^3.4.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
+  },
+  "overrides": {
+    "minimatch": "11.0.1",
+    "stremio-addon-sdk": {
+      "inquirer": {
+        "external-editor": {
+          "tmp": "0.2.7"
+        }
+      },
+      "router": {
+        "path-to-regexp": "0.1.13"
+      }
+    }
   }
 }
