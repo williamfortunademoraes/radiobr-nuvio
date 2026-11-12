@@ -1,21 +1,24 @@
 # 🇧🇷 RADIO BR
 
-Addon independente para Stremio e Nuvio que transforma o diretório público Radio Browser em uma experiência de rádio brasileira, com catálogo dinâmico, metadados e streams diretos.
+Addon independente para **Stremio** e **Nuvio** que transforma o diretório público [Radio Browser](https://www.radio-browser.info/) em uma experiência de rádio brasileira.
 
-> **Status:** Fases 2.1 e 2.2 implementadas localmente · compatibilidade AAC/AAC+ observada no Nuvio Desktop 1.1.35 para Windows · navegação por gênero pendente de validação visual · MP3, OGG e HLS pendentes de reprodução manual.
+Descubra estações, filtre por gênero ou estado, consulte metadados e reproduza os streams públicos cadastrados pelas emissoras — tudo em um catálogo dinâmico.
 
-## O que o RADIO BR faz
+> **Status atual:** catálogo, destaques, gêneros e central de personalização implementados localmente. A reprodução AAC/AAC+ foi observada no Nuvio Desktop 1.1.35 para Windows. MP3, OGG, HLS e outras plataformas ainda aguardam validação manual.
 
-- Consulta estações brasileiras dinamicamente no Radio Browser.
-- Expõe os catálogos Rádios em destaque, Rádios por gênero e Rádios do Brasil, com pesquisa, metadados e streams pelo protocolo de addons do Stremio.
-- Classifica estações por gênero usando somente as tags reais da Radio Browser, com aliases explícitos e sem inferência por nome ou domínio.
-- Usa IDs estáveis derivados do `stationuuid`.
-- Mantém cache em memória com expiração configurável e reaproveita a mesma consulta entre os catálogos.
-- Entrega URLs diretas, sem proxy, retransmissão ou conversão de áudio.
+## O que está incluído
 
-O addon inclui página própria e central de personalização em cinco etapas. Coleções, gêneros, estados e envio de logotipos ficam em uma URL compartilhável, sem conta ou banco de dados.
+- Catálogos de rádios em destaque, rádios por gênero e rádios do Brasil.
+- Pesquisa, metadados e streams pelo protocolo de addons do Stremio.
+- Classificação por gênero baseada apenas nas tags reais da Radio Browser, com aliases explícitos.
+- IDs estáveis derivados de `stationuuid`.
+- Cache em memória com TTL configurável e consulta compartilhada entre catálogos.
+- Página inicial e central de personalização em cinco etapas.
+- URLs de áudio diretas, sem proxy, retransmissão ou conversão.
 
-## Executar localmente
+Não há conta, banco de dados ou painel administrativo. A personalização gera uma URL compacta e um manifesto próprio para as escolhas de cada usuário.
+
+## Começar localmente
 
 ```bash
 npm install
@@ -23,18 +26,22 @@ copy .env.example .env
 npm run dev
 ```
 
-A página fica em `http://localhost:7000/`, o configurador em `/personalizar` e o manifesto padrão em `/manifest.json`. A personalização gera `/:config/manifest.json` usando o formato nativo do SDK. O addon não faz proxy ou retransmissão de áudio.
+Depois, abra:
 
-Para testar em um perfil separado do Nuvio sem substituir a instalação existente:
+- `http://localhost:7000/` — página inicial;
+- `http://localhost:7000/personalizar` — central de personalização;
+- `http://localhost:7000/manifest.json` — manifesto padrão para instalar no Stremio ou Nuvio.
+
+Para testar sem substituir uma instalação existente do Nuvio, use outra porta e um perfil separado:
 
 ```powershell
 $env:PORT='7002'
 npm run dev
 ```
 
-Instale `http://127.0.0.1:7002/manifest.json` no perfil separado e abra o catálogo **Rádios por gênero**.
+Instale `http://127.0.0.1:7002/manifest.json` nesse perfil e abra o catálogo **Rádios por gênero**.
 
-## Validar
+## Verificar o projeto
 
 ```bash
 npm test
@@ -44,31 +51,50 @@ npm run format:check
 npm run test:ui
 ```
 
-Os testes do serviço usam fixtures, sem chamadas à Radio Browser. Os testes de interface usam Chrome instalado e o build de produção em uma porta isolada (7011).
-
-## Publicação no Render
-
-No serviço existente, use build `npm ci && npm run build`, start `npm start` (ou `node dist/src/index.js`) e `ADDON_BASE_URL=https://radiobr-nuvio.onrender.com`. O servidor usa `process.env.PORT`. Mantenha `assets/` junto do build e execute a partir da raiz do projeto. Não é necessário criar outro serviço ou banco.
-
-Após o deploy, verifique `/`, `/personalizar`, `/manifest.json` e gere uma URL pela interface. A URL deve usar HTTPS e o domínio público. Consulte [o relatório da central](docs/PERSONALIZATION_REPORT.md) para limitações e validação experimental.
+Os testes do serviço usam fixtures determinísticas e não chamam a Radio Browser. Os testes de interface usam o Chrome instalado e o build de produção em uma porta isolada.
 
 ## Configuração
 
-`RADIO_BROWSER_BASE_URL`, `RADIO_BROWSER_USER_AGENT`, `RADIO_BROWSER_CACHE_TTL_MS`, `PORT` e `ADDON_BASE_URL` estão descritos em `.env.example`. `ADDON_BASE_URL` define a origem pública usada nas imagens do manifest e, quando omitido, usa `http://127.0.0.1:PORT`.
+As variáveis estão documentadas em [.env.example](.env.example):
+
+| Variável                     | Finalidade                                       |
+| ---------------------------- | ------------------------------------------------ |
+| `RADIO_BROWSER_BASE_URL`     | Servidor da API Radio Browser.                   |
+| `RADIO_BROWSER_USER_AGENT`   | User-Agent enviado nas consultas.                |
+| `RADIO_BROWSER_CACHE_TTL_MS` | Tempo de vida do cache em memória.               |
+| `PORT`                       | Porta HTTP local ou definida pelo provedor.      |
+| `ADDON_BASE_URL`             | Origem pública usada no manifesto e nas imagens. |
+
+Se `ADDON_BASE_URL` não for definida, o addon usa `http://127.0.0.1:PORT`.
+
+## Publicar no Render
+
+No serviço existente, use:
+
+```text
+Build:  npm ci && npm run build
+Start:  npm start
+```
+
+Defina `ADDON_BASE_URL` com a URL pública HTTPS. Mantenha a pasta `assets/` junto do build e execute a aplicação a partir da raiz do projeto. Não é necessário criar outro serviço ou banco de dados.
+
+Após publicar, verifique `/`, `/personalizar` e `/manifest.json`. Para detalhes sobre a central, consulte o [relatório de personalização](docs/PERSONALIZATION_REPORT.md).
 
 ## Compatibilidade
 
-Consulte [docs/NUVIO_COMPATIBILITY_TEST_REPORT.md](docs/NUVIO_COMPATIBILITY_TEST_REPORT.md) para ver a matriz real por formato e plataforma. A compatibilidade geral ainda não é declarada.
+O [relatório de compatibilidade com o Nuvio](docs/NUVIO_COMPATIBILITY_TEST_REPORT.md) separa o que foi observado no cliente das verificações HTTP e dos testes automatizados. A compatibilidade geral ainda não é declarada.
 
 ## Documentação
 
 - [Arquitetura](docs/architecture.md)
 - [Endpoints](docs/endpoints.md)
+- [Rádios em destaque](docs/RADIOS_EM_DESTAQUE.md)
 - [Relatório de compatibilidade](docs/NUVIO_COMPATIBILITY_TEST_REPORT.md)
+- [Relatório da central de personalização](docs/PERSONALIZATION_REPORT.md)
 - [Fase 2.1](docs/PHASE_2_1.md)
 - [Fase 2.2 — gêneros](docs/PHASE_2_2.md)
 - [Evolução futura do catálogo](docs/RADIO_BR_CATALOG_EVOLUTION.md)
 
-## Licença e fonte de dados
+## Licença e fonte dos dados
 
-O addon usa dados públicos do [Radio Browser](https://www.radio-browser.info/). As estações e URLs pertencem às respectivas emissoras e provedores.
+O addon utiliza dados públicos do [Radio Browser](https://www.radio-browser.info/). Nomes, logotipos, páginas e URLs de transmissão pertencem às respectivas emissoras e provedores.
