@@ -96,7 +96,7 @@ describe('catalog', () => {
       type: 'tv',
       id: 'radios-em-destaque',
     })
-    expect(result.metas[0]).toMatchObject({
+    expect(result.metas[6]).toMatchObject({
       poster: 'https://radio.example/assets/logo.png',
       posterShape: 'square',
     })
@@ -115,6 +115,22 @@ describe('catalog', () => {
     expect(result.metas[1]).toMatchObject({
       poster:
         'https://radio.example/assets/logos/stations/bandeirantes-107-3.jfif',
+      posterShape: 'square',
+    })
+  })
+
+  it('uses the clean curated logo for Rádio Gaúcha', async () => {
+    const result = await createCatalogService(
+      client(),
+      'https://radio.example/assets/logo.png',
+    ).getCatalog({
+      type: 'tv',
+      id: 'radios-em-destaque',
+      config: defaultConfig(),
+    })
+
+    expect(result.metas[0]).toMatchObject({
+      poster: 'https://radio.example/assets/logos/stations/gaucha-93-7.png',
       posterShape: 'square',
     })
   })

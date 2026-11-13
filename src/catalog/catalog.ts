@@ -16,6 +16,7 @@ import type { EnrichmentSnapshot } from '../enrichment/snapshot.js'
 import { applySnapshot } from '../enrichment/resolve.js'
 
 const curatedEditorialLogos: Record<string, string> = {
+  'Rádio Gaúcha 93.7 FM': 'gaucha-93-7.png',
   'Rádio Bandeirantes 107.3 FM': 'bandeirantes-107-3.jfif',
   'Super Rádio Tupi 96.5 FM': 'tupi-96-5.png',
   'Rádio Itatiaia 610 AM 95.7 FM': 'itatiaia-610-am-95-7.jpg',
@@ -23,8 +24,12 @@ const curatedEditorialLogos: Record<string, string> = {
   'Rádio CBN São Paulo 90.5 FM': 'cbn-sao-paulo-90-5.png',
   'Rádio Antena 1 94.7 FM': 'antena-1-94-7.png',
   'Radio Saudade 99.7 FM': 'saudade-99-7.png',
+  'Rádio Clube 105.5 FM': 'clube-105-5.png',
+  'Rádio Alpha 101.7 FM': 'alpha-101-7.jpg',
+  'Rádio Metropolitana 98.5 FM': 'metropolitana-98-5.png',
   'Rádio Nativa 95.3 FM': 'nativa-95-3.png',
   'Rádio FM O Dia 100.5': 'fm-o-dia-100-5.png',
+  'Rádio Liberdade 92.9 FM': 'liberdade-92-9.jpg',
 }
 
 function curatedEditorialPoster(

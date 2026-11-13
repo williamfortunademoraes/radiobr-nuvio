@@ -34,6 +34,7 @@ function normalize(value: string): string {
 }
 
 const curatedLogos: Record<string, string> = {
+  [normalize('Rádio Gaúcha 93.7 FM')]: 'gaucha-93-7.png',
   [normalize('Antena 1')]: 'antena-1-94-7.png',
   [normalize('Rádio Antena 1 94.7 FM')]: 'antena-1-94-7.png',
   [normalize('Rádio Bandeirantes')]: 'bandeirantes-107-3.jfif',
@@ -47,7 +48,10 @@ const curatedLogos: Record<string, string> = {
   [normalize('Nativa')]: 'nativa-95-3.png',
   [normalize('Rádio Nativa 95.3 FM')]: 'nativa-95-3.png',
   [normalize('Rádio Jovem Pan News')]: 'jovem-pan-news.png',
-  [normalize('Rádio Liberdade 92.9 FM')]: 'liberdade-92-9.png',
+  [normalize('Rádio Liberdade 92.9 FM')]: 'liberdade-92-9.jpg',
+  [normalize('Rádio Clube 105.5 FM')]: 'clube-105-5.png',
+  [normalize('Rádio Alpha 101.7 FM')]: 'alpha-101-7.jpg',
+  [normalize('Rádio Metropolitana 98.5 FM')]: 'metropolitana-98-5.png',
   [normalize('Saudade')]: 'saudade-99-7.png',
   [normalize('Radio Saudade 99.7 FM')]: 'saudade-99-7.png',
   [normalize('Tupi')]: 'tupi-96-5.png',

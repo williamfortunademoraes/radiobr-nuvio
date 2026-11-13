@@ -1,5 +1,11 @@
 [
   {
+    "station": "Rádio Gaúcha 93.7 FM",
+    "file": "assets/logos/stations/gaucha-93-7.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
     "station": "Rádio Antena 1 94.7 FM",
     "file": "assets/logos/stations/antena-1-94-7.png",
     "source": "user",
@@ -43,9 +49,27 @@
   },
   {
     "station": "Rádio Liberdade 92.9 FM",
-    "file": "assets/logos/stations/liberdade-92-9.png",
-    "source": "official-website",
-    "reference": "https://radioliberdade.com.br/"
+    "file": "assets/logos/stations/liberdade-92-9.jpg",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Clube 105.5 FM",
+    "file": "assets/logos/stations/clube-105-5.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Alpha 101.7 FM",
+    "file": "assets/logos/stations/alpha-101-7.jpg",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Metropolitana 98.5 FM",
+    "file": "assets/logos/stations/metropolitana-98-5.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
   },
   {
     "station": "Radio Saudade 99.7 FM",
