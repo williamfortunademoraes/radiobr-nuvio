@@ -5,7 +5,7 @@ import type {
   FieldProvenance,
 } from '../types.js'
 
-interface ParsedSource {
+export interface ParsedSource {
   data: EnrichedStationData
   provenance: Partial<Record<EnrichmentField, FieldProvenance>>
 }

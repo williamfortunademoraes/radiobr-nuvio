@@ -11,6 +11,12 @@
     "rootDir": ".",
     "declaration": true
   },
-  "include": ["src", "tests", "vitest.config.ts", "eslint.config.mjs"],
+  "include": [
+    "src",
+    "scripts",
+    "tests",
+    "vitest.config.ts",
+    "eslint.config.mjs"
+  ],
   "exclude": ["dist", "node_modules"]
 }

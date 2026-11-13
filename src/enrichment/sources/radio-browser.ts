@@ -2,11 +2,12 @@ import type { Station } from '../../stations/types.js'
 import type {
   EnrichedStationData,
   EnrichmentField,
+  EnrichmentSource,
   FieldProvenance,
 } from '../types.js'
 
 export interface EnrichmentCandidate {
-  source: 'radio-browser'
+  source: EnrichmentSource
   data: EnrichedStationData
   provenance: Partial<Record<EnrichmentField, FieldProvenance>>
   checkedAt: string

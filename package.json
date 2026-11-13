@@ -8,6 +8,7 @@
     "start": "node dist/src/index.js",
     "test:ui": "playwright test",
     "dev": "tsx src/index.ts",
+    "enrich": "tsx scripts/enrich-stations.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",

@@ -4,6 +4,7 @@ import { createCatalogService } from '../catalog/catalog.js'
 import { createMetadataService } from '../metadata/metadata.js'
 import { createStreamService } from '../streams/streams.js'
 import { RadioBrowserClient } from '../radio-browser/client.js'
+import { loadEnrichmentSnapshot } from '../enrichment/storage.js'
 
 const require = createRequire(import.meta.url)
 const { addonBuilder: AddonBuilder } =
@@ -16,8 +17,9 @@ export function createAddon(
   const fallbackPoster = baseUrl
     ? new URL('/assets/logo.png', baseUrl).href
     : undefined
-  const catalog = createCatalogService(client, fallbackPoster)
-  const metadata = createMetadataService(client)
+  const snapshot = loadEnrichmentSnapshot()
+  const catalog = createCatalogService(client, fallbackPoster, snapshot)
+  const metadata = createMetadataService(client, snapshot)
   const streams = createStreamService(client)
   const builder = new AddonBuilder(baseUrl ? createManifest(baseUrl) : manifest)
   builder.defineCatalogHandler((args: any) => catalog.getCatalog(args))
