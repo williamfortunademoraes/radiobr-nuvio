@@ -30,11 +30,13 @@
 ### Task 1: Enrichment contracts and snapshot schema
 
 **Files:**
+
 - Create: `src/enrichment/types.ts`
 - Create: `src/enrichment/snapshot.ts`
 - Test: `tests/enrichment/snapshot.test.ts`
 
 **Interfaces:**
+
 - `EnrichedStationData`: optional `name`, `city`, `state`, `stateName`, `categories`, `slogan`, `logo`.
 - `FieldProvenance`: `source`, `url`, `checkedAt`, `status`.
 - `EnrichmentRecord`: `stationUuid`, `data`, `provenance`, `updatedAt`.
@@ -50,6 +52,7 @@
 ### Task 2: HTTP policy and source adapters
 
 **Files:**
+
 - Create: `src/enrichment/http.ts`
 - Create: `src/enrichment/sources/radios-com-br.ts`
 - Create: `src/enrichment/sources/official-website.ts`
@@ -57,6 +60,7 @@
 - Test: `tests/enrichment/sources.test.ts`
 
 **Interfaces:**
+
 - `EnrichmentHttpClient.request(url, options) -> Promise<EnrichmentResponse>`.
 - Each adapter exposes `lookup(reference) -> Promise<Partial<EnrichedStationData> & source metadata>`.
 
@@ -69,12 +73,14 @@
 ### Task 3: Identity matching and normalization
 
 **Files:**
+
 - Create: `src/enrichment/identity.ts`
 - Create: `src/enrichment/normalize.ts`
 - Modify: `src/stations/types.ts` only for fields without existing equivalents.
 - Test: `tests/enrichment/identity.test.ts`
 
 **Interfaces:**
+
 - `matchStation(reference, stations) -> Station | undefined`.
 - `normalizeEnrichedData(raw) -> Partial<EnrichedStationData>`.
 - `stateNameFor(code) -> string | undefined`.
@@ -89,6 +95,7 @@
 ### Task 4: Conflict resolution and catalog overlay
 
 **Files:**
+
 - Create: `src/enrichment/resolve.ts`
 - Modify: `src/catalog/catalog.ts`
 - Modify: `src/metadata/metadata.ts`
@@ -96,6 +103,7 @@
 - Test: `tests/metadata/metadata.test.ts`
 
 **Interfaces:**
+
 - `resolveEnrichment(existing, candidates) -> EnrichmentRecord`.
 - `applyEnrichment(station, record) -> Station`.
 
@@ -108,12 +116,14 @@
 ### Task 5: Logo validation and curated asset provenance
 
 **Files:**
+
 - Create: `src/enrichment/logo.ts`
 - Create: `data/enrichment/logo-sources.json`
 - Modify: `assets/logos/stations/` only for validated user-provided or permitted images.
 - Test: `tests/enrichment/logo.test.ts`
 
 **Interfaces:**
+
 - `validateLogo(response) -> ValidatedLogo | undefined`.
 - `chooseLogo(existing, candidates) -> ValidatedLogo | undefined`.
 
@@ -126,6 +136,7 @@
 ### Task 6: Runner, idempotency and operational reporting
 
 **Files:**
+
 - Create: `src/enrichment/runner.ts`
 - Create: `src/enrichment/report.ts`
 - Create: `scripts/enrich-stations.ts`
@@ -134,6 +145,7 @@
 - Create: `docs/RADIO_BR_ENRICHMENT_REPORT.md`
 
 **Interfaces:**
+
 - `runEnrichment(options) -> Promise<EnrichmentRunReport>`.
 - CLI command: `npm run enrich`.
 

@@ -1,0 +1,26 @@
+[
+  {
+    "station": "Rádio FM O Dia 100.5",
+    "file": "assets/logos/stations/fm-o-dia-100-5.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Nativa 95.3 FM",
+    "file": "assets/logos/stations/nativa-95-3.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Jovem Pan News",
+    "file": "assets/logos/stations/jovem-pan-news.png",
+    "source": "public",
+    "reference": "https://commons.wikimedia.org/wiki/File:Jovem_Pan_News_logo_2022.png"
+  },
+  {
+    "station": "Rádio Liberdade 92.9 FM",
+    "file": "assets/logos/stations/liberdade-92-9.png",
+    "source": "official-website",
+    "reference": "https://radioliberdade.com.br/"
+  }
+]
