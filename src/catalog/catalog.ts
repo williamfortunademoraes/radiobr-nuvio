@@ -1,5 +1,5 @@
 import type { RadioBrowserClient } from '../radio-browser/client.js'
-import { resolveGenre } from '../stations/tags.js'
+import { genreDefinitions, resolveGenre } from '../stations/tags.js'
 import { normalizeState, type StateCode } from '../stations/states.js'
 import type { Station } from '../stations/types.js'
 import {
@@ -14,6 +14,7 @@ import { top25Ranking } from '../editorial/top-25-ranking.js'
 import { REGIONS, stationRegion } from './geography.js'
 import type { EnrichmentSnapshot } from '../enrichment/snapshot.js'
 import { applySnapshot } from '../enrichment/resolve.js'
+import { genreCover, regionCover } from './covers.js'
 
 const curatedEditorialLogos: Record<string, string> = {
   'Rádio Gaúcha 93.7 FM': 'gaucha-93-7.png',
@@ -107,6 +108,26 @@ export function createCatalogService(
 
       const config = resolveHandlerConfig(args.config)
       if (!config) return { metas: [] }
+      if (args.id === 'radio-br-genres')
+        return {
+          metas: config.g.map((genre) => ({
+            id: `radio-br-genre-${genre}`,
+            type: 'tv' as const,
+            name: genreDefinitions.find((item) => item.id === genre)?.name ?? genre,
+            poster: new URL(genreCover(genre), fallbackPoster ?? 'http://127.0.0.1').href,
+            posterShape: 'square' as const,
+          })),
+        }
+      if (args.id === 'radio-br-regions')
+        return {
+          metas: REGIONS.map((region) => ({
+            id: `radio-br-region-${region.id}`,
+            type: 'tv' as const,
+            name: region.name,
+            poster: new URL(regionCover(region.id), fallbackPoster ?? 'http://127.0.0.1').href,
+            posterShape: 'square' as const,
+          })),
+        }
       if (args.id === 'radios-em-destaque') {
         if (!catalogAllowed(args.id, config)) return { metas: [] }
         if (!radiosEmDestaque.enabled) return { metas: [] }

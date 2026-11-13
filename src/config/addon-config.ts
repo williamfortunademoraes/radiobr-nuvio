@@ -344,6 +344,21 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
       extra: [searchExtra],
     })
 
+  catalogs.push(
+    {
+      type: 'tv',
+      id: 'radio-br-genres',
+      name: 'Gêneros Musicais',
+      extra: [searchExtra],
+    },
+    {
+      type: 'tv',
+      id: 'radio-br-regions',
+      name: 'Regiões',
+      extra: [searchExtra],
+    },
+  )
+
   if (collections.has('news-sports'))
     catalogs.push({
       type: 'tv',
