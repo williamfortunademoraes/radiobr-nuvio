@@ -119,13 +119,22 @@ function editorialMeta(
   item: ReturnType<typeof resolveEditorialStations>[number],
 ) {
   const { editorial, playable } = item
+  const station = item.station
+    ? {
+        ...item.station,
+        ...(editorial.city ? { city: editorial.city } : {}),
+        ...(editorial.state
+          ? { state: editorial.state, stateName: undefined }
+          : {}),
+      }
+    : undefined
   const editorialDescription = [
-    item.station
-      ? stationDescription(item.station, editorial.name)
+    station
+      ? stationDescription(station, editorial.name)
       : frequencyLine(editorial.name),
     editorial.frequency,
-    !item.station && editorial.city ? `Cidade: ${editorial.city}` : undefined,
-    editorial.state ? `Estado: ${editorial.state}` : undefined,
+    !station && editorial.city ? `Cidade: ${editorial.city}` : undefined,
+    !station && editorial.state ? `Estado: ${editorial.state}` : undefined,
     playable ? 'Disponível para reprodução' : 'Indisponível para reprodução',
   ]
     .filter(Boolean)

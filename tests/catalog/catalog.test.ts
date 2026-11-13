@@ -97,7 +97,7 @@ describe('catalog', () => {
       id: 'radios-em-destaque',
     })
     expect(result.metas[6]).toMatchObject({
-      poster: 'https://radio.example/assets/logo.png',
+      poster: 'https://radio.example/assets/logos/stations/bandnews-sp-96-9.jpg',
       posterShape: 'square',
     })
   })

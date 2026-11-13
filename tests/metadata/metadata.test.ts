@@ -206,4 +206,28 @@ describe('metadata', () => {
       'Disponível para reprodução',
     )
   })
+
+  it('uses the editorial city and UF once for a featured station', async () => {
+    const result = await createMetadataService({
+      searchStations: vi.fn().mockResolvedValue([
+        {
+          ...validStation,
+          id: 'radio-br:tupi',
+          stationUuid: 'tupi',
+          name: 'Super Rádio Tupi',
+          state: 'Rio de Janeiro',
+          city: undefined,
+        },
+      ]),
+    } as never).getMetadata({
+      type: 'tv',
+      id: 'radio-br:editorial:top25-3',
+    })
+
+    const description = (result.meta as { description?: string }).description!
+    expect(description).toContain('Cidade: Rio de Janeiro')
+    expect(description).toContain('Estado: RJ')
+    expect(description).not.toContain('Estado: Rio de Janeiro')
+    expect(description.match(/Estado:/g)).toHaveLength(1)
+  })
 })

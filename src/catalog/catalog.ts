@@ -27,7 +27,8 @@ const curatedEditorialLogos: Record<string, string> = {
   'Rádio Grenal 95.9 FM': 'grenal-95-9.png',
   'Rádio JB FM 99.9': 'jb-fm-99-9.png',
   'Rádio 89 FM Rádio Rock': 'radio-89-rock.webp',
-  'Rádio Antena 1 94.7 FM': 'antena-1-94-7.png',
+  'Rádio Antena 1 94.7 FM': 'antena-1-94-7.jfif',
+  'Rádio BandNews SP 96.9 FM': 'bandnews-sp-96-9.jpg',
   'Radio Saudade 99.7 FM': 'saudade-99-7.png',
   'Rádio Clube 105.5 FM': 'clube-105-5.png',
   'Rádio Alpha 101.7 FM': 'alpha-101-7.jpg',
@@ -42,6 +43,8 @@ const curatedEditorialLogos: Record<string, string> = {
   'Rádio Kiss FM 92.5': 'kiss-92-5.png',
   'Rádio Flashback': 'flashback.png',
   'Smooth Jazz Lounge Radio': 'smooth-jazz-lounge.jpg',
+  'Rádio Mix 106.3 FM': 'mix-106-3.jpg',
+  'Rádio Jangadeiro 88.9 FM': 'jangadeiro-88-9.jfif',
 }
 
 function curatedPoster(name: string, basePoster?: string): string | undefined {
