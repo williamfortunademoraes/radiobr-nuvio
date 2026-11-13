@@ -13,6 +13,8 @@ export interface Station {
   countryCode: 'BR'
   city?: string
   state?: string
+  stateName?: string
+  categories?: string[]
   language?: string
   tags: string[]
   codec?: string

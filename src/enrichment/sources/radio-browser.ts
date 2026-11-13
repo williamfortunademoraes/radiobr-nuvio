@@ -6,8 +6,10 @@ import type {
 } from '../types.js'
 
 export interface EnrichmentCandidate {
+  source: 'radio-browser'
   data: EnrichedStationData
   provenance: Partial<Record<EnrichmentField, FieldProvenance>>
+  checkedAt: string
 }
 
 export class RadioBrowserEnrichmentAdapter {
@@ -33,6 +35,6 @@ export class RadioBrowserEnrichmentAdapter {
         },
       ]),
     ) as Partial<Record<EnrichmentField, FieldProvenance>>
-    return { data, provenance }
+    return { source: 'radio-browser', data, provenance, checkedAt }
   }
 }

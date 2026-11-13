@@ -5,6 +5,7 @@ import {
 } from '../../src/metadata/metadata.js'
 import { validStation } from '../fixtures/station.js'
 import { radiosEmDestaque } from '../../src/editorial/radios-em-destaque.js'
+import type { EnrichmentSnapshot } from '../../src/enrichment/snapshot.js'
 describe('metadata', () => {
   it('exposes available station details without inventing fields', async () => {
     const station = {
@@ -53,6 +54,50 @@ describe('metadata', () => {
         hls: false,
       }),
     ).toContain('Slogan: Não informado')
+  })
+
+  it('applies an optional enrichment snapshot without changing the station id', async () => {
+    const snapshot: EnrichmentSnapshot = {
+      version: 1,
+      generatedAt: '2026-11-12T00:00:00.000Z',
+      records: [
+        {
+          stationUuid: validStation.stationuuid!,
+          data: {
+            state: 'RJ',
+            stateName: 'Rio de Janeiro',
+            categories: ['Pop'],
+            slogan: 'A rádio atual',
+            logo: 'https://official.example/logo.png',
+          },
+          provenance: {},
+          updatedAt: '2026-11-12T00:00:00.000Z',
+        },
+      ],
+      failures: [],
+    }
+    const station = {
+      ...validStation,
+      id: `radio-br:${validStation.stationuuid}`,
+      stationUuid: validStation.stationuuid!,
+      countryCode: 'BR' as const,
+      tags: ['news'],
+      hls: false,
+    }
+    const result = await createMetadataService(
+      { searchStations: vi.fn().mockResolvedValue([station]) } as never,
+      snapshot,
+    ).getMetadata({ type: 'tv', id: station.id })
+    expect(result.meta).toMatchObject({
+      id: station.id,
+      poster: 'https://official.example/logo.png',
+    })
+    expect((result.meta as { description?: string }).description).toContain(
+      'Estado: RJ - Rio de Janeiro',
+    )
+    expect((result.meta as { description?: string }).description).toContain(
+      'Slogan: A rádio atual',
+    )
   })
 
   it('keeps editorial radio descriptions free of country wording', async () => {

@@ -6,7 +6,13 @@ import { resolveEditorialStations } from '../editorial/resolve.js'
 import { matchTop25Editorial } from '../editorial/top-25-match.js'
 import { top25Ranking } from '../editorial/top-25-ranking.js'
 import { resolveHandlerConfig } from '../config/addon-config.js'
-export function createMetadataService(client: RadioBrowserClient) {
+import type { EnrichmentSnapshot } from '../enrichment/snapshot.js'
+import { applySnapshot } from '../enrichment/resolve.js'
+
+export function createMetadataService(
+  client: RadioBrowserClient,
+  snapshot?: EnrichmentSnapshot,
+) {
   return {
     async getMetadata(args: { type: string; id: string; config?: unknown }) {
       const config = resolveHandlerConfig(args.config)
@@ -22,10 +28,12 @@ export function createMetadataService(client: RadioBrowserClient) {
       }
       if (args.type !== 'tv' || !args.id.startsWith('radio-br:'))
         return { meta: {} }
-      const stations =
-        typeof client.searchAllStations === 'function'
-          ? await client.searchAllStations()
-          : await client.searchStations()
+      const stations = applySnapshot(
+        await (typeof client.searchAllStations === 'function'
+          ? client.searchAllStations()
+          : client.searchStations()),
+        snapshot,
+      )
       if (args.id.startsWith('radio-br:editorial:')) {
         const top25Position = Number(args.id.match(/top25-(\d+)$/)?.[1])
         if (top25Position >= 1 && top25Position <= top25Ranking.length) {
@@ -143,13 +151,18 @@ function displayGenre(tag: string): string {
 export function stationDescription(station: Station): string {
   const lines: string[] = []
   if (station.city) lines.push(`Cidade: ${station.city}`)
-  if (station.state) lines.push(`Estado: ${station.state}`)
+  if (station.state)
+    lines.push(
+      `Estado: ${station.state}${station.stateName ? ` - ${station.stateName}` : ''}`,
+    )
 
-  const tags: string[] = Array.isArray(station.tags)
-    ? station.tags
-    : String(station.tags)
-        .split(',')
-        .map((tag: string) => tag.trim())
+  const tags: string[] = station.categories?.length
+    ? station.categories
+    : Array.isArray(station.tags)
+      ? station.tags
+      : String(station.tags)
+          .split(',')
+          .map((tag: string) => tag.trim())
   const genres = tags.filter((tag) => {
     const normalized = normalizeTag(tag)
     return normalized && !genericGenreTags.has(normalized)

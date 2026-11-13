@@ -12,6 +12,8 @@ import { radiosEmDestaque } from '../editorial/radios-em-destaque.js'
 import { matchTop25Editorial } from '../editorial/top-25-match.js'
 import { top25Ranking } from '../editorial/top-25-ranking.js'
 import { REGIONS, stationRegion } from './geography.js'
+import type { EnrichmentSnapshot } from '../enrichment/snapshot.js'
+import { applySnapshot } from '../enrichment/resolve.js'
 
 export interface CatalogArgs {
   type: string
@@ -66,6 +68,7 @@ function requestedGenres(config: AddonConfig) {
 export function createCatalogService(
   client: RadioBrowserClient,
   fallbackPoster?: string,
+  snapshot?: EnrichmentSnapshot,
 ) {
   return {
     async getCatalog(args: CatalogArgs) {
@@ -76,10 +79,12 @@ export function createCatalogService(
       if (args.id === 'radios-em-destaque') {
         if (!catalogAllowed(args.id, config)) return { metas: [] }
         if (!radiosEmDestaque.enabled) return { metas: [] }
-        const stations =
-          typeof client.searchAllStations === 'function'
-            ? await client.searchAllStations()
-            : await client.searchStations()
+        const stations = applySnapshot(
+          await (typeof client.searchAllStations === 'function'
+            ? client.searchAllStations()
+            : client.searchStations()),
+          snapshot,
+        )
         const matchesState = stateFilter(config.s)
         const search = args.extra?.search?.trim().toLocaleLowerCase('pt-BR')
         const matched = matchTop25Editorial(top25Ranking, stations)
@@ -119,12 +124,14 @@ export function createCatalogService(
 
       const search = args.extra?.search
       const skip = args.extra?.skip ?? 0
-      const stations =
+      const stations = applySnapshot(
         args.id === 'radio-br-catalog' &&
-        !search?.trim() &&
-        typeof client.searchAllStations === 'function'
+          !search?.trim() &&
+          typeof client.searchAllStations === 'function'
           ? (await client.searchAllStations()).slice(skip, skip + 100)
-          : await client.searchStations({ search, offset: skip })
+          : await client.searchStations({ search, offset: skip }),
+        snapshot,
+      )
 
       const matchesState = stateFilter(config.s)
       const preview = (station: Station) =>
