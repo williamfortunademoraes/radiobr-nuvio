@@ -40,16 +40,18 @@ it('serves both catalogs, genre filters, streams and PNG assets through the SDK 
     expect(manifest.catalogs.map((c: { id: string }) => c.id)).toEqual(
       expect.arrayContaining([
         'radios-em-destaque',
-        'radio-br-featured',
         'radio-br-genre',
         'radio-br-catalog',
         'radio-br-genre-sertanejo',
         'radio-br-region-sp',
       ]),
     )
-    expect(manifest.catalogs[2].extra[0]).toMatchObject({
+    const genreCatalog = manifest.catalogs.find(
+      (catalog: { id: string }) => catalog.id === 'radio-br-genre',
+    )
+    expect(genreCatalog?.extra?.[0]).toMatchObject({
       name: 'genre',
-      options: expect.arrayContaining(['Sertanejo', 'Gênero não informado']),
+      options: expect.arrayContaining(['Sertanejo', 'Outros gêneros']),
     })
     for (const [field, width, height] of [
       ['logo', 256, 256],
@@ -66,11 +68,11 @@ it('serves both catalogs, genre filters, streams and PNG assets through the SDK 
     const original = await (
       await fetch(`${base}/catalog/tv/radio-br-catalog.json`)
     ).json()
-    const featured = await (
-      await fetch(`${base}/catalog/tv/radio-br-featured.json`)
+    const editorial = await (
+      await fetch(`${base}/catalog/tv/radios-em-destaque.json`)
     ).json()
-    expect(original.metas[0].id).toBe(`radio-br:${validStation.stationuuid}`)
-    expect(featured.metas[0].id).toBe(`radio-br:${sertanejoUuid}`)
+    expect(original.metas[0].id).toBe(`radio-br:${sertanejoUuid}`)
+    expect(editorial.metas.length).toBeGreaterThan(0)
 
     const genre = await (
       await fetch(`${base}/catalog/tv/radio-br-genre/genre=Sertanejo.json`)
@@ -80,7 +82,7 @@ it('serves both catalogs, genre filters, streams and PNG assets through the SDK 
     ])
     const noticias = await (
       await fetch(
-        `${base}/catalog/tv/radio-br-genre/genre=${encodeURIComponent('Notícias')}.json`,
+        `${base}/catalog/tv/radio-br-genre/genre=${encodeURIComponent('Notícias e esportes')}.json`,
       )
     ).json()
     expect(noticias.metas.map((meta: { id: string }) => meta.id)).toEqual([
@@ -101,11 +103,10 @@ it('serves both catalogs, genre filters, streams and PNG assets through the SDK 
     ).json()
     expect(stream.streams[0].url).toBe(validStation.url_resolved)
     const search = await fetch(
-      `${base}/catalog/tv/radio-br-featured/search=Prova.json`,
+      `${base}/catalog/tv/radios-em-destaque/search=Prova.json`,
     )
     expect(search.status).toBe(200)
-    expect(fetcher.mock.calls[1][0]).toContain('name=Prova')
-    expect(fetcher).toHaveBeenCalledTimes(2)
+    expect(fetcher).toHaveBeenCalledTimes(1)
   } finally {
     server.closeAllConnections()
     await new Promise<void>((resolve, reject) =>

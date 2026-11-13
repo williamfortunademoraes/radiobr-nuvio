@@ -9,12 +9,13 @@ import {
   normalizeState,
   type StateCode,
 } from '../stations/states.js'
+import { REGIONS } from '../catalog/geography.js'
 
 export const CONFIG_VERSION = 1
 export const MAX_CONFIG_LENGTH = 2048
 
 export interface CollectionDefinition {
-  id: 'editorial' | 'featured' | 'all' | 'news' | 'sports' | 'unknown'
+  id: 'editorial' | 'all' | 'news-sports' | 'unknown'
   name: string
   short: string
   description: string
@@ -25,20 +26,11 @@ export interface CollectionDefinition {
 export const COLLECTION_DEFINITIONS = [
   {
     id: 'editorial',
-    name: 'Rádios em Destaque — curadoria',
-    short: 'Curadoria',
+    name: 'Destaques',
+    short: 'Destaques',
     description:
-      'Treze emissoras escolhidas manualmente pela curadoria editorial do RADIO BR.',
+      'As 25 rádios mais bem posicionadas no ranking editorial nacional.',
     catalogId: 'radios-em-destaque',
-    icon: 'star',
-  },
-  {
-    id: 'featured',
-    name: 'Rádios em destaque — ranking',
-    short: 'Ranking',
-    description:
-      'Uma seleção automática das estações mais populares, completas e disponíveis do Brasil.',
-    catalogId: 'radio-br-featured',
     icon: 'star',
   },
   {
@@ -51,28 +43,19 @@ export const COLLECTION_DEFINITIONS = [
     icon: 'globe',
   },
   {
-    id: 'news',
-    name: 'Notícias',
-    short: 'Notícias',
-    description: 'Jornalismo, talk radio e cobertura de notícias.',
-    catalogId: 'radio-br-news',
+    id: 'news-sports',
+    name: 'Notícias e esportes',
+    short: 'Notícias e esportes',
+    description: 'Jornalismo, debates, futebol e cobertura esportiva.',
+    catalogId: 'radio-br-news-sports',
     icon: 'news',
   },
   {
-    id: 'sports',
-    name: 'Esportes',
-    short: 'Esportes',
-    description: 'Futebol, debates esportivos e transmissões ao vivo.',
-    catalogId: 'radio-br-sports',
-    icon: 'sports',
-  },
-  {
     id: 'unknown',
-    name: 'Rádios sem gênero identificado',
-    short: 'Sem gênero',
-    description:
-      'Estações que ainda não informaram uma categoria reconhecível nas tags.',
-    catalogId: 'radio-br-nogenero',
+    name: 'Outros gêneros',
+    short: 'Outros',
+    description: 'Outros gêneros e estações sem gênero informado.',
+    catalogId: 'radio-br-outros',
     icon: 'question',
   },
 ] as const satisfies readonly CollectionDefinition[]
@@ -83,9 +66,9 @@ export const COLLECTION_IDS = COLLECTION_DEFINITIONS.map(
 ) as CollectionId[]
 
 export const MUSIC_GENRE_IDS = [
+  'noticias-esportes',
   'sertanejo',
-  'pagode',
-  'samba',
+  'samba-pagode',
   'rock',
   'gospel',
   'pop',
@@ -132,7 +115,7 @@ export type ConfigValidation = ConfigValidationSuccess | ConfigValidationFailure
 export function defaultConfig(): AddonConfig {
   return {
     v: CONFIG_VERSION,
-    c: ['editorial', 'featured', 'all'],
+    c: ['editorial', 'all'],
     g: [...GENRE_IDS],
     s: [],
     o: { logos: true },
@@ -347,8 +330,7 @@ const searchExtra: ManifestCatalogExtra = {
 
 /**
  * Builds the catalogs declared by a configuration. Catalog order is stable:
- * featured, news, sports, unknown, genre, all. With the default config this
- * preserves the historical featured/genre/all order.
+ * editorial, news-sports, unknown, genre, all.
  */
 export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
   const catalogs: ManifestCatalog[] = []
@@ -358,41 +340,34 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
     catalogs.push({
       type: 'tv',
       id: 'radios-em-destaque',
-      name: 'Rádios em Destaque',
+      name: 'Destaques',
       extra: [searchExtra],
     })
 
-  if (collections.has('featured'))
+  if (collections.has('news-sports'))
     catalogs.push({
       type: 'tv',
-      id: 'radio-br-featured',
-      name: 'Rádios em destaque',
-      extra: [searchExtra],
-    })
-
-  if (collections.has('news'))
-    catalogs.push({
-      type: 'tv',
-      id: 'radio-br-news',
-      name: 'Notícias',
-      extra: [searchExtra],
-    })
-
-  if (collections.has('sports'))
-    catalogs.push({
-      type: 'tv',
-      id: 'radio-br-sports',
-      name: 'Esportes',
+      id: 'radio-br-news-sports',
+      name: 'Notícias e esportes',
       extra: [searchExtra],
     })
 
   if (collections.has('unknown'))
     catalogs.push({
       type: 'tv',
-      id: 'radio-br-nogenero',
-      name: 'Rádios sem gênero identificado',
+      id: 'radio-br-outros',
+      name: 'Outros gêneros',
       extra: [searchExtra],
     })
+
+  catalogs.push(
+    ...REGIONS.map((region) => ({
+      type: 'tv' as const,
+      id: `radio-br-region-${region.id}`,
+      name: `Rádios da região ${region.name}`,
+      extra: [searchExtra],
+    })),
+  )
 
   if (config.g.length)
     catalogs.push({
@@ -424,7 +399,7 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
       ...(config.s.length ? config.s : STATE_CODES).map((state) => ({
         type: 'tv' as const,
         id: `radio-br-region-${state.toLowerCase()}`,
-        name: `Rádios por região — ${state}`,
+        name: `Rádios da região — ${state}`,
         extra: [searchExtra],
       })),
     )
@@ -433,7 +408,7 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
     catalogs.push({
       type: 'tv',
       id: 'radio-br-catalog',
-      name: 'Rádios do Brasil',
+      name: 'Todas as rádios',
       extra: [searchExtra],
     })
 
@@ -443,6 +418,8 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
 export function catalogAllowed(id: string, config: AddonConfig): boolean {
   if (id.startsWith('radio-br-genre-'))
     return config.g.some((genre) => id === `radio-br-genre-${genre}`)
+  if (REGIONS.some((region) => id === `radio-br-region-${region.id}`))
+    return true
   if (id.startsWith('radio-br-region-'))
     return (config.s.length ? config.s : STATE_CODES).some(
       (state) => id === `radio-br-region-${state.toLowerCase()}`,
@@ -450,15 +427,11 @@ export function catalogAllowed(id: string, config: AddonConfig): boolean {
   switch (id) {
     case 'radios-em-destaque':
       return config.c.includes('editorial')
-    case 'radio-br-featured':
-      return config.c.includes('featured')
     case 'radio-br-catalog':
       return config.c.includes('all')
-    case 'radio-br-news':
-      return config.c.includes('news')
-    case 'radio-br-sports':
-      return config.c.includes('sports')
-    case 'radio-br-nogenero':
+    case 'radio-br-news-sports':
+      return config.c.includes('news-sports')
+    case 'radio-br-outros':
       return config.c.includes('unknown')
     case 'radio-br-genre':
       return config.g.length > 0

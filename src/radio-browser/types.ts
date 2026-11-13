@@ -7,6 +7,7 @@ export interface RadioBrowserStation {
   favicon?: string
   homepage?: string
   countrycode?: string
+  city?: string
   state?: string
   language?: string
   tags?: string

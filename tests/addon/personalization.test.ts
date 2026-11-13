@@ -13,7 +13,7 @@ import {
 
 const config = {
   ...defaultConfig(),
-  c: ['featured'] as const,
+  c: ['editorial'] as const,
   g: ['sertanejo', 'gospel'] as const,
   s: ['RJ', 'SP'] as const,
 }
@@ -119,14 +119,22 @@ it('keeps default regional catalogs but restricts personalized states', () => {
     buildCatalogs(defaultConfig()).filter((c) =>
       c.id.startsWith('radio-br-region-'),
     ),
-  ).toHaveLength(27)
+  ).toHaveLength(32)
   const result = validateConfig(payload)
   if (!result.ok) throw new Error(result.error)
   expect(
     buildCatalogs(result.config)
       .filter((c) => c.id.startsWith('radio-br-region-'))
       .map((c) => c.id),
-  ).toEqual(['radio-br-region-rj', 'radio-br-region-sp'])
+  ).toEqual([
+    'radio-br-region-norte',
+    'radio-br-region-nordeste',
+    'radio-br-region-centro-oeste',
+    'radio-br-region-sudeste',
+    'radio-br-region-sul',
+    'radio-br-region-rj',
+    'radio-br-region-sp',
+  ])
 })
 it('generates a canonical public URL and its dynamic manifest on the server', async () => {
   const response = await fetch(base + '/api/configuration', {
@@ -154,9 +162,9 @@ it.each([
 it('filters catalogs and metadata while preserving streams and shared cache', async () => {
   const prefix = `${base}/${encodeURIComponent(JSON.stringify(payload))}`
   const json = async (route: string) => (await fetch(prefix + route)).json()
-  expect((await json('/catalog/tv/radio-br-featured.json')).metas).toHaveLength(
-    2,
-  )
+  expect(
+    (await json('/catalog/tv/radios-em-destaque.json')).metas,
+  ).toHaveLength(0)
   expect(
     (await json('/catalog/tv/radio-br-genre-sertanejo.json')).metas[0],
   ).not.toHaveProperty('poster')

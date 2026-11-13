@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="AP">
+  <rect width="640" height="360" rx="32" fill="#171126"/>
+  <path d="M0 300C130 220 210 390 360 285S560 230 640 270V360H0Z" fill="#6d4aff" opacity=".6"/>
+  <text x="320" y="190" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="42" font-weight="700">AP</text>
+</svg>

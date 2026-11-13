@@ -2,7 +2,7 @@
 
 `radio-browser` concentra HTTP, parâmetros obrigatórios e cache TTL. `stations` normaliza a resposta externa em um modelo interno e elimina registros não brasileiros, quebrados ou sem URL.
 
-`stations/tags` é um módulo puro de normalização e classificação por gênero. Ele converte tags em uma forma comparável (minúsculas, sem acentos, separadores padronizados, sem duplicatas), aplica aliases explícitos e devolve IDs de categoria. As tags originais permanecem em `Station.tags`; o módulo não infere gênero por nome, domínio, homepage ou localização. `Outros gêneros identificados` e `Gênero não informado` são decididos pelo agrupamento, não pelos aliases.
+`stations/tags` é um módulo puro de normalização e classificação por gênero. Ele converte tags em uma forma comparável (minúsculas, sem acentos, separadores padronizados, sem duplicatas), aplica aliases explícitos e devolve IDs de categoria. As tags originais permanecem em `Station.tags`; o módulo não infere gênero por nome, domínio, homepage ou localização. Notícias e esportes, samba e pagode são categorias consolidadas; estações sem gênero identificável entram em `Outros gêneros`.
 
 `catalog/grouping` agrupa as estações em todas as categorias de uma vez, preservando a ordem recebida e permitindo que uma estação apareça em mais de um gênero quando as tags justificarem. O resultado é memoizado por identidade da coleção com `WeakMap`, evitando reclassificação do mesmo lote cacheado.
 

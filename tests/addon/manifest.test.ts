@@ -14,7 +14,6 @@ describe('RADIO BR manifest', () => {
     expect(manifest.catalogs.map((catalog) => catalog.id)).toEqual(
       expect.arrayContaining([
         'radios-em-destaque',
-        'radio-br-featured',
         'radio-br-genre',
         'radio-br-catalog',
       ]),

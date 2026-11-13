@@ -32,7 +32,7 @@
   )
 
   const selection = {
-    collections: new Set(['editorial', 'featured', 'all']),
+    collections: new Set(['editorial', 'all']),
     genres: new Set(),
     allStates: true,
     states: new Set(),
@@ -193,10 +193,10 @@
 
     if (logosInput) logosInput.checked = selection.logos
     if (includeMainInput) {
-      const featured = selection.collections.has('featured')
       const all = selection.collections.has('all')
-      includeMainInput.checked = featured && all
-      includeMainInput.indeterminate = featured !== all
+      const editorial = selection.collections.has('editorial')
+      includeMainInput.checked = editorial && all
+      includeMainInput.indeterminate = editorial !== all
     }
     if (includeUnknownInput)
       includeUnknownInput.checked = selection.collections.has('unknown')
@@ -363,10 +363,10 @@
       selection.logos = target.checked
     } else if (target.id === 'include-main') {
       if (target.checked) {
-        selection.collections.add('featured')
+        selection.collections.add('editorial')
         selection.collections.add('all')
       } else {
-        selection.collections.delete('featured')
+        selection.collections.delete('editorial')
         selection.collections.delete('all')
       }
     } else if (target.id === 'include-unknown') {

@@ -28,20 +28,20 @@ function onlyGroup(groups: GenreGroups, genre: GenreId): Station[] {
 
 describe('grouping by genre', () => {
   it.each([
-    ['news', 'noticias'],
-    ['esportes', 'esportes'],
+    ['news', 'noticias-esportes'],
+    ['esportes', 'noticias-esportes'],
     ['music', 'musica'],
     ['sertanejo', 'sertanejo'],
-    ['pagode', 'pagode'],
-    ['samba', 'samba'],
+    ['pagode', 'samba-pagode'],
+    ['samba', 'samba-pagode'],
     ['rock', 'rock'],
     ['gospel', 'gospel'],
     ['pop', 'pop'],
     ['mpb', 'mpb'],
     ['eletronica', 'eletronica'],
     ['forró', 'outros'],
-    ['radio, live', 'nao-informado'],
-    ['', 'nao-informado'],
+    ['radio, live', 'outros'],
+    ['', 'outros'],
   ] as const)('places a station tagged %j in %s', (tag, genre) => {
     const item = station('11111111-1111-4111-8111-111111111111', [tag])
     const groups = groupStationsByGenre([item])
@@ -87,7 +87,7 @@ describe('grouping by genre', () => {
       language: 'portuguese',
     })
     const groups = groupStationsByGenre([item])
-    expect(groups['nao-informado']).toEqual([item])
+    expect(groups.outros).toEqual([item])
     expect(groups.rock).toEqual([])
     expect(groups.sertanejo).toEqual([])
     expect(groups.gospel).toEqual([])

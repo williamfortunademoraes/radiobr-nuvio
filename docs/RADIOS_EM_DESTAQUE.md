@@ -1,22 +1,22 @@
-# Rádios em Destaque
+# Destaques Top 25
 
-O addon expõe a coleção editorial `radios-em-destaque` como catálogo `tv`. Ela é independente do ranking automático `radio-br-featured` e mantém 13 itens em ordem manual.
+O catálogo técnico `radios-em-destaque` expõe exatamente 25 posições do ranking nacional de FM do Radios.com.br, preservando a ordem editorial da fonte. A fotografia versionada atual corresponde ao período `2026-07`.
 
 ## Dados
 
-Os registros ficam em `src/editorial/radios-em-destaque.ts`, versionados junto do código. Cada item possui ID estável, nome, categoria, referência da fonte e campos opcionais para logo, origem, website, frequência, cidade, estado, estação Radio Browser e stream.
+Os dados ficam em `src/editorial/top-25-ranking.ts`, separados do catálogo Radio Browser. O cruzamento é feito por `src/editorial/top-25-match.ts`, usando nome normalizado e UF explícita. A localização não é inferida pelo nome da emissora.
 
-Dados não confirmados permanecem ausentes. A página de referência é `https://radiosbrasil.com.br/radios-mais-ouvidas/`; os logos preenchidos apontam para os ativos publicados pelo portal e registram essa página em `logoSource`. URLs de páginas nunca são tratadas como URLs de reprodução.
+Uma posição sem correspondência continua visível no catálogo com indicação de indisponibilidade. Ela não é substituída por outra rádio. A lista contém a URL da fonte e está preparada para receber uma nova fotografia do ranking em atualização futura.
 
 ## Resolução e reprodução
 
-O addon consulta o Radio Browser pelo cliente existente, normaliza as estações e tenta associá-las por `stationId` ou nome normalizado. Uma entrada editorial sem correspondência continua no catálogo, mas recebe a indicação de indisponível e retorna `streams: []`. Quando há correspondência, a reprodução reutiliza `urlResolved` ou `url` do fluxo existente.
+Quando existe correspondência, logo, identificador e URL de reprodução continuam vindo do registro normalizado do Radio Browser. A página de metadata apresenta cidade, estado e gênero como links do Radios Brasil quando esses dados existem; país, idioma e termos de TV não são exibidos.
 
-O Nuvio pode usar `poster`, `description`, `website` e o ID `radio-br:editorial:<id>` para decidir como apresentar os cards. Quando o logo editorial não existe, o favicon real da estação é usado; se nenhum dos dois existir, o cliente deve aplicar seu fallback visual.
+O identificador das posições é `radio-br:editorial:top25-{posição}`. A reprodução das emissoras encontradas continua usando o fluxo existente `urlResolved` ou `url`.
 
 ## Atualização editorial
 
-Para alterar ordem, visibilidade ou itens, edite o arquivo editorial e publique uma nova versão do addon. `enabled` controla a exposição do catálogo e `showOnHome` fica disponível para o Nuvio decidir a apresentação na página inicial. Não há banco nem painel administrativo neste addon.
+Para atualizar o ranking, substitua a fotografia em `top-25-ranking.ts`, mantendo posições, período, fonte e a estrutura de correspondência. Não há banco nem painel administrativo neste addon.
 
 ## Compatibilidade
 

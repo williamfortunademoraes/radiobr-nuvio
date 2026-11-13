@@ -35,19 +35,13 @@ const SHOWCASE = [
     name: 'Rádios em destaque',
     icon: 'star',
     tone: 'violet',
-    copy: 'Curadoria editorial e ranking de popularidade para descobrir emissoras.',
+    copy: 'As 25 rádios mais bem posicionadas no ranking nacional.',
   },
   {
-    name: 'Notícias',
+    name: 'Notícias e esportes',
     icon: 'news',
     tone: 'blue',
-    copy: 'Jornalismo, entrevistas e cobertura ao vivo.',
-  },
-  {
-    name: 'Esportes',
-    icon: 'sports',
-    tone: 'green',
-    copy: 'Futebol, debates e transmissões esportivas.',
+    copy: 'Jornalismo, futebol, debates e cobertura ao vivo.',
   },
   {
     name: 'Sertanejo',
@@ -56,16 +50,10 @@ const SHOWCASE = [
     copy: 'Do universitário à moda de viola.',
   },
   {
-    name: 'Pagode',
+    name: 'Samba e pagode',
     icon: 'music',
     tone: 'rose',
-    copy: 'Pagode brasileiro para todos os momentos.',
-  },
-  {
-    name: 'Samba',
-    icon: 'music',
-    tone: 'orange',
-    copy: 'Samba de raiz, rodas e clássicos.',
+    copy: 'Samba de raiz, rodas, clássicos e pagode.',
   },
   {
     name: 'Rock',
@@ -256,15 +244,15 @@ ${header('inicio')}
           </div>
           <div class="floating-card floating-card--two">
             <span class="floating-icon tone-cyan">${icon('wave')}</span>
-            <span><strong>13 gêneros</strong><small>Do sertanejo ao rock</small></span>
+            <span><strong>10 gêneros</strong><small>Do sertanejo ao rock</small></span>
           </div>
         </div>
       </section>
 
       <section class="stats-band shell" aria-label="Números do RADIO BR">
         <div class="stat"><strong>Até 100</strong><span>estações no lote consultado</span></div>
-        <div class="stat"><strong>13</strong><span>gêneros mapeados</span></div>
-        <div class="stat"><strong>27</strong><span>estados brasileiros</span></div>
+        <div class="stat"><strong>9</strong><span>gêneros consolidados</span></div>
+        <div class="stat"><strong>27</strong><span>UFs e Distrito Federal</span></div>
         <div class="stat"><strong>0</strong><span>contas ou cadastros</span></div>
       </section>
 
@@ -292,7 +280,7 @@ ${header('inicio')}
           <article class="step-card">
             <span class="step-number">01</span>
             <h3>Escolha suas coleções</h3>
-            <p>Ative destaques, notícias, esportes, gêneros musicais e os estados que quiser acompanhar.</p>
+            <p>Ative destaques, notícias e esportes, gêneros musicais e os estados que quiser acompanhar.</p>
           </article>
           <article class="step-card">
             <span class="step-number">02</span>
@@ -345,11 +333,7 @@ ${footer()}`
 function collectionCards() {
   return COLLECTION_DEFINITIONS.map((collection) => {
     const checked =
-      collection.id === 'editorial' ||
-      collection.id === 'featured' ||
-      collection.id === 'all'
-        ? ' checked'
-        : ''
+      collection.id === 'editorial' || collection.id === 'all' ? ' checked' : ''
     return `<label class="option-card">
       <input type="checkbox" name="collections" value="${collection.id}"${checked}>
       <span class="option-body">
@@ -368,14 +352,10 @@ function collectionTone(id: CollectionId): string {
   switch (id) {
     case 'editorial':
       return 'amber'
-    case 'featured':
-      return 'violet'
     case 'all':
       return 'indigo'
-    case 'news':
+    case 'news-sports':
       return 'blue'
-    case 'sports':
-      return 'green'
     default:
       return 'slate'
   }
@@ -456,7 +436,7 @@ ${header('personalizar')}
               <legend class="sr-only">Coleções principais</legend>
               ${collectionCards()}
             </fieldset>
-            <p class="step-note">Curadoria, ranking e catálogo completo formam a instalação padrão. As demais coleções são opcionais.</p>
+            <p class="step-note">Destaques editoriais e catálogo completo formam a instalação padrão. As demais coleções são opcionais.</p>
             <div class="step-actions">
               <span></span>
               <button type="button" class="btn btn-primary" data-step-next>Escolher gêneros <span aria-hidden="true">→</span></button>
@@ -467,7 +447,7 @@ ${header('personalizar')}
             <div class="step-heading">
               <span class="step-kicker">Etapa B</span>
               <h2 id="step-2-title">Gêneros musicais</h2>
-              <p>Selecione quantos gêneros quiser. Cada gênero ganha uma coleção e também aparece em “Rádios por gênero”. Destaques e catálogo geral mantêm sua seleção própria.</p>
+              <p>Selecione quantos gêneros quiser. Cada gênero ganha uma coleção e também aparece em “Rádios por gênero”.</p>
             </div>
             <div class="bulk-actions">
               <button type="button" class="text-button" data-action="select-all-genres">Selecionar todos</button>
@@ -524,12 +504,12 @@ ${header('personalizar')}
                 <span class="switch" aria-hidden="true"></span>
               </label>
               <label class="toggle-row">
-                <span><strong>Incluir coleções principais</strong><small>Mantém “Rádios em destaque” e “Todas as rádios brasileiras” na instalação.</small></span>
+                <span><strong>Incluir coleções principais</strong><small>Mantém “Rádios em destaque” e “Todas as rádios” na instalação.</small></span>
                 <input type="checkbox" id="include-main" checked>
                 <span class="switch" aria-hidden="true"></span>
               </label>
               <label class="toggle-row">
-                <span><strong>Incluir rádios sem gênero identificado</strong><small>Adiciona a coleção de estações que não informaram uma categoria reconhecível.</small></span>
+                <span><strong>Incluir outros gêneros</strong><small>Adiciona outros gêneros e estações sem gênero informado.</small></span>
                 <input type="checkbox" id="include-unknown">
                 <span class="switch" aria-hidden="true"></span>
               </label>
@@ -577,7 +557,7 @@ ${header('personalizar')}
             <h2>Resumo</h2>
           </div>
           <dl class="summary-list">
-            <div><dt>Coleções</dt><dd id="summary-collections">Curadoria + Ranking + Todas</dd></div>
+            <div><dt>Coleções</dt><dd id="summary-collections">Destaques + Todas</dd></div>
             <div><dt>Gêneros</dt><dd id="summary-genres">Nenhum</dd></div>
             <div><dt>Estados</dt><dd id="summary-states">Todos os estados</dd></div>
             <div><dt>Experiência</dt><dd id="summary-options">Logotipos visíveis</dd></div>

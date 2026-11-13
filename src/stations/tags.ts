@@ -1,7 +1,7 @@
 export const genreDefinitions = [
   {
-    id: 'noticias',
-    name: 'Notícias',
+    id: 'noticias-esportes',
+    name: 'Notícias e esportes',
     aliases: [
       'news',
       'noticia',
@@ -13,12 +13,13 @@ export const genreDefinitions = [
       'talk radio',
       'spoken',
       'spoken word',
+      'sport',
+      'sports',
+      'esporte',
+      'esportes',
+      'futebol',
+      'football',
     ],
-  },
-  {
-    id: 'esportes',
-    name: 'Esportes',
-    aliases: ['sport', 'sports', 'esporte', 'esportes', 'futebol', 'football'],
   },
   {
     id: 'musica',
@@ -44,14 +45,15 @@ export const genreDefinitions = [
     ],
   },
   {
-    id: 'pagode',
-    name: 'Pagode',
-    aliases: ['pagode', 'pagode brasileiro'],
-  },
-  {
-    id: 'samba',
-    name: 'Samba',
-    aliases: ['samba', 'samba brasileiro', 'samba de raiz'],
+    id: 'samba-pagode',
+    name: 'Samba e pagode',
+    aliases: [
+      'pagode',
+      'pagode brasileiro',
+      'samba',
+      'samba brasileiro',
+      'samba de raiz',
+    ],
   },
   {
     id: 'rock',
@@ -109,8 +111,7 @@ export const genreDefinitions = [
       'trance',
     ],
   },
-  { id: 'outros', name: 'Outros gêneros identificados', aliases: [] },
-  { id: 'nao-informado', name: 'Gênero não informado', aliases: [] },
+  { id: 'outros', name: 'Outros gêneros', aliases: [] },
 ] as const
 
 export type GenreId = (typeof genreDefinitions)[number]['id']

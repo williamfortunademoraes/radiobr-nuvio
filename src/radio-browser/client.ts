@@ -38,6 +38,38 @@ export class RadioBrowserClient {
     }
   }
 
+  async searchAllStations(): Promise<Station[]> {
+    const cacheKey = JSON.stringify({ all: true })
+    const cached = this.cache.get(cacheKey)
+    if (cached) return cached
+
+    const stations: Station[] = []
+    for (let offset = 0; ; offset += 100) {
+      const page = await this.searchStations({ offset, limit: 100 })
+      stations.push(...page)
+      if (page.length < 100) break
+    }
+
+    const seen = new Set<string>()
+    const unique = stations.filter((station) => {
+      if (seen.has(station.id)) return false
+      seen.add(station.id)
+      return true
+    })
+    const ordered = unique
+      .map((station, index) => ({ station, index }))
+      .sort((a, b) => {
+        const aKnown = typeof a.station.clickcount === 'number'
+        const bKnown = typeof b.station.clickcount === 'number'
+        if (aKnown !== bKnown) return aKnown ? -1 : 1
+        if (!aKnown) return a.index - b.index
+        return (b.station.clickcount ?? 0) - (a.station.clickcount ?? 0)
+      })
+      .map(({ station }) => station)
+    this.cache.set(cacheKey, ordered)
+    return ordered
+  }
+
   private async fetchStations(
     search: string | undefined,
     limit: number,

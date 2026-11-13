@@ -1,7 +1,10 @@
 import type { RadioBrowserClient } from '../radio-browser/client.js'
 import type { Station } from '../stations/types.js'
+import { normalizeTag } from '../stations/tags.js'
 import { radiosEmDestaque } from '../editorial/radios-em-destaque.js'
 import { resolveEditorialStations } from '../editorial/resolve.js'
+import { matchTop25Editorial } from '../editorial/top-25-match.js'
+import { top25Ranking } from '../editorial/top-25-ranking.js'
 import { resolveHandlerConfig } from '../config/addon-config.js'
 export function createMetadataService(client: RadioBrowserClient) {
   return {
@@ -19,8 +22,30 @@ export function createMetadataService(client: RadioBrowserClient) {
       }
       if (args.type !== 'tv' || !args.id.startsWith('radio-br:'))
         return { meta: {} }
-      const stations = await client.searchStations()
+      const stations =
+        typeof client.searchAllStations === 'function'
+          ? await client.searchAllStations()
+          : await client.searchStations()
       if (args.id.startsWith('radio-br:editorial:')) {
+        const top25Position = Number(args.id.match(/top25-(\d+)$/)?.[1])
+        if (top25Position >= 1 && top25Position <= top25Ranking.length) {
+          const editorial = radiosEmDestaque.items[top25Position - 1]
+          const matched = matchTop25Editorial(
+            [top25Ranking[top25Position - 1]],
+            stations,
+          )[0]
+          return {
+            meta: presentation(
+              editorialMeta({
+                editorial,
+                station: matched.station,
+                playable: Boolean(
+                  matched.station?.urlResolved || matched.station?.url,
+                ),
+              }),
+            ),
+          }
+        }
         const item = radiosEmDestaque.items.find(
           (entry) => `radio-br:editorial:${entry.id}` === args.id,
         )
@@ -39,6 +64,21 @@ function editorialMeta(
   item: ReturnType<typeof resolveEditorialStations>[number],
 ) {
   const { editorial, playable } = item
+  const editorialDescription = [
+    editorial.frequency,
+    editorial.city
+      ? `Cidade: ${link(editorial.city, 'cidades', editorial.city)}`
+      : undefined,
+    editorial.state
+      ? `Estado: ${link(editorial.state, 'estados', editorial.state)}`
+      : undefined,
+    editorial.category
+      ? `Gênero: ${link(editorial.category, 'generos', editorial.category)}`
+      : undefined,
+    playable ? 'Disponível para reprodução' : 'Indisponível para reprodução',
+  ]
+    .filter(Boolean)
+    .join('\n')
   return {
     id: `radio-br:editorial:${editorial.id}`,
     type: 'tv',
@@ -49,29 +89,12 @@ function editorialMeta(
           posterShape: 'square',
         }
       : {}),
-    description: [
-      editorial.frequency,
-      editorial.city && editorial.state
-        ? `${editorial.city}/${editorial.state}`
-        : 'Rede nacional',
-      editorial.category,
-      playable ? 'Disponível para reprodução' : 'Indisponível para reprodução',
-    ]
-      .filter(Boolean)
-      .join(' · '),
+    description: editorialDescription,
     ...(editorial.websiteUrl ? { website: editorial.websiteUrl } : {}),
   }
 }
 export function stationMeta(station: Station) {
-  const details = [
-    station.state,
-    station.language,
-    station.tags.length ? `tags: ${station.tags.join(', ')}` : undefined,
-    station.codec,
-    station.bitrate ? `${station.bitrate} kbps` : undefined,
-  ]
-    .filter(Boolean)
-    .join(' · ')
+  const description = stationDescription(station)
   return {
     id: station.id,
     type: 'tv',
@@ -79,7 +102,75 @@ export function stationMeta(station: Station) {
     ...(station.favicon
       ? { poster: station.favicon, posterShape: 'square' }
       : {}),
-    ...(details ? { description: details } : {}),
+    ...(description ? { description } : {}),
     ...(station.homepage ? { website: station.homepage } : {}),
   }
+}
+
+const genericGenreTags = new Set([
+  'am',
+  'ao vivo',
+  'br',
+  'brasil',
+  'brazil',
+  'brazilian',
+  'estacao',
+  'estacao de radio',
+  'fm',
+  'live',
+  'online',
+  'radio',
+  'radio fm',
+  'radios',
+  'station',
+  'stations',
+  'tv',
+  'web radio',
+  'webradio',
+])
+
+function slug(value: string): string {
+  return normalizeTag(value).replace(/\s+/g, '-')
+}
+
+function link(label: string, section: string, value: string): string {
+  return `[${label}](https://radiosbrasil.com.br/${section}/${slug(value)}/)`
+}
+
+function displayGenre(tag: string): string {
+  const value = tag.trim()
+  return value
+    ? `${value[0].toLocaleUpperCase('pt-BR')}${value.slice(1)}`
+    : value
+}
+
+export function stationDescription(station: Station): string {
+  const lines: string[] = []
+  if (station.city)
+    lines.push(`Cidade: ${link(station.city, 'cidades', station.city)}`)
+  if (station.state)
+    lines.push(`Estado: ${link(station.state, 'estados', station.state)}`)
+
+  const genres = station.tags.filter((tag) => {
+    const normalized = normalizeTag(tag)
+    return normalized && !genericGenreTags.has(normalized)
+  })
+  const uniqueGenres = [
+    ...new Map(genres.map((tag) => [normalizeTag(tag), tag])).values(),
+  ]
+  if (uniqueGenres.length)
+    lines.push(
+      `Gênero: ${uniqueGenres
+        .map((tag) => link(displayGenre(tag), 'generos', tag))
+        .join(', ')}`,
+    )
+
+  const format = [
+    station.codec,
+    station.bitrate ? `${station.bitrate} kbps` : undefined,
+  ]
+    .filter(Boolean)
+    .join(' · ')
+  if (format) lines.push(`Formato: ${format}`)
+  return lines.join('\n')
 }

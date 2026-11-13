@@ -31,6 +31,7 @@ export function normalizeStation(raw: RadioBrowserStation): Station | null {
     favicon: raw.favicon || undefined,
     homepage: raw.homepage || undefined,
     countryCode: 'BR',
+    city: raw.city || undefined,
     state: raw.state || undefined,
     language: raw.language || undefined,
     tags,

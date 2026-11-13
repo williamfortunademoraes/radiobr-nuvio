@@ -12,7 +12,7 @@ Exemplo de corpo:
 ```json
 {
   "v": 1,
-  "c": ["featured"],
+  "c": ["editorial"],
   "g": ["sertanejo", "gospel"],
   "s": ["RJ", "SP"],
   "o": { "logos": false }
@@ -32,7 +32,7 @@ Pelo menos uma coleção ou gênero é obrigatório. Estados vazios significam a
 
 `:config` é `encodeURIComponent(JSON.stringify(config))`, formato nativo do SDK 1.6.10. O prefixo acompanha todos os recursos. Configuração inválida retorna 400 antes do SDK; catálogo desativado retorna `{ "metas": [] }`.
 
-Catálogos: `radios-em-destaque`, `radio-br-featured`, `radio-br-catalog`, `radio-br-news`, `radio-br-sports`, `radio-br-nogenero`, `radio-br-genre`, `radio-br-genre-{genreId}`, `radio-br-region-{uf-minúscula}`. Veja opções efetivas no manifesto.
+Catálogos: `radios-em-destaque`, `radio-br-catalog`, `radio-br-news-sports`, `radio-br-outros`, `radio-br-genre`, `radio-br-genre-{genreId}`, `radio-br-region-{uf-minúscula}`. Veja opções efetivas no manifesto.
 
 Extras são um único segmento, por exemplo `/catalog/tv/radio-br-genre/genre=Sertanejo&search=prova.json`. Valores devem ser percent-encoded. Não usar vários segmentos ou presumir que `?search=` seja lido pelo SDK.
 

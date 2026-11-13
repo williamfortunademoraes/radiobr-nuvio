@@ -53,8 +53,8 @@ describe('tag classification', () => {
   it.each([
     ['sertanejo', 'sertanejo'],
     ['sertanejo universitário', 'sertanejo'],
-    ['pagode brasileiro', 'pagode'],
-    ['samba brasileiro', 'samba'],
+    ['pagode brasileiro', 'samba-pagode'],
+    ['samba brasileiro', 'samba-pagode'],
     ['classic rock', 'rock'],
     ['rock nacional', 'rock'],
     ['música gospel', 'gospel'],
@@ -64,10 +64,10 @@ describe('tag classification', () => {
     ['eletrônica', 'eletronica'],
     ['electronic', 'eletronica'],
     ['dance', 'eletronica'],
-    ['notícias', 'noticias'],
-    ['news', 'noticias'],
-    ['esportes', 'esportes'],
-    ['futebol', 'esportes'],
+    ['notícias', 'noticias-esportes'],
+    ['news', 'noticias-esportes'],
+    ['esportes', 'noticias-esportes'],
+    ['futebol', 'noticias-esportes'],
     ['music', 'musica'],
   ])('classifies %s as %s', (tag, genre) => {
     expect(classifyTags(tag)).toEqual([genre])
@@ -107,19 +107,16 @@ describe('tag classification', () => {
 describe('genre catalog metadata', () => {
   it('exposes the thirteen categories in canonical order', () => {
     expect(GENRE_NAMES).toEqual([
-      'Notícias',
-      'Esportes',
+      'Notícias e esportes',
       'Música',
       'Sertanejo',
-      'Pagode',
-      'Samba',
+      'Samba e pagode',
       'Rock',
       'Gospel',
       'Pop',
       'MPB',
       'Música eletrônica',
-      'Outros gêneros identificados',
-      'Gênero não informado',
+      'Outros gêneros',
     ])
     expect(genreName('eletronica')).toBe('Música eletrônica')
   })
@@ -128,9 +125,7 @@ describe('genre catalog metadata', () => {
     expect(resolveGenre('Sertanejo')).toBe('sertanejo')
     expect(resolveGenre('Música eletrônica')).toBe('eletronica')
     expect(resolveGenre('musica eletronica')).toBe('eletronica')
-    expect(resolveGenre('Outros gêneros identificados')).toBe('outros')
-    expect(resolveGenre('Gênero não informado')).toBe('nao-informado')
-    expect(resolveGenre('nao-informado')).toBe('nao-informado')
+    expect(resolveGenre('Outros gêneros')).toBe('outros')
     expect(resolveGenre('Inexistente')).toBeUndefined()
   })
 })

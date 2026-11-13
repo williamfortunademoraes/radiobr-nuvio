@@ -25,13 +25,13 @@ describe('addon handlers', () => {
       ((await addon.get('catalog', 'tv', 'radio-br-catalog', {})) as any).metas,
     ).toHaveLength(1)
     expect(
-      ((await addon.get('catalog', 'tv', 'radio-br-featured', {})) as any)
+      ((await addon.get('catalog', 'tv', 'radios-em-destaque', {})) as any)
         .metas,
-    ).toHaveLength(1)
+    ).toHaveLength(25)
     expect(
       (
         (await addon.get('catalog', 'tv', 'radio-br-genre', {
-          genre: 'Notícias',
+          genre: 'Notícias e esportes',
         })) as any
       ).metas,
     ).toHaveLength(1)

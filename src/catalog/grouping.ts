@@ -20,11 +20,11 @@ export function groupStationsByGenre(
   ) as GenreGroups
 
   for (const station of stations) {
-    const { genres, hasIdentifiableTag } = classifyStationTags(station.tags)
+    const { genres } = classifyStationTags(station.tags)
     if (genres.length > 0) {
       for (const genre of genres) groups[genre].push(station)
     } else {
-      groups[hasIdentifiableTag ? 'outros' : 'nao-informado'].push(station)
+      groups.outros.push(station)
     }
   }
 

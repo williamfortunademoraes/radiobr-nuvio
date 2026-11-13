@@ -8,9 +8,10 @@ import {
   type AddonConfig,
 } from '../config/addon-config.js'
 import { groupStationsByGenre } from './grouping.js'
-import { rankFeaturedStations } from './ranking.js'
 import { radiosEmDestaque } from '../editorial/radios-em-destaque.js'
-import { resolveEditorialStations } from '../editorial/resolve.js'
+import { matchTop25Editorial } from '../editorial/top-25-match.js'
+import { top25Ranking } from '../editorial/top-25-ranking.js'
+import { REGIONS, stationRegion } from './geography.js'
 
 export interface CatalogArgs {
   type: string
@@ -31,32 +32,6 @@ export function stationPreview(
     ...(showLogos && (station.favicon || fallbackPoster)
       ? { poster: station.favicon || fallbackPoster, posterShape: 'square' }
       : {}),
-  }
-}
-
-function editorialPreview(
-  item: ReturnType<typeof resolveEditorialStations>[number],
-  showLogos = true,
-) {
-  return {
-    id: `radio-br:editorial:${item.editorial.id}`,
-    type: 'tv',
-    name: item.editorial.name,
-    ...(showLogos && (item.editorial.logoUrl || item.station?.favicon)
-      ? {
-          poster: item.editorial.logoUrl || item.station?.favicon,
-          posterShape: 'square',
-        }
-      : {}),
-    description: [
-      item.editorial.city && item.editorial.state
-        ? `${item.editorial.city}/${item.editorial.state}`
-        : 'Rede nacional',
-      item.editorial.category,
-      item.playable
-        ? 'Disponível para reprodução'
-        : 'Indisponível para reprodução',
-    ].join(' · '),
   }
 }
 
@@ -95,11 +70,15 @@ export function createCatalogService(
       if (args.id === 'radios-em-destaque') {
         if (!catalogAllowed(args.id, config)) return { metas: [] }
         if (!radiosEmDestaque.enabled) return { metas: [] }
-        const stations = await client.searchStations()
+        const stations =
+          typeof client.searchAllStations === 'function'
+            ? await client.searchAllStations()
+            : await client.searchStations()
         const matchesState = stateFilter(config.s)
         const search = args.extra?.search?.trim().toLocaleLowerCase('pt-BR')
+        const matched = matchTop25Editorial(top25Ranking, stations)
         return {
-          metas: resolveEditorialStations(radiosEmDestaque.items, stations)
+          metas: matched
             .filter(
               (item) =>
                 !config.s.length ||
@@ -108,17 +87,35 @@ export function createCatalogService(
             .filter(
               (item) =>
                 !search ||
-                item.editorial.name.toLocaleLowerCase('pt-BR').includes(search),
+                item.ranking.name.toLocaleLowerCase('pt-BR').includes(search),
             )
-            .map((item) => editorialPreview(item, config.o.logos)),
+            .map((item) => ({
+              id: `radio-br:editorial:top25-${item.ranking.position}`,
+              type: 'tv' as const,
+              name: item.ranking.name,
+              ...(config.o.logos && item.station?.favicon
+                ? { poster: item.station.favicon, posterShape: 'square' }
+                : {}),
+              description: [
+                item.ranking.location,
+                `${item.ranking.visits.toLocaleString('pt-BR')} visitas`,
+                item.matchStatus === 'matched'
+                  ? 'Disponível para reprodução'
+                  : 'Indisponível para reprodução',
+              ].join(' · '),
+            })),
         }
       }
       if (!catalogAllowed(args.id, config)) return { metas: [] }
 
-      const stations = await client.searchStations({
-        search: args.extra?.search,
-        offset: args.extra?.skip ?? 0,
-      })
+      const search = args.extra?.search
+      const skip = args.extra?.skip ?? 0
+      const stations =
+        args.id === 'radio-br-catalog' &&
+        !search?.trim() &&
+        typeof client.searchAllStations === 'function'
+          ? (await client.searchAllStations()).slice(skip, skip + 100)
+          : await client.searchStations({ search, offset: skip })
 
       const matchesState = stateFilter(config.s)
       const preview = (station: Station) =>
@@ -133,6 +130,16 @@ export function createCatalogService(
           : { metas: [] }
       }
 
+      const regionId = REGIONS.find(
+        (region) => args.id === `radio-br-region-${region.id}`,
+      )?.id
+      if (regionId)
+        return {
+          metas: stations
+            .filter((station) => stationRegion(station) === regionId)
+            .map(preview),
+        }
+
       const region = args.id.match(/^radio-br-region-([a-z]{2})$/)?.[1]
       if (region)
         return {
@@ -145,29 +152,19 @@ export function createCatalogService(
         }
 
       switch (args.id) {
-        case 'radio-br-featured':
-          return {
-            metas: rankFeaturedStations(stations.filter(matchesState)).map(
-              preview,
-            ),
-          }
-
         case 'radio-br-catalog':
           return { metas: stations.filter(matchesState).map(preview) }
 
-        case 'radio-br-news':
+        case 'radio-br-news-sports': {
+          const newsSports = grouped()['noticias-esportes']
           return {
-            metas: grouped().noticias.filter(matchesState).map(preview),
+            metas: newsSports.filter(matchesState).map(preview),
           }
+        }
 
-        case 'radio-br-sports':
+        case 'radio-br-outros':
           return {
-            metas: grouped().esportes.filter(matchesState).map(preview),
-          }
-
-        case 'radio-br-nogenero':
-          return {
-            metas: grouped()['nao-informado'].filter(matchesState).map(preview),
+            metas: grouped().outros.filter(matchesState).map(preview),
           }
 
         case 'radio-br-genre': {

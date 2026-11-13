@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { createCatalogService } from '../../src/catalog/catalog.js'
+import { buildCatalogs, defaultConfig } from '../../src/config/addon-config.js'
 import type { Station } from '../../src/stations/types.js'
 import { validStation } from '../fixtures/station.js'
 
@@ -8,6 +9,7 @@ function station(
   name: string,
   tags: string[],
   clickcount = 0,
+  state?: string,
 ): Station {
   return {
     id: `radio-br:${uuid}`,
@@ -17,6 +19,7 @@ function station(
     url: `https://example.test/${uuid}.mp3`,
     urlResolved: `https://example.test/${uuid}-resolved.mp3`,
     countryCode: 'BR',
+    state,
     tags,
     clickcount,
     hls: false,
@@ -50,6 +53,57 @@ function client() {
 }
 
 describe('catalog', () => {
+  it('declares five region catalogs and all state catalogs', () => {
+    const ids = buildCatalogs(defaultConfig()).map((catalog) => catalog.id)
+    expect(ids.filter((id) => id.startsWith('radio-br-region-'))).toHaveLength(
+      32,
+    )
+    expect(ids).toEqual(
+      expect.arrayContaining([
+        'radio-br-region-norte',
+        'radio-br-region-nordeste',
+        'radio-br-region-centro-oeste',
+        'radio-br-region-sudeste',
+        'radio-br-region-sul',
+        'radio-br-region-rj',
+      ]),
+    )
+  })
+
+  it('returns exactly the 25 ordered editorial ranking entries', async () => {
+    const result = await createCatalogService(client()).getCatalog({
+      type: 'tv',
+      id: 'radios-em-destaque',
+    })
+    expect(result.metas).toHaveLength(25)
+    expect(result.metas[0].name).toContain('Gaúcha')
+    expect(result.metas[24].name).toContain('Liberdade')
+  })
+
+  it('filters region and state catalogs using explicit state data', async () => {
+    const result = await createCatalogService({
+      searchStations: vi
+        .fn()
+        .mockResolvedValue([
+          station(
+            '44444444-4444-4444-8444-444444444444',
+            'Rádio Rio',
+            ['rock'],
+            5,
+            'RJ',
+          ),
+          station(
+            '55555555-5555-4555-8555-555555555555',
+            'Rádio Norte',
+            ['rock'],
+            4,
+            'AM',
+          ),
+        ]),
+    } as never).getCatalog({ type: 'tv', id: 'radio-br-region-sudeste' })
+    expect(result.metas.map((meta) => meta.name)).toEqual(['Rádio Rio'])
+  })
+
   it('generates a TV preview and forwards search/pagination', async () => {
     const searchStations = vi
       .fn()
@@ -86,12 +140,13 @@ describe('catalog', () => {
     ])
   })
 
-  it('preserves the featured catalog ranking', async () => {
+  it('returns the consolidated news and sports catalog', async () => {
     const result = await createCatalogService(client()).getCatalog({
       type: 'tv',
-      id: 'radio-br-featured',
+      id: 'radio-br-news-sports',
+      config: { ...defaultConfig(), c: ['news-sports'] },
     })
-    expect(result.metas[0].id).toBe(sertanejo.id)
+    expect(result.metas.map((meta) => meta.id)).toEqual([noticias.id])
   })
 
   it('returns all stations when the genre catalog has no filter', async () => {
@@ -127,7 +182,7 @@ describe('catalog', () => {
     const result = await createCatalogService(radio).getCatalog({
       type: 'tv',
       id: 'radio-br-genre',
-      extra: { genre: 'Notícias', search: 'prova' },
+      extra: { genre: 'Notícias e esportes', search: 'prova' },
     })
     expect(result.metas.map((meta) => meta.name)).toEqual(['Rádio Notícias'])
     expect(

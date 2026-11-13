@@ -53,7 +53,11 @@ for (const width of [390, 1440]) {
     expect(response.status()).toBe(200)
     const manifest = await response.json()
     expect(manifest.catalogs.map((c: { id: string }) => c.id)).toEqual([
-      'radio-br-featured',
+      'radio-br-region-norte',
+      'radio-br-region-nordeste',
+      'radio-br-region-centro-oeste',
+      'radio-br-region-sudeste',
+      'radio-br-region-sul',
       'radio-br-genre',
       'radio-br-genre-sertanejo',
       'radio-br-genre-gospel',
@@ -88,7 +92,7 @@ test('empty selection is rejected and stale installation is hidden after editing
   await page.locator('#generate-addon').click()
   await expect(page.locator('#result')).toBeVisible()
   await page.locator('[data-step-target="1"]').click()
-  for (const id of ['editorial', 'featured', 'all'])
+  for (const id of ['editorial', 'all'])
     await page
       .locator(`input[name="collections"][value="${id}"]`)
       .locator('..')
