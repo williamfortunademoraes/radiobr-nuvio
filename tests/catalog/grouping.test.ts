@@ -30,7 +30,6 @@ describe('grouping by genre', () => {
   it.each([
     ['news', 'noticias-esportes'],
     ['esportes', 'noticias-esportes'],
-    ['music', 'musica'],
     ['sertanejo', 'sertanejo'],
     ['pagode', 'samba-pagode'],
     ['samba', 'samba-pagode'],
@@ -67,7 +66,6 @@ describe('grouping by genre', () => {
       'sertanejo',
     ])
     const groups = groupStationsByGenre([broad, specific])
-    expect(groups.musica).toEqual([broad])
     expect(groups.sertanejo).toEqual([specific])
   })
 

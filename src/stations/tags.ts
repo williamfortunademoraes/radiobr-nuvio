@@ -22,17 +22,6 @@ export const genreDefinitions = [
     ],
   },
   {
-    id: 'musica',
-    name: 'Música',
-    aliases: [
-      'music',
-      'musica',
-      'musical',
-      'musica variada',
-      'variedades musicais',
-    ],
-  },
-  {
     id: 'sertanejo',
     name: 'Sertanejo',
     aliases: [

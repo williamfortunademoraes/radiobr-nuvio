@@ -68,7 +68,6 @@ describe('tag classification', () => {
     ['news', 'noticias-esportes'],
     ['esportes', 'noticias-esportes'],
     ['futebol', 'noticias-esportes'],
-    ['music', 'musica'],
   ])('classifies %s as %s', (tag, genre) => {
     expect(classifyTags(tag)).toEqual([genre])
   })
@@ -108,7 +107,6 @@ describe('genre catalog metadata', () => {
   it('exposes the thirteen categories in canonical order', () => {
     expect(GENRE_NAMES).toEqual([
       'Notícias e esportes',
-      'Música',
       'Sertanejo',
       'Samba e pagode',
       'Rock',
