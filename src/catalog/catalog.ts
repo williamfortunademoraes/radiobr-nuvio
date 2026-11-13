@@ -15,6 +15,28 @@ import { REGIONS, stationRegion } from './geography.js'
 import type { EnrichmentSnapshot } from '../enrichment/snapshot.js'
 import { applySnapshot } from '../enrichment/resolve.js'
 
+const curatedEditorialLogos: Record<string, string> = {
+  'Rádio Bandeirantes 107.3 FM': 'bandeirantes-107-3.jfif',
+  'Super Rádio Tupi 96.5 FM': 'tupi-96-5.png',
+  'Rádio Itatiaia 610 AM 95.7 FM': 'itatiaia-610-am-95-7.jpg',
+  'Rádio Jovem Pan News': 'jovem-pan-news.png',
+  'Rádio CBN São Paulo 90.5 FM': 'cbn-sao-paulo-90-5.png',
+  'Rádio Antena 1 94.7 FM': 'antena-1-94-7.png',
+  'Radio Saudade 99.7 FM': 'saudade-99-7.png',
+  'Rádio Nativa 95.3 FM': 'nativa-95-3.png',
+  'Rádio FM O Dia 100.5': 'fm-o-dia-100-5.png',
+}
+
+function curatedEditorialPoster(
+  name: string,
+  basePoster?: string,
+): string | undefined {
+  const file = curatedEditorialLogos[name]
+  return file && basePoster
+    ? new URL(`/assets/logos/stations/${file}`, basePoster).href
+    : undefined
+}
+
 export interface CatalogArgs {
   type: string
   id: string
@@ -104,9 +126,18 @@ export function createCatalogService(
               id: `radio-br:editorial:top25-${item.ranking.position}`,
               type: 'tv' as const,
               name: item.ranking.name,
-              ...(config.o.logos && (item.station?.favicon || fallbackPoster)
+              ...(config.o.logos &&
+              (curatedEditorialPoster(item.ranking.name, fallbackPoster) ||
+                item.station?.favicon ||
+                fallbackPoster)
                 ? {
-                    poster: item.station?.favicon || fallbackPoster,
+                    poster:
+                      curatedEditorialPoster(
+                        item.ranking.name,
+                        fallbackPoster,
+                      ) ||
+                      item.station?.favicon ||
+                      fallbackPoster,
                     posterShape: 'square',
                   }
                 : {}),

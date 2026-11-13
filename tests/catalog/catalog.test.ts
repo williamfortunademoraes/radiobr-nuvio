@@ -102,6 +102,23 @@ describe('catalog', () => {
     })
   })
 
+  it('uses the curated logo for a highlighted station when available', async () => {
+    const result = await createCatalogService(
+      client(),
+      'https://radio.example/assets/logo.png',
+    ).getCatalog({
+      type: 'tv',
+      id: 'radios-em-destaque',
+      config: defaultConfig(),
+    })
+
+    expect(result.metas[1]).toMatchObject({
+      poster:
+        'https://radio.example/assets/logos/stations/bandeirantes-107-3.jfif',
+      posterShape: 'square',
+    })
+  })
+
   it('filters region and state catalogs using explicit state data', async () => {
     const result = await createCatalogService({
       searchStations: vi
