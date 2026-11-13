@@ -27,10 +27,11 @@ describe('metadata', () => {
       poster: station.favicon,
     })
     const description = (result.meta as { description?: string }).description!
+    expect(description.split('\n')[0]).toBe('A rádio que informa você')
     expect(description).toContain('Cidade: Rio de Janeiro')
     expect(description).toContain('Estado: SP')
     expect(description).toContain('Gênero: Notícias e esportes')
-    expect(description).toContain('Slogan: A rádio que informa você')
+    expect(description).not.toContain('Slogan:')
     expect(description).not.toContain('https://')
     expect(description).not.toContain('portuguese')
     expect(description).not.toContain('Brasil')
@@ -42,7 +43,7 @@ describe('metadata', () => {
     ).resolves.toEqual({ meta: {} })
   })
 
-  it('shows a Portuguese fallback when the station has no slogan', () => {
+  it('omits the slogan line when the station has no slogan', () => {
     expect(
       stationDescription({
         ...validStation,
@@ -53,7 +54,25 @@ describe('metadata', () => {
         countryCode: 'BR',
         hls: false,
       }),
-    ).toContain('Slogan: Não informado')
+    ).not.toContain('Slogan')
+  })
+
+  it('translates common English genre terms in the radio description', () => {
+    const description = stationDescription({
+      ...validStation,
+      id: `radio-br:${validStation.stationuuid}`,
+      stationUuid: validStation.stationuuid!,
+      name: 'Rádio com gêneros traduzidos',
+      tags: ['adult contemporary', 'smooth jazz', 'flashback', 'news'],
+      countryCode: 'BR',
+      hls: false,
+    })
+
+    expect(description).toContain(
+      'Gênero: Adulto contemporâneo, Jazz suave, Flashback, Notícias e esportes',
+    )
+    expect(description).not.toContain('adult contemporary')
+    expect(description).not.toContain('smooth jazz')
   })
 
   it('applies an optional enrichment snapshot without changing the station id', async () => {
@@ -95,9 +114,9 @@ describe('metadata', () => {
     expect((result.meta as { description?: string }).description).toContain(
       'Estado: RJ - Rio de Janeiro',
     )
-    expect((result.meta as { description?: string }).description).toContain(
-      'Slogan: A rádio atual',
-    )
+    const description = (result.meta as { description?: string }).description!
+    expect(description.split('\n')[0]).toBe('A rádio atual')
+    expect(description).not.toContain('Slogan:')
   })
 
   it('keeps editorial radio descriptions free of country wording', async () => {

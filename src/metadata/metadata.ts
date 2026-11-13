@@ -73,10 +73,10 @@ function editorialMeta(
 ) {
   const { editorial, playable } = item
   const editorialDescription = [
-    editorial.frequency,
-    editorial.city ? `Cidade: ${editorial.city}` : undefined,
-    editorial.state ? `Estado: ${editorial.state}` : undefined,
     item.station ? stationDescription(item.station) : undefined,
+    editorial.frequency,
+    !item.station && editorial.city ? `Cidade: ${editorial.city}` : undefined,
+    editorial.state ? `Estado: ${editorial.state}` : undefined,
     playable ? 'Disponível para reprodução' : 'Indisponível para reprodução',
   ]
     .filter(Boolean)
@@ -135,6 +135,19 @@ const translatedGenres: Record<string, string> = {
   'adult contemporary': 'Adulto contemporâneo',
   'smooth jazz': 'Jazz suave',
   jazz: 'Jazz',
+  flashback: 'Flashback',
+  oldies: 'Clássicos',
+  blues: 'Blues',
+  'classical music': 'Música clássica',
+  classical: 'Música clássica',
+  'folk music': 'Música folk',
+  folk: 'Música folk',
+  'hip hop': 'Hip hop',
+  'r and b': 'R&B',
+  reggae: 'Reggae',
+  lounge: 'Lounge',
+  ambient: 'Ambiente',
+  'world music': 'Música mundial',
 }
 
 function displayGenre(tag: string): string {
@@ -150,6 +163,7 @@ function displayGenre(tag: string): string {
 
 export function stationDescription(station: Station): string {
   const lines: string[] = []
+  if (station.slogan?.trim()) lines.push(station.slogan.trim())
   if (station.city) lines.push(`Cidade: ${station.city}`)
   if (station.state)
     lines.push(
@@ -172,8 +186,6 @@ export function stationDescription(station: Station): string {
   ]
   if (uniqueGenres.length)
     lines.push(`Gênero: ${uniqueGenres.map(displayGenre).join(', ')}`)
-
-  lines.push(`Slogan: ${station.slogan || 'Não informado'}`)
 
   const format = [
     station.codec,
