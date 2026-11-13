@@ -33,7 +33,9 @@ export function createMetadataService(
         if (args.type === 'tv') {
           const genre = args.id.match(/^radio-br-genre-(.+)$/)?.[1]
           if (genre) {
-            const definition = genreDefinitions.find((item) => item.id === genre)
+            const definition = genreDefinitions.find(
+              (item) => item.id === genre,
+            )
             if (definition)
               return {
                 meta: presentation({

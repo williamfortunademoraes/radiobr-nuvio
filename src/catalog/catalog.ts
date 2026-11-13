@@ -121,8 +121,12 @@ export function createCatalogService(
           metas: config.g.map((genre) => ({
             id: `radio-br-genre-${genre}`,
             type: 'tv' as const,
-            name: genreDefinitions.find((item) => item.id === genre)?.name ?? genre,
-            poster: new URL(genreCover(genre), fallbackPoster ?? 'http://127.0.0.1').href,
+            name:
+              genreDefinitions.find((item) => item.id === genre)?.name ?? genre,
+            poster: new URL(
+              genreCover(genre),
+              fallbackPoster ?? 'http://127.0.0.1',
+            ).href,
             posterShape: 'square' as const,
           })),
         }
@@ -132,7 +136,10 @@ export function createCatalogService(
             id: `radio-br-region-${region.id}`,
             type: 'tv' as const,
             name: region.name,
-            poster: new URL(regionCover(region.id), fallbackPoster ?? 'http://127.0.0.1').href,
+            poster: new URL(
+              regionCover(region.id),
+              fallbackPoster ?? 'http://127.0.0.1',
+            ).href,
             posterShape: 'square' as const,
           })),
         }
