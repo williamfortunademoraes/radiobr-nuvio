@@ -34,10 +34,31 @@ function normalize(value: string): string {
 }
 
 const curatedLogos: Record<string, string> = {
+  [normalize('Antena 1')]: 'antena-1-94-7.png',
+  [normalize('Rádio Antena 1 94.7 FM')]: 'antena-1-94-7.png',
+  [normalize('Rádio Bandeirantes')]: 'bandeirantes-107-3.jfif',
+  [normalize('Rádio Bandeirantes 107.3 FM')]: 'bandeirantes-107-3.jfif',
+  [normalize('CBN São Paulo')]: 'cbn-sao-paulo-90-5.png',
+  [normalize('Rádio CBN São Paulo 90.5 FM')]: 'cbn-sao-paulo-90-5.png',
+  [normalize('FM O Dia')]: 'fm-o-dia-100-5.png',
   [normalize('Rádio FM O Dia 100.5')]: 'fm-o-dia-100-5.png',
+  [normalize('Itatiaia')]: 'itatiaia-610-am-95-7.jpg',
+  [normalize('Rádio Itatiaia 610 AM 95.7 FM')]: 'itatiaia-610-am-95-7.jpg',
+  [normalize('Nativa')]: 'nativa-95-3.png',
   [normalize('Rádio Nativa 95.3 FM')]: 'nativa-95-3.png',
   [normalize('Rádio Jovem Pan News')]: 'jovem-pan-news.png',
   [normalize('Rádio Liberdade 92.9 FM')]: 'liberdade-92-9.png',
+  [normalize('Saudade')]: 'saudade-99-7.png',
+  [normalize('Radio Saudade 99.7 FM')]: 'saudade-99-7.png',
+  [normalize('Tupi')]: 'tupi-96-5.png',
+  [normalize('Super Rádio Tupi 96.5 FM')]: 'tupi-96-5.png',
+}
+
+function curatedLogoFor(stationName: string): string | undefined {
+  const name = normalize(stationName)
+  const exact = curatedLogos[name]
+  if (exact) return exact
+  return Object.entries(curatedLogos).find(([key]) => name.includes(key))?.[1]
 }
 
 async function candidateFromPage(
@@ -118,7 +139,7 @@ const result = await runEnrichment({
         })
       }
     }
-    const curated = curatedLogos[normalize(station.name)]
+    const curated = curatedLogoFor(station.name)
     if (curated && baseUrl) {
       const logo = new URL(`/assets/logos/stations/${curated}`, baseUrl).href
       candidates.push({

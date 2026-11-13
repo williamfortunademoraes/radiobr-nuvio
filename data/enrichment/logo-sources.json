@@ -1,5 +1,23 @@
 [
   {
+    "station": "Rádio Antena 1 94.7 FM",
+    "file": "assets/logos/stations/antena-1-94-7.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Bandeirantes 107.3 FM",
+    "file": "assets/logos/stations/bandeirantes-107-3.jfif",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio CBN São Paulo 90.5 FM",
+    "file": "assets/logos/stations/cbn-sao-paulo-90-5.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
     "station": "Rádio FM O Dia 100.5",
     "file": "assets/logos/stations/fm-o-dia-100-5.png",
     "source": "user",
@@ -12,15 +30,33 @@
     "reference": "Fornecido pelo usuário"
   },
   {
+    "station": "Rádio Itatiaia 610 AM 95.7 FM",
+    "file": "assets/logos/stations/itatiaia-610-am-95-7.jpg",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
     "station": "Rádio Jovem Pan News",
     "file": "assets/logos/stations/jovem-pan-news.png",
-    "source": "public",
-    "reference": "https://commons.wikimedia.org/wiki/File:Jovem_Pan_News_logo_2022.png"
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
   },
   {
     "station": "Rádio Liberdade 92.9 FM",
     "file": "assets/logos/stations/liberdade-92-9.png",
     "source": "official-website",
     "reference": "https://radioliberdade.com.br/"
+  },
+  {
+    "station": "Radio Saudade 99.7 FM",
+    "file": "assets/logos/stations/saudade-99-7.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Super Rádio Tupi 96.5 FM",
+    "file": "assets/logos/stations/tupi-96-5.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
   }
 ]
