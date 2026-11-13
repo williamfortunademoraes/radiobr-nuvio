@@ -379,49 +379,6 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
       extra: [searchExtra],
     })
 
-  catalogs.push({
-    type: 'tv' as const,
-    id: 'radio-br-region',
-    name: 'Rádios por região',
-    extra: [
-      {
-        name: 'region',
-        isRequired: false,
-        options: REGIONS.map((region) => region.name),
-      },
-      searchExtra,
-    ],
-  })
-
-  if (config.g.length)
-    catalogs.push({
-      type: 'tv',
-      id: 'radio-br-genre',
-      name: 'Rádios por gênero',
-      extra: [
-        {
-          name: 'genre',
-          isRequired: false,
-          options: config.g.map((genre) => genreName(genre)),
-        },
-        searchExtra,
-      ],
-    })
-
-  catalogs.push({
-    type: 'tv',
-    id: 'radio-br-state',
-    name: 'Rádios por estado',
-    extra: [
-      {
-        name: 'state',
-        isRequired: false,
-        options: config.s.length ? config.s : STATE_CODES,
-      },
-      searchExtra,
-    ],
-  })
-
   if (collections.has('all'))
     catalogs.push({
       type: 'tv',

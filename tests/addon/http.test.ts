@@ -40,19 +40,18 @@ it('serves both catalogs, genre filters, streams and PNG assets through the SDK 
     expect(manifest.catalogs.map((c: { id: string }) => c.id)).toEqual(
       expect.arrayContaining([
         'radios-em-destaque',
-        'radio-br-genre',
+        'radio-br-genre-sertanejo',
         'radio-br-catalog',
+        'radio-br-region-sudeste',
+      ]),
+    )
+    expect(manifest.catalogs.map((c: { id: string }) => c.id)).not.toEqual(
+      expect.arrayContaining([
+        'radio-br-genre',
         'radio-br-region',
         'radio-br-state',
       ]),
     )
-    const genreCatalog = manifest.catalogs.find(
-      (catalog: { id: string }) => catalog.id === 'radio-br-genre',
-    )
-    expect(genreCatalog?.extra?.[0]).toMatchObject({
-      name: 'genre',
-      options: expect.arrayContaining(['Sertanejo', 'Outros gêneros']),
-    })
     for (const [field, width, height] of [
       ['logo', 256, 256],
       ['background', 1600, 900],

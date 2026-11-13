@@ -114,19 +114,27 @@ it.each([
 it('rejects malformed percent encoding', async () => {
   expect((await fetch(base + '/%E0%A4%A/manifest.json')).status).toBe(400)
 })
-it('keeps default regional catalogs but restricts personalized states', () => {
-  expect(
-    buildCatalogs(defaultConfig()).filter((c) => c.id === 'radio-br-region'),
-  ).toHaveLength(1)
+it('keeps direct regional sources and includes only the selected genres', () => {
+  expect(buildCatalogs(defaultConfig()).map((c) => c.id)).toContain(
+    'radio-br-region-sudeste',
+  )
   const result = validateConfig(payload)
   if (!result.ok) throw new Error(result.error)
-  expect(buildCatalogs(result.config).map((c) => c.id)).toContain(
-    'radio-br-region',
+  const ids = buildCatalogs(result.config).map((c) => c.id)
+  expect(ids).toEqual(
+    expect.arrayContaining([
+      'radio-br-genre-sertanejo',
+      'radio-br-genre-gospel',
+    ]),
   )
-  expect(
-    buildCatalogs(result.config).find((c) => c.id === 'radio-br-state')
-      ?.extra?.[0],
-  ).toMatchObject({ name: 'state', options: ['RJ', 'SP'] })
+  expect(ids).not.toContain('radio-br-genre-rock')
+  expect(ids).not.toEqual(
+    expect.arrayContaining([
+      'radio-br-genre',
+      'radio-br-region',
+      'radio-br-state',
+    ]),
+  )
 })
 it('generates a canonical public URL and its dynamic manifest on the server', async () => {
   const response = await fetch(base + '/api/configuration', {

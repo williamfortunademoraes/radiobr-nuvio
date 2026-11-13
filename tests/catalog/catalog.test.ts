@@ -74,10 +74,15 @@ describe('catalog', () => {
     ])
   })
 
-  it('declares grouped region, state and genre catalogs', () => {
+  it('keeps only the direct genre and region collection sources in the manifest', () => {
     const ids = buildCatalogs(defaultConfig()).map((catalog) => catalog.id)
-    expect(ids.filter((id) => id === 'radio-br-region')).toHaveLength(1)
     expect(ids).toEqual(
+      expect.arrayContaining([
+        'radio-br-genre-sertanejo',
+        'radio-br-region-norte',
+      ]),
+    )
+    expect(ids).not.toEqual(
       expect.arrayContaining([
         'radio-br-region',
         'radio-br-state',

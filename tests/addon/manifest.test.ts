@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { manifest } from '../../src/addon/manifest.js'
-import { GENRE_NAMES } from '../../src/stations/tags.js'
 
 describe('RADIO BR manifest', () => {
   it('declares the stable addon identity and supported resources', () => {
@@ -14,20 +13,20 @@ describe('RADIO BR manifest', () => {
     expect(manifest.catalogs.map((catalog) => catalog.id)).toEqual(
       expect.arrayContaining([
         'radios-em-destaque',
-        'radio-br-genre',
+        'radio-br-genre-sertanejo',
+        'radio-br-region-sudeste',
         'radio-br-catalog',
       ]),
     )
   })
 
-  it('declares every genre category as a filter option', () => {
-    const genreCatalog = manifest.catalogs.find(
-      (catalog) => catalog.id === 'radio-br-genre',
+  it('exposes direct genre sources instead of the redundant genre filter catalog', () => {
+    expect(manifest.catalogs.map((catalog) => catalog.id)).toEqual(
+      expect.arrayContaining(['radio-br-genre-sertanejo']),
     )
-    expect(genreCatalog?.extra).toEqual([
-      { name: 'genre', isRequired: false, options: GENRE_NAMES },
-      { name: 'search', isRequired: false },
-    ])
+    expect(manifest.catalogs.map((catalog) => catalog.id)).not.toContain(
+      'radio-br-genre',
+    )
   })
 
   it('keeps the main collection names and puts the national catalog last', () => {
