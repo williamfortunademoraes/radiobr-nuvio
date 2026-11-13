@@ -53,6 +53,10 @@ export function resolveEnrichment(
   candidates: readonly ResolutionCandidate[],
   updatedAt = new Date().toISOString(),
 ): EnrichmentRecord {
+  const normalizedCandidates = candidates.map((candidate) => ({
+    ...candidate,
+    data: normalizeEnrichedData(candidate.data),
+  }))
   const existing = normalizeEnrichedData({
     name: station.name,
     city: station.city,
@@ -64,11 +68,11 @@ export function resolveEnrichment(
   })
   const data: EnrichmentRecord['data'] = { ...existing }
   const provenance: EnrichmentRecord['provenance'] = {}
-  const candidateFields = candidates.flatMap((candidate) =>
+  const candidateFields = normalizedCandidates.flatMap((candidate) =>
     fields(candidate.data),
   )
   for (const field of new Set([...fields(existing), ...candidateFields])) {
-    const selected = pick(field, candidates)
+    const selected = pick(field, normalizedCandidates)
     if (!selected) continue
     const value = selected.data[field as keyof typeof selected.data]
     if (value !== undefined) data[field as keyof typeof data] = value as never

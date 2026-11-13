@@ -9,13 +9,18 @@ import {
 import { RadioBrowserEnrichmentAdapter } from '../src/enrichment/sources/radio-browser.js'
 import { validateLogo } from '../src/enrichment/logo.js'
 import { runEnrichment } from '../src/enrichment/runner.js'
-import { writeEnrichmentSnapshot } from '../src/enrichment/storage.js'
+import {
+  loadEnrichmentSnapshot,
+  writeEnrichmentSnapshot,
+} from '../src/enrichment/storage.js'
 import { RadioBrowserClient } from '../src/radio-browser/client.js'
 import { matchTop25Editorial } from '../src/editorial/top-25-match.js'
 import { top25Ranking } from '../src/editorial/top-25-ranking.js'
+import type { EnrichmentFailure } from '../src/enrichment/types.js'
 
 const checkedAt = new Date().toISOString()
 const output = 'data/enrichment/stations.json'
+const previous = loadEnrichmentSnapshot(output)
 const baseUrl = process.env.ADDON_BASE_URL
 const http = new EnrichmentHttpClient(fetch, { retries: 2, backoffMs: 500 })
 const radioBrowser = new RadioBrowserEnrichmentAdapter()
@@ -76,8 +81,10 @@ const result = await runEnrichment({
   stations,
   now: checkedAt,
   concurrency: 3,
+  previous,
   lookup: async (station) => {
     const candidates = [radioBrowser.lookup(station, checkedAt)]
+    const failures: EnrichmentFailure[] = []
     const radiosUrl = radiosUrls.get(station.stationUuid)
     if (radiosUrl) {
       try {
@@ -85,7 +92,12 @@ const result = await runEnrichment({
           await candidateFromPage(radiosUrl, 'radios-com-br', parseRadiosComBr),
         )
       } catch {
-        // A source failure must not prevent the official-site fallback.
+        failures.push({
+          source: 'radios-com-br',
+          stationUuid: station.stationUuid,
+          url: radiosUrl,
+          error: 'Falha ao consultar Radios.com.br',
+        })
       }
     }
     if (station.homepage) {
@@ -98,7 +110,12 @@ const result = await runEnrichment({
           ),
         )
       } catch {
-        // A source failure is recorded by the next run/report layer.
+        failures.push({
+          source: 'official-website',
+          stationUuid: station.stationUuid,
+          url: station.homepage,
+          error: 'Falha ao consultar site oficial',
+        })
       }
     }
     const curated = curatedLogos[normalize(station.name)]
@@ -119,7 +136,7 @@ const result = await runEnrichment({
         checkedAt,
       })
     }
-    return candidates
+    return { candidates, failures }
   },
 })
 

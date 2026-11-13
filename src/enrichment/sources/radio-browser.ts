@@ -23,7 +23,6 @@ export class RadioBrowserEnrichmentAdapter {
       city: station.city,
       state: station.state,
       categories: station.tags.length ? station.tags : undefined,
-      logo: station.favicon,
     }
     const provenance = Object.fromEntries(
       Object.keys(data).map((field) => [

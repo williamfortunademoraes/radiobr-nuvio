@@ -1,13 +1,21 @@
 import { RadioBrowserEnrichmentAdapter } from './sources/radio-browser.js'
 import { resolveEnrichment, type ResolutionCandidate } from './resolve.js'
-import type { EnrichmentSnapshot } from './snapshot.js'
+import { mergeSnapshot, type EnrichmentSnapshot } from './snapshot.js'
+import type { EnrichmentFailure } from './types.js'
 import type { Station } from '../stations/types.js'
 
 export interface EnrichmentRunOptions {
   stations: readonly Station[]
-  lookup?: (station: Station) => Promise<readonly ResolutionCandidate[]>
+  lookup?: (station: Station) => Promise<
+    | readonly ResolutionCandidate[]
+    | {
+        candidates: readonly ResolutionCandidate[]
+        failures: EnrichmentFailure[]
+      }
+  >
   concurrency?: number
   now?: string
+  previous?: EnrichmentSnapshot
 }
 
 export interface EnrichmentRunReport {
@@ -37,9 +45,13 @@ export async function runEnrichment(
       const station = unique[index]
       if (!station) return
       try {
-        const candidates = options.lookup
+        const lookupResult = options.lookup
           ? await options.lookup(station)
           : [adapter.lookup(station, now)]
+        const candidates =
+          'candidates' in lookupResult ? lookupResult.candidates : lookupResult
+        if ('candidates' in lookupResult)
+          failures.push(...lookupResult.failures)
         records.push(resolveEnrichment(station, candidates, now))
       } catch (error) {
         records.push(resolveEnrichment(station, [], now))
@@ -65,13 +77,14 @@ export async function runEnrichment(
       `${right.stationUuid ?? ''}${right.source}`,
     ),
   )
+  const snapshot = mergeSnapshot(options.previous, {
+    version: 1,
+    generatedAt: now,
+    records,
+    failures,
+  })
   return {
-    snapshot: {
-      version: 1,
-      generatedAt: now,
-      records,
-      failures,
-    },
+    snapshot,
     processed: unique.length,
     failed: failures.length,
   }

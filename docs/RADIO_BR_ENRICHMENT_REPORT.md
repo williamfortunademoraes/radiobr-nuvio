@@ -37,7 +37,7 @@ Foram registrados os logos de FM O Dia, Nativa, Jovem Pan News e Liberdade. Logo
 
 Foram cobertos: retry, timeout, HTTP 403/404/429/5xx, parsing HTML/JSON-LD/Open Graph, identidade, UF, categorias, conflitos, preservação de IDs/streams, validação de logos, concorrência, falhas isoladas e idempotência.
 
-Última validação: 151 testes unitários aprovados, build TypeScript aprovado, ESLint aprovado e Prettier aprovado.
+Última validação: 153 testes unitários aprovados, build TypeScript aprovado, ESLint aprovado e Prettier aprovado.
 
 ## Limitações conhecidas
 
@@ -45,3 +45,4 @@ Foram cobertos: retry, timeout, HTTP 403/404/429/5xx, parsing HTML/JSON-LD/Open 
 - A fotografia do ranking Top 25 é a única parte que possui links Radios.com.br individuais já conhecidos; emissoras fora dela precisam de referências de busca adicionais.
 - O comando não contorna 403, autenticação, robots ou bloqueios; nesses casos o erro é preservado no snapshot e a coleta continua.
 - O snapshot gerado em `data/enrichment/stations.json` é ignorado pelo Git e deve ser atualizado pelo ambiente operacional.
+- O comando preserva campos verificados do snapshot anterior quando uma execução nova não encontra substituto melhor.

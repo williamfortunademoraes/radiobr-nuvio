@@ -62,6 +62,22 @@ describe('enrichment resolution', () => {
     expect(record.data.name).toBe('Rádio Atual')
   })
 
+  it('normalizes candidate values before applying them', () => {
+    const record = resolveEnrichment(station, [
+      {
+        source: 'official-website',
+        data: { state: 'Rio de Janeiro', categories: ['pop music'] },
+        provenance: {},
+        checkedAt: '2026-11-01T00:00:00.000Z',
+      },
+    ])
+    expect(record.data).toMatchObject({
+      state: 'RJ',
+      stateName: 'Rio de Janeiro',
+      categories: ['Pop'],
+    })
+  })
+
   it('applies enrichment without changing identity or stream URLs', () => {
     const result = applyEnrichment(station, {
       stationUuid: 'uuid',

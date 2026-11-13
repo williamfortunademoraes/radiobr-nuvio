@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { runEnrichment } from '../../src/enrichment/runner.js'
+import type { EnrichmentSnapshot } from '../../src/enrichment/snapshot.js'
 import type { Station } from '../../src/stations/types.js'
 
 const station = (uuid: string): Station => ({
@@ -62,5 +63,44 @@ describe('enrichment runner', () => {
 
     expect(maximum).toBeLessThanOrEqual(2)
     expect(result.processed).toBe(3)
+  })
+
+  it('keeps source-level failures returned by a station lookup', async () => {
+    const result = await runEnrichment({
+      stations: [station('a')],
+      lookup: async () => ({
+        candidates: [],
+        failures: [
+          { source: 'radios-com-br', stationUuid: 'a', error: 'HTTP 403' },
+        ],
+      }),
+    })
+
+    expect(result.snapshot.failures).toEqual([
+      { source: 'radios-com-br', stationUuid: 'a', error: 'HTTP 403' },
+    ])
+  })
+
+  it('preserves a previous verified field when a later run has no replacement', async () => {
+    const previous: EnrichmentSnapshot = {
+      version: 1,
+      generatedAt: '2026-11-11T00:00:00.000Z',
+      records: [
+        {
+          stationUuid: 'a',
+          data: { slogan: 'Slogan preservado' },
+          provenance: {},
+          updatedAt: '2026-11-11T00:00:00.000Z',
+        },
+      ],
+      failures: [],
+    }
+    const result = await runEnrichment({
+      stations: [station('a')],
+      previous,
+      lookup: async () => [],
+    })
+
+    expect(result.snapshot.records[0].data.slogan).toBe('Slogan preservado')
   })
 })

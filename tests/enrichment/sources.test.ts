@@ -106,8 +106,8 @@ describe('Radio Browser adapter', () => {
       city: 'Belém',
       state: 'PA',
       categories: ['popular', 'news'],
-      logo: 'https://radio.example/logo.png',
     })
+    expect(result.data.logo).toBeUndefined()
     expect(result.provenance.name?.source).toBe('radio-browser')
   })
 })
