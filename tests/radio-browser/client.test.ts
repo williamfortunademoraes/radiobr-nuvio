@@ -40,4 +40,42 @@ describe('Radio Browser client', () => {
       ).searchStations(),
     ).rejects.toThrow('invalid JSON')
   })
+
+  it('loads the complete directory in pages and deduplicates station IDs', async () => {
+    const page = Array.from({ length: 100 }, (_, index) => ({
+      ...validStation,
+      stationuuid: `00000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`,
+      name: `Rádio ${index + 1}`,
+      clickcount: 100 - index,
+    }))
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(response(page))
+      .mockResolvedValueOnce(
+        response([
+          {
+            ...validStation,
+            stationuuid: '00000000-0000-4000-8000-000000000101',
+            name: 'Rádio 101',
+            clickcount: 1,
+          },
+          page[0],
+        ]),
+      )
+    const client = new RadioBrowserClient(
+      {
+        radioBrowserBaseUrl: 'https://api.test',
+        userAgent: 'RADIO-BR/test',
+        cacheTtlMs: 1000,
+        port: 7000,
+      },
+      fetcher,
+    )
+
+    const stations = await client.searchAllStations()
+    expect(stations).toHaveLength(101)
+    expect(stations[0].clickcount).toBe(100)
+    expect(fetcher).toHaveBeenCalledTimes(2)
+    expect(fetcher.mock.calls[1][0] as string).toContain('offset=100')
+  })
 })

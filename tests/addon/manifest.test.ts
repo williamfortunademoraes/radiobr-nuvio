@@ -11,38 +11,11 @@ describe('RADIO BR manifest', () => {
       resources: ['catalog', 'meta', 'stream'],
       types: ['tv'],
     })
-    expect(manifest.catalogs).toEqual(
+    expect(manifest.catalogs.map((catalog) => catalog.id)).toEqual(
       expect.arrayContaining([
-        {
-          type: 'tv',
-          id: 'radio-br-genres',
-          name: 'Gêneros Musicais',
-          extra: expect.any(Array),
-        },
-        {
-          type: 'tv',
-          id: 'radio-br-regions',
-          name: 'Regiões',
-          extra: expect.any(Array),
-        },
-        {
-          type: 'tv',
-          id: 'radio-br-featured',
-          name: 'Rádios em destaque',
-          extra: expect.any(Array),
-        },
-        {
-          type: 'tv',
-          id: 'radio-br-genre',
-          name: 'Rádios por gênero',
-          extra: expect.any(Array),
-        },
-        {
-          type: 'tv',
-          id: 'radio-br-catalog',
-          name: 'Rádios do Brasil',
-          extra: expect.any(Array),
-        },
+        'radios-em-destaque',
+        'radio-br-genre',
+        'radio-br-catalog',
       ]),
     )
   })
@@ -55,5 +28,16 @@ describe('RADIO BR manifest', () => {
       { name: 'genre', isRequired: false, options: GENRE_NAMES },
       { name: 'search', isRequired: false },
     ])
+  })
+
+  it('keeps the main collection names and puts the national catalog last', () => {
+    expect(manifest.catalogs.slice(-1)[0]).toMatchObject({
+      id: 'radio-br-catalog',
+      name: 'Todas as rádios',
+    })
+    expect(manifest.catalogs[0]).toMatchObject({
+      id: 'radios-em-destaque',
+      name: 'Rádios em destaque',
+    })
   })
 })

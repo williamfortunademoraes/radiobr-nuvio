@@ -1,11 +1,15 @@
-import { GENRE_NAMES } from '../stations/tags.js'
-import { BRAZILIAN_REGIONS, BRAZILIAN_STATES } from '../stations/locations.js'
 import {
-  genreCatalogId,
-  regionCatalogId,
-  stateCatalogId,
-} from '../catalog/collections.js'
+  buildCatalogs,
+  defaultConfig,
+  type AddonConfig,
+} from '../config/addon-config.js'
 
+/**
+ * The `config` array is required by the official SDK to enable the
+ * `/:config?/manifest.json` routes. The real configuration experience is the
+ * RADIO BR wizard at `/personalizar` (also served at `/configure`), so this
+ * entry is only a compatibility hook for clients that inspect manifest.config.
+ */
 export const manifest = {
   id: 'com.williamfortuna.radio-br',
   version: '0.1.0',
@@ -14,69 +18,22 @@ export const manifest = {
     'RADIO BR reúne estações brasileiras com pesquisa, rádios em destaque, navegação por gênero e informações das emissoras para descobrir e reproduzir streams diretos no Nuvio.',
   resources: ['catalog', 'meta', 'stream'],
   types: ['tv'],
-  catalogs: [
+  catalogs: buildCatalogs(defaultConfig()),
+  config: [
     {
-      type: 'tv',
-      id: 'radio-br-genres',
-      name: 'Gêneros Musicais',
-      extra: [{ name: 'search', isRequired: false }],
+      key: 'perfil',
+      type: 'select',
+      title: 'Perfil de catálogos',
+      options: ['Completo'],
+      default: 'Completo',
     },
-    {
-      type: 'tv',
-      id: 'radio-br-regions',
-      name: 'Regiões',
-      extra: [{ name: 'search', isRequired: false }],
-    },
-    {
-      type: 'tv',
-      id: 'radio-br-featured',
-      name: 'Rádios em destaque',
-      extra: [{ name: 'search', isRequired: false }],
-    },
-    {
-      type: 'tv',
-      id: 'radio-br-genre',
-      name: 'Rádios por gênero',
-      extra: [
-        { name: 'genre', isRequired: false, options: [...GENRE_NAMES] },
-        { name: 'search', isRequired: false },
-      ],
-    },
-    {
-      type: 'tv',
-      id: 'radio-br-catalog',
-      name: 'Rádios do Brasil',
-      extra: [{ name: 'search', isRequired: false }],
-    },
-    ...GENRE_NAMES.slice(0, 18).map((name) => ({
-      type: 'tv' as const,
-      id: genreCatalogId(
-        name
-          .toLowerCase()
-          .normalize('NFKD')
-          .replace(/\p{M}/gu, '')
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '') as never,
-      ),
-      name: `Gênero — ${name}`,
-      extra: [{ name: 'search', isRequired: false }],
-    })),
-    ...BRAZILIAN_REGIONS.map(({ id, name }) => ({
-      type: 'tv' as const,
-      id: regionCatalogId(id),
-      name: `Região — ${name}`,
-      extra: [{ name: 'search', isRequired: false }],
-    })),
-    ...BRAZILIAN_STATES.map(({ id, name }) => ({
-      type: 'tv' as const,
-      id: stateCatalogId(id),
-      name: `Estado — ${name}`,
-      extra: [{ name: 'search', isRequired: false }],
-    })),
   ],
+  behaviorHints: {
+    configurable: true,
+  },
 } as const
 
-export function createManifest(baseUrl: string) {
+function validateBaseUrl(baseUrl: string): URL {
   const base = new URL(baseUrl)
   if (
     !['http:', 'https:'].includes(base.protocol) ||
@@ -84,8 +41,27 @@ export function createManifest(baseUrl: string) {
     base.password
   )
     throw new Error('ADDON_BASE_URL must be an HTTP(S) URL without credentials')
+  return base
+}
+
+export function createManifest(baseUrl: string, config?: AddonConfig) {
+  const base = validateBaseUrl(baseUrl)
+  const configured = config !== undefined
+
   return {
-    ...manifest,
+    id: manifest.id,
+    version: manifest.version,
+    name: manifest.name,
+    description: manifest.description,
+    resources: manifest.resources,
+    types: manifest.types,
+    catalogs: configured ? buildCatalogs(config) : manifest.catalogs,
+    ...(configured
+      ? {}
+      : {
+          config: manifest.config,
+          behaviorHints: manifest.behaviorHints,
+        }),
     logo: new URL('/assets/logo.png', base).href,
     background: new URL('/assets/background.png', base).href,
   }

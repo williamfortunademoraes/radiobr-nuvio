@@ -6,6 +6,21 @@ export default [
   { ignores: ['dist/**', 'node_modules/**'] },
   eslint.configs.recommended,
   {
+    files: ['assets/*.js'],
+    languageOptions: {
+      globals: Object.fromEntries(
+        [
+          'document',
+          'window',
+          'navigator',
+          'fetch',
+          'HTMLInputElement',
+          'Element',
+        ].map((name) => [name, 'readonly']),
+      ),
+    },
+  },
+  {
     files: ['**/*.ts'],
     languageOptions: {
       parser: tsParser,

@@ -28,19 +28,20 @@ function onlyGroup(groups: GenreGroups, genre: GenreId): Station[] {
 
 describe('grouping by genre', () => {
   it.each([
-    ['news', 'noticias'],
-    ['hip hop', 'hip-hop-rap'],
+    ['news', 'noticias-esportes'],
+    ['esportes', 'noticias-esportes'],
+    ['music', 'musica'],
     ['sertanejo', 'sertanejo'],
-    ['pagode', 'pagode'],
-    ['samba', 'samba'],
+    ['pagode', 'samba-pagode'],
+    ['samba', 'samba-pagode'],
     ['rock', 'rock'],
     ['gospel', 'gospel'],
     ['pop', 'pop'],
     ['mpb', 'mpb'],
     ['eletronica', 'eletronica'],
-    ['forró', 'forro'],
-    ['radio, live', 'nao-informado'],
-    ['', 'nao-informado'],
+    ['forró', 'outros'],
+    ['radio, live', 'outros'],
+    ['', 'outros'],
   ] as const)('places a station tagged %j in %s', (tag, genre) => {
     const item = station('11111111-1111-4111-8111-111111111111', [tag])
     const groups = groupStationsByGenre([item])
@@ -61,12 +62,12 @@ describe('grouping by genre', () => {
   })
 
   it('adds broad and specific genres only when both tags exist', () => {
-    const broad = station('33333333-3333-4333-8333-333333333333', ['pop'])
+    const broad = station('33333333-3333-4333-8333-333333333333', ['music'])
     const specific = station('44444444-4444-4444-8444-444444444444', [
       'sertanejo',
     ])
     const groups = groupStationsByGenre([broad, specific])
-    expect(groups.pop).toEqual([broad])
+    expect(groups.musica).toEqual([broad])
     expect(groups.sertanejo).toEqual([specific])
   })
 
@@ -86,7 +87,7 @@ describe('grouping by genre', () => {
       language: 'portuguese',
     })
     const groups = groupStationsByGenre([item])
-    expect(groups['nao-informado']).toEqual([item])
+    expect(groups.outros).toEqual([item])
     expect(groups.rock).toEqual([])
     expect(groups.sertanejo).toEqual([])
     expect(groups.gospel).toEqual([])

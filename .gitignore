@@ -3,3 +3,6 @@ dist/
 .env
 coverage/
 .superpowers/
+.playwright-cli/
+output/
+data/enrichment/stations.json

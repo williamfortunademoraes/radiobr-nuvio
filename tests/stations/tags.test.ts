@@ -53,8 +53,8 @@ describe('tag classification', () => {
   it.each([
     ['sertanejo', 'sertanejo'],
     ['sertanejo universitário', 'sertanejo'],
-    ['pagode brasileiro', 'pagode'],
-    ['samba brasileiro', 'samba'],
+    ['pagode brasileiro', 'samba-pagode'],
+    ['samba brasileiro', 'samba-pagode'],
     ['classic rock', 'rock'],
     ['rock nacional', 'rock'],
     ['música gospel', 'gospel'],
@@ -64,9 +64,11 @@ describe('tag classification', () => {
     ['eletrônica', 'eletronica'],
     ['electronic', 'eletronica'],
     ['dance', 'eletronica'],
-    ['notícias', 'noticias'],
-    ['news', 'noticias'],
-    ['hip hop', 'hip-hop-rap'],
+    ['notícias', 'noticias-esportes'],
+    ['news', 'noticias-esportes'],
+    ['esportes', 'noticias-esportes'],
+    ['futebol', 'noticias-esportes'],
+    ['music', 'musica'],
   ])('classifies %s as %s', (tag, genre) => {
     expect(classifyTags(tag)).toEqual([genre])
   })
@@ -80,7 +82,7 @@ describe('tag classification', () => {
   })
 
   it('returns no genre for unknown, generic or absent tags', () => {
-    expect(classifyTags('forró')).toEqual(['forro'])
+    expect(classifyTags('forró')).toEqual([])
     expect(classifyTags('radio, live, brasil, online')).toEqual([])
     expect(classifyTags('')).toEqual([])
     expect(classifyTags([])).toEqual([])
@@ -88,7 +90,7 @@ describe('tag classification', () => {
 
   it('distinguishes identifiable unknown tags from generic tags', () => {
     expect(classifyStationTags('forró')).toEqual({
-      genres: ['forro'],
+      genres: [],
       hasIdentifiableTag: true,
     })
     expect(classifyStationTags('radio, live, brasil')).toEqual({
@@ -103,34 +105,27 @@ describe('tag classification', () => {
 })
 
 describe('genre catalog metadata', () => {
-  it('exposes the eighteen requested categories in canonical order', () => {
-    expect(GENRE_NAMES.slice(0, 18)).toEqual([
+  it('exposes the thirteen categories in canonical order', () => {
+    expect(GENRE_NAMES).toEqual([
+      'Notícias e esportes',
+      'Música',
       'Sertanejo',
-      'Pop',
+      'Samba e pagode',
       'Rock',
-      'MPB',
-      'Eletrônica',
-      'Hip-Hop / Rap',
       'Gospel',
-      'Samba',
-      'Pagode',
-      'Forró',
-      'Axé',
-      'Funk',
-      'Jazz',
-      'Música Clássica',
-      'Reggae',
-      'Bossa Nova',
-      'Flashback',
-      'Notícias',
+      'Pop',
+      'MPB',
+      'Música eletrônica',
+      'Outros gêneros',
     ])
-    expect(genreName('eletronica')).toBe('Eletrônica')
+    expect(genreName('eletronica')).toBe('Música eletrônica')
   })
 
   it('resolves names and ids without accents or case sensitivity', () => {
     expect(resolveGenre('Sertanejo')).toBe('sertanejo')
     expect(resolveGenre('Música eletrônica')).toBe('eletronica')
     expect(resolveGenre('musica eletronica')).toBe('eletronica')
+    expect(resolveGenre('Outros gêneros')).toBe('outros')
     expect(resolveGenre('Inexistente')).toBeUndefined()
   })
 })

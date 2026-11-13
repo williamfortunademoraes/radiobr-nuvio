@@ -12,6 +12,12 @@ describe('station normalization', () => {
       urlResolved: validStation.url_resolved,
     })
   })
+  it('preserves an explicit city without inventing one', () => {
+    expect(
+      normalizeStation({ ...validStation, city: 'Rio de Janeiro' }),
+    ).toMatchObject({ city: 'Rio de Janeiro' })
+    expect(normalizeStation(validStation)?.city).toBeUndefined()
+  })
   it('rejects non-Brazilian, broken, and URL-less stations', () => {
     expect(normalizeStation({ ...validStation, countrycode: 'PT' })).toBeNull()
     expect(normalizeStation({ ...validStation, lastcheckok: 0 })).toBeNull()
