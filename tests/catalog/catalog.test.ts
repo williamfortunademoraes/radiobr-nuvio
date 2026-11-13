@@ -76,6 +76,18 @@ describe('catalog', () => {
     expect(result.metas[24].name).toContain('Liberdade')
   })
 
+  it('does not expose ranking visits on editorial radio cards', async () => {
+    const result = await createCatalogService(client()).getCatalog({
+      type: 'tv',
+      id: 'radios-em-destaque',
+      config: defaultConfig(),
+    })
+
+    expect(
+      (result.metas[0] as { description?: string }).description,
+    ).not.toContain('visitas')
+  })
+
   it('uses a square fallback poster for editorial cards without a logo', async () => {
     const result = await createCatalogService(
       client(),

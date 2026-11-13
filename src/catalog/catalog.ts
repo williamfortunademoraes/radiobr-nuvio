@@ -112,7 +112,6 @@ export function createCatalogService(
                 : {}),
               description: [
                 item.ranking.location,
-                `${item.ranking.visits.toLocaleString('pt-BR')} visitas`,
                 item.matchStatus === 'matched'
                   ? 'Disponível para reprodução'
                   : 'Indisponível para reprodução',
