@@ -34,12 +34,16 @@ const curatedEditorialLogos: Record<string, string> = {
   'Rádio Nativa 95.3 FM': 'nativa-95-3.png',
   'Rádio FM O Dia 100.5': 'fm-o-dia-100-5.png',
   'Rádio Liberdade 92.9 FM': 'liberdade-92-9.jpg',
+  'Rádio Aparecida 104.3 FM': 'aparecida-104-3.jpg',
+  'Rádio Jornal de Recife 90.3 FM': 'jornal-recife-90-3.jpg',
+  'Rádio Melodia 97.5 FM': 'melodia-97-5.png',
+  'Rádio TMC 100.1 FM': 'tmc-100-1.webp',
+  'Rádio Kiss FM 92.5': 'kiss-92-5.png',
+  'Rádio Flashback': 'flashback.png',
+  'Smooth Jazz Lounge Radio': 'smooth-jazz-lounge.jpg',
 }
 
-function curatedEditorialPoster(
-  name: string,
-  basePoster?: string,
-): string | undefined {
+function curatedPoster(name: string, basePoster?: string): string | undefined {
   const file = curatedEditorialLogos[name]
   return file && basePoster
     ? new URL(`/assets/logos/stations/${file}`, basePoster).href
@@ -64,12 +68,16 @@ export function stationPreview(
   showLogos = true,
   fallbackPoster?: string,
 ) {
+  const curatedPosterUrl = curatedPoster(station.name, fallbackPoster)
   return {
     id: station.id,
     type: 'tv',
     name: station.name,
-    ...(showLogos && (station.favicon || fallbackPoster)
-      ? { poster: station.favicon || fallbackPoster, posterShape: 'square' }
+    ...(showLogos && (curatedPosterUrl || station.favicon || fallbackPoster)
+      ? {
+          poster: curatedPosterUrl || station.favicon || fallbackPoster,
+          posterShape: 'square',
+        }
       : {}),
   }
 }
@@ -136,15 +144,12 @@ export function createCatalogService(
               type: 'tv' as const,
               name: item.ranking.name,
               ...(config.o.logos &&
-              (curatedEditorialPoster(item.ranking.name, fallbackPoster) ||
+              (curatedPoster(item.ranking.name, fallbackPoster) ||
                 item.station?.favicon ||
                 fallbackPoster)
                 ? {
                     poster:
-                      curatedEditorialPoster(
-                        item.ranking.name,
-                        fallbackPoster,
-                      ) ||
+                      curatedPoster(item.ranking.name, fallbackPoster) ||
                       item.station?.favicon ||
                       fallbackPoster,
                     posterShape: 'square',
