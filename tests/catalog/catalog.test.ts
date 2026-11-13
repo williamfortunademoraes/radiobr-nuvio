@@ -135,6 +135,30 @@ describe('catalog', () => {
     })
   })
 
+  it('uses improved curated logos for the other highlighted stations', async () => {
+    const result = await createCatalogService(
+      client(),
+      'https://radio.example/assets/logo.png',
+    ).getCatalog({
+      type: 'tv',
+      id: 'radios-em-destaque',
+      config: defaultConfig(),
+    })
+
+    expect(result.metas[7]).toMatchObject({
+      poster: 'https://radio.example/assets/logos/stations/grenal-95-9.png',
+    })
+    expect(result.metas[10]).toMatchObject({
+      poster: 'https://radio.example/assets/logos/stations/band-96-1.png',
+    })
+    expect(result.metas[12]).toMatchObject({
+      poster: 'https://radio.example/assets/logos/stations/jb-fm-99-9.png',
+    })
+    expect(result.metas[16]).toMatchObject({
+      poster: 'https://radio.example/assets/logos/stations/radio-89-rock.webp',
+    })
+  })
+
   it('filters region and state catalogs using explicit state data', async () => {
     const result = await createCatalogService({
       searchStations: vi

@@ -24,6 +24,30 @@
     "reference": "Fornecido pelo usuário"
   },
   {
+    "station": "Rádio Band 96.1 FM",
+    "file": "assets/logos/stations/band-96-1.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Grenal 95.9 FM",
+    "file": "assets/logos/stations/grenal-95-9.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio JB FM 99.9",
+    "file": "assets/logos/stations/jb-fm-99-9.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio 89 FM Rádio Rock",
+    "file": "assets/logos/stations/radio-89-rock.webp",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
     "station": "Rádio FM O Dia 100.5",
     "file": "assets/logos/stations/fm-o-dia-100-5.png",
     "source": "user",
