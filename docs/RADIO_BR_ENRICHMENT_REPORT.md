@@ -37,7 +37,7 @@ Foram registrados os logos de FM O Dia, Nativa, Jovem Pan News e Liberdade. Logo
 
 Foram cobertos: retry, timeout, HTTP 403/404/429/5xx, parsing HTML/JSON-LD/Open Graph, identidade, UF, categorias, conflitos, preservação de IDs/streams, validação de logos, concorrência, falhas isoladas e idempotência.
 
-Última validação: 153 testes unitários aprovados, build TypeScript aprovado, ESLint aprovado e Prettier aprovado.
+Última validação: 154 testes unitários aprovados, build TypeScript aprovado, ESLint aprovado e Prettier aprovado.
 
 ## Limitações conhecidas
 
