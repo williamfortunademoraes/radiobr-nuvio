@@ -1,5 +1,47 @@
 [
   {
+    "station": "Rádio Aparecida 104.3 FM",
+    "file": "assets/logos/stations/aparecida-104-3.jpg",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Jornal de Recife 90.3 FM",
+    "file": "assets/logos/stations/jornal-recife-90-3.jpg",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Melodia 97.5 FM",
+    "file": "assets/logos/stations/melodia-97-5.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio TMC 100.1 FM",
+    "file": "assets/logos/stations/tmc-100-1.webp",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Kiss FM 92.5",
+    "file": "assets/logos/stations/kiss-92-5.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Flashback",
+    "file": "assets/logos/stations/flashback.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Smooth Jazz Lounge Radio",
+    "file": "assets/logos/stations/smooth-jazz-lounge.jpg",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
     "station": "Rádio Gaúcha 93.7 FM",
     "file": "assets/logos/stations/gaucha-93-7.png",
     "source": "user",
