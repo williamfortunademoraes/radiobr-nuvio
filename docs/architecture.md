@@ -8,6 +8,8 @@
 
 `catalog`, `metadata` e `streams` transformam o modelo interno nos contratos do protocolo. O catálogo `radio-br-genre` usa o mesmo `searchStations` dos catálogos geral e de destaque e filtra localmente, sem consulta adicional por gênero. O filtro chega em `args.extra.genre`; sem filtro, o catálogo mostra a coleção completa.
 
+As coleções `radio-br-genres` e `radio-br-regions` fornecem cards com capas locais. IDs `radio-br-genre-<id>`, `radio-br-region-<id>` e `radio-br-state-<uf>` resolvem, respectivamente, rádios por gênero, estados de uma região e rádios de um estado. Gêneros usam apenas aliases explícitos de tags; localização usa somente `state` normalizado para as 27 UFs.
+
 `addon` compõe esses serviços com `addonBuilder` do `stremio-addon-sdk` 1.6.10. O cliente recebe `fetch` e cache por injeção, permitindo testes sem rede.
 
 `server` compõe Express com `getRouter` oficial. A página própria (`web/pages`, `assets/site.css`, `assets/personalizar.js`) é parte do addon. O SDK 1.6.10 usa `manifest.config` para habilitar `/:config?` e entrega JSON decodificado em `args.config`. `behaviorHints.configurable` anuncia configuração ao cliente. `serveHTTP` não oferece manifesto dinâmico: o servidor intercepta os manifests e mantém os recursos no roteador oficial.
