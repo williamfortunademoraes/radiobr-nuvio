@@ -360,14 +360,19 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
       extra: [searchExtra],
     })
 
-  catalogs.push(
-    ...REGIONS.map((region) => ({
-      type: 'tv' as const,
-      id: `radio-br-region-${region.id}`,
-      name: `Rádios da região ${region.name}`,
-      extra: [searchExtra],
-    })),
-  )
+  catalogs.push({
+    type: 'tv' as const,
+    id: 'radio-br-region',
+    name: 'Rádios por região',
+    extra: [
+      {
+        name: 'region',
+        isRequired: false,
+        options: REGIONS.map((region) => region.name),
+      },
+      searchExtra,
+    ],
+  })
 
   if (config.g.length)
     catalogs.push({
@@ -384,25 +389,19 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
       ],
     })
 
-  if (config.g.length)
-    catalogs.push(
-      ...config.g.map((genre) => ({
-        type: 'tv' as const,
-        id: `radio-br-genre-${genre}`,
-        name: genreName(genre),
-        extra: [searchExtra],
-      })),
-    )
-
-  if (STATE_CODES.length)
-    catalogs.push(
-      ...(config.s.length ? config.s : STATE_CODES).map((state) => ({
-        type: 'tv' as const,
-        id: `radio-br-region-${state.toLowerCase()}`,
-        name: `Rádios da região — ${state}`,
-        extra: [searchExtra],
-      })),
-    )
+  catalogs.push({
+    type: 'tv',
+    id: 'radio-br-state',
+    name: 'Rádios por estado',
+    extra: [
+      {
+        name: 'state',
+        isRequired: false,
+        options: config.s.length ? config.s : STATE_CODES,
+      },
+      searchExtra,
+    ],
+  })
 
   if (collections.has('all'))
     catalogs.push({
@@ -418,6 +417,7 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
 export function catalogAllowed(id: string, config: AddonConfig): boolean {
   if (id.startsWith('radio-br-genre-'))
     return config.g.some((genre) => id === `radio-br-genre-${genre}`)
+  if (id === 'radio-br-region' || id === 'radio-br-state') return true
   if (REGIONS.some((region) => id === `radio-br-region-${region.id}`))
     return true
   if (id.startsWith('radio-br-region-'))

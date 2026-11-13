@@ -53,19 +53,14 @@ function client() {
 }
 
 describe('catalog', () => {
-  it('declares five region catalogs and all state catalogs', () => {
+  it('declares grouped region, state and genre catalogs', () => {
     const ids = buildCatalogs(defaultConfig()).map((catalog) => catalog.id)
-    expect(ids.filter((id) => id.startsWith('radio-br-region-'))).toHaveLength(
-      32,
-    )
+    expect(ids.filter((id) => id === 'radio-br-region')).toHaveLength(1)
     expect(ids).toEqual(
       expect.arrayContaining([
-        'radio-br-region-norte',
-        'radio-br-region-nordeste',
-        'radio-br-region-centro-oeste',
-        'radio-br-region-sudeste',
-        'radio-br-region-sul',
-        'radio-br-region-rj',
+        'radio-br-region',
+        'radio-br-state',
+        'radio-br-genre',
       ]),
     )
   })
@@ -102,6 +97,43 @@ describe('catalog', () => {
         ]),
     } as never).getCatalog({ type: 'tv', id: 'radio-br-region-sudeste' })
     expect(result.metas.map((meta) => meta.name)).toEqual(['Rádio Rio'])
+  })
+
+  it('filters grouped region and state catalogs with extras', async () => {
+    const radio = createCatalogService({
+      searchStations: vi
+        .fn()
+        .mockResolvedValue([
+          station(
+            '66666666-6666-4666-8666-666666666666',
+            'Rádio Rio',
+            ['rock'],
+            5,
+            'RJ',
+          ),
+          station(
+            '77777777-7777-4777-8777-777777777777',
+            'Rádio Norte',
+            ['rock'],
+            4,
+            'AM',
+          ),
+        ]),
+    } as never)
+    await expect(
+      radio.getCatalog({
+        type: 'tv',
+        id: 'radio-br-region',
+        extra: { region: 'Sudeste' },
+      }),
+    ).resolves.toMatchObject({ metas: [{ name: 'Rádio Rio' }] })
+    await expect(
+      radio.getCatalog({
+        type: 'tv',
+        id: 'radio-br-state',
+        extra: { state: 'AM' },
+      }),
+    ).resolves.toMatchObject({ metas: [{ name: 'Rádio Norte' }] })
   })
 
   it('generates a TV preview and forwards search/pagination', async () => {

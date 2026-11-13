@@ -42,8 +42,8 @@ it('serves both catalogs, genre filters, streams and PNG assets through the SDK 
         'radios-em-destaque',
         'radio-br-genre',
         'radio-br-catalog',
-        'radio-br-genre-sertanejo',
-        'radio-br-region-sp',
+        'radio-br-region',
+        'radio-br-state',
       ]),
     )
     const genreCatalog = manifest.catalogs.find(

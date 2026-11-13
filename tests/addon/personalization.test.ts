@@ -116,25 +116,17 @@ it('rejects malformed percent encoding', async () => {
 })
 it('keeps default regional catalogs but restricts personalized states', () => {
   expect(
-    buildCatalogs(defaultConfig()).filter((c) =>
-      c.id.startsWith('radio-br-region-'),
-    ),
-  ).toHaveLength(32)
+    buildCatalogs(defaultConfig()).filter((c) => c.id === 'radio-br-region'),
+  ).toHaveLength(1)
   const result = validateConfig(payload)
   if (!result.ok) throw new Error(result.error)
+  expect(buildCatalogs(result.config).map((c) => c.id)).toContain(
+    'radio-br-region',
+  )
   expect(
-    buildCatalogs(result.config)
-      .filter((c) => c.id.startsWith('radio-br-region-'))
-      .map((c) => c.id),
-  ).toEqual([
-    'radio-br-region-norte',
-    'radio-br-region-nordeste',
-    'radio-br-region-centro-oeste',
-    'radio-br-region-sudeste',
-    'radio-br-region-sul',
-    'radio-br-region-rj',
-    'radio-br-region-sp',
-  ])
+    buildCatalogs(result.config).find((c) => c.id === 'radio-br-state')
+      ?.extra?.[0],
+  ).toMatchObject({ name: 'state', options: ['RJ', 'SP'] })
 })
 it('generates a canonical public URL and its dynamic manifest on the server', async () => {
   const response = await fetch(base + '/api/configuration', {

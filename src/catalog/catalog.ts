@@ -16,7 +16,13 @@ import { REGIONS, stationRegion } from './geography.js'
 export interface CatalogArgs {
   type: string
   id: string
-  extra?: { search?: string; skip?: number; genre?: string }
+  extra?: {
+    search?: string
+    skip?: number
+    genre?: string
+    region?: string
+    state?: string
+  }
   config?: unknown
 }
 
@@ -128,6 +134,40 @@ export function createCatalogService(
         return genre && config.g.includes(genre)
           ? { metas: grouped()[genre].filter(matchesState).map(preview) }
           : { metas: [] }
+      }
+
+      if (args.id === 'radio-br-region') {
+        const requestedRegion = args.extra?.region
+          ?.trim()
+          .toLocaleLowerCase('pt-BR')
+        const regionId = REGIONS.find(
+          (region) =>
+            !requestedRegion ||
+            region.id === requestedRegion ||
+            region.name.toLocaleLowerCase('pt-BR') === requestedRegion,
+        )?.id
+        return {
+          metas: stations
+            .filter(
+              (station) => !regionId || stationRegion(station) === regionId,
+            )
+            .filter(matchesState)
+            .map(preview),
+        }
+      }
+
+      if (args.id === 'radio-br-state') {
+        const requestedState = normalizeState(args.extra?.state)
+        return {
+          metas: stations
+            .filter(
+              (station) =>
+                (!requestedState ||
+                  normalizeState(station.state) === requestedState) &&
+                matchesState(station),
+            )
+            .map(preview),
+        }
       }
 
       const regionId = REGIONS.find(

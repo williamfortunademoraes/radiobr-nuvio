@@ -53,16 +53,9 @@ for (const width of [390, 1440]) {
     expect(response.status()).toBe(200)
     const manifest = await response.json()
     expect(manifest.catalogs.map((c: { id: string }) => c.id)).toEqual([
-      'radio-br-region-norte',
-      'radio-br-region-nordeste',
-      'radio-br-region-centro-oeste',
-      'radio-br-region-sudeste',
-      'radio-br-region-sul',
+      'radio-br-region',
       'radio-br-genre',
-      'radio-br-genre-sertanejo',
-      'radio-br-genre-gospel',
-      'radio-br-region-rj',
-      'radio-br-region-sp',
+      'radio-br-state',
     ])
     expect(
       JSON.parse(await page.locator('#manifest-json').innerText()),
