@@ -53,6 +53,27 @@ function client() {
 }
 
 describe('catalog', () => {
+  it('exposes each genre as a collection of real stations, never collection cards', async () => {
+    const catalogIds = buildCatalogs(defaultConfig()).map(
+      (catalog) => catalog.id,
+    )
+    expect(catalogIds).toContain('radio-br-genre-sertanejo')
+    expect(catalogIds).not.toContain('radio-br-genres')
+
+    const result = await createCatalogService(client()).getCatalog({
+      type: 'tv',
+      id: 'radio-br-genre-sertanejo',
+    })
+
+    expect(result.metas).toEqual([
+      {
+        id: sertanejo.id,
+        type: 'tv',
+        name: 'Rádio Sertanejo',
+      },
+    ])
+  })
+
   it('declares grouped region, state and genre catalogs', () => {
     const ids = buildCatalogs(defaultConfig()).map((catalog) => catalog.id)
     expect(ids.filter((id) => id === 'radio-br-region')).toHaveLength(1)
@@ -97,7 +118,8 @@ describe('catalog', () => {
       id: 'radios-em-destaque',
     })
     expect(result.metas[6]).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/bandnews-sp-96-9.jpg',
+      poster:
+        'https://radio.example/assets/logos/stations/bandnews-sp-96-9.jpg',
       posterShape: 'square',
     })
   })

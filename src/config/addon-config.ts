@@ -344,19 +344,23 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
       extra: [searchExtra],
     })
 
+  // These catalogs are the sources that Nuvio places inside its collections.
+  // Do not return genre or region cards as `tv` metas: clicking a meta makes
+  // the client treat it as a live channel and request a stream for it. Each
+  // source below therefore returns only real radio stations.
   catalogs.push(
-    {
-      type: 'tv',
-      id: 'radio-br-genres',
-      name: 'Gêneros Musicais',
+    ...config.g.map((genre) => ({
+      type: 'tv' as const,
+      id: `radio-br-genre-${genre}`,
+      name: genreName(genre),
       extra: [searchExtra],
-    },
-    {
-      type: 'tv',
-      id: 'radio-br-regions',
-      name: 'Regiões',
+    })),
+    ...REGIONS.map((region) => ({
+      type: 'tv' as const,
+      id: `radio-br-region-${region.id}`,
+      name: region.name,
       extra: [searchExtra],
-    },
+    })),
   )
 
   if (collections.has('news-sports'))

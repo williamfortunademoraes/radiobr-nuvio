@@ -7,6 +7,14 @@ import { validStation } from '../fixtures/station.js'
 import { radiosEmDestaque } from '../../src/editorial/radios-em-destaque.js'
 import type { EnrichmentSnapshot } from '../../src/enrichment/snapshot.js'
 describe('metadata', () => {
+  it('does not manufacture a TV channel for a genre collection', async () => {
+    const result = await createMetadataService({
+      searchStations: vi.fn().mockResolvedValue([]),
+    } as never).getMetadata({ type: 'tv', id: 'radio-br-genre-sertanejo' })
+
+    expect(result).toEqual({ meta: {} })
+  })
+
   it('exposes available station details without inventing fields', async () => {
     const station = {
       ...validStation,

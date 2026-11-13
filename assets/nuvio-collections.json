@@ -1,0 +1,186 @@
+[
+  {
+    "id": "radio-br-generos-musicais",
+    "title": "Gêneros Musicais",
+    "viewMode": "FOLLOW_LAYOUT",
+    "showAllTab": false,
+    "folders": [
+      {
+        "id": "radio-br-genero-noticias-esportes",
+        "title": "Notícias e esportes",
+        "tileShape": "SQUARE",
+        "catalogSources": [
+          {
+            "addonId": "com.williamfortuna.radio-br",
+            "type": "tv",
+            "catalogId": "radio-br-genre-noticias-esportes"
+          }
+        ]
+      },
+      {
+        "id": "radio-br-genero-sertanejo",
+        "title": "Sertanejo",
+        "tileShape": "SQUARE",
+        "catalogSources": [
+          {
+            "addonId": "com.williamfortuna.radio-br",
+            "type": "tv",
+            "catalogId": "radio-br-genre-sertanejo"
+          }
+        ]
+      },
+      {
+        "id": "radio-br-genero-samba-pagode",
+        "title": "Samba e pagode",
+        "tileShape": "SQUARE",
+        "catalogSources": [
+          {
+            "addonId": "com.williamfortuna.radio-br",
+            "type": "tv",
+            "catalogId": "radio-br-genre-samba-pagode"
+          }
+        ]
+      },
+      {
+        "id": "radio-br-genero-rock",
+        "title": "Rock",
+        "tileShape": "SQUARE",
+        "catalogSources": [
+          {
+            "addonId": "com.williamfortuna.radio-br",
+            "type": "tv",
+            "catalogId": "radio-br-genre-rock"
+          }
+        ]
+      },
+      {
+        "id": "radio-br-genero-gospel",
+        "title": "Gospel",
+        "tileShape": "SQUARE",
+        "catalogSources": [
+          {
+            "addonId": "com.williamfortuna.radio-br",
+            "type": "tv",
+            "catalogId": "radio-br-genre-gospel"
+          }
+        ]
+      },
+      {
+        "id": "radio-br-genero-pop",
+        "title": "Pop",
+        "tileShape": "SQUARE",
+        "catalogSources": [
+          {
+            "addonId": "com.williamfortuna.radio-br",
+            "type": "tv",
+            "catalogId": "radio-br-genre-pop"
+          }
+        ]
+      },
+      {
+        "id": "radio-br-genero-mpb",
+        "title": "MPB",
+        "tileShape": "SQUARE",
+        "catalogSources": [
+          {
+            "addonId": "com.williamfortuna.radio-br",
+            "type": "tv",
+            "catalogId": "radio-br-genre-mpb"
+          }
+        ]
+      },
+      {
+        "id": "radio-br-genero-eletronica",
+        "title": "Música eletrônica",
+        "tileShape": "SQUARE",
+        "catalogSources": [
+          {
+            "addonId": "com.williamfortuna.radio-br",
+            "type": "tv",
+            "catalogId": "radio-br-genre-eletronica"
+          }
+        ]
+      },
+      {
+        "id": "radio-br-genero-outros",
+        "title": "Outros gêneros",
+        "tileShape": "SQUARE",
+        "catalogSources": [
+          {
+            "addonId": "com.williamfortuna.radio-br",
+            "type": "tv",
+            "catalogId": "radio-br-genre-outros"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "radio-br-por-regioes",
+    "title": "Por Regiões",
+    "viewMode": "FOLLOW_LAYOUT",
+    "showAllTab": false,
+    "folders": [
+      {
+        "id": "radio-br-regiao-norte",
+        "title": "Norte",
+        "tileShape": "SQUARE",
+        "catalogSources": [
+          {
+            "addonId": "com.williamfortuna.radio-br",
+            "type": "tv",
+            "catalogId": "radio-br-region-norte"
+          }
+        ]
+      },
+      {
+        "id": "radio-br-regiao-nordeste",
+        "title": "Nordeste",
+        "tileShape": "SQUARE",
+        "catalogSources": [
+          {
+            "addonId": "com.williamfortuna.radio-br",
+            "type": "tv",
+            "catalogId": "radio-br-region-nordeste"
+          }
+        ]
+      },
+      {
+        "id": "radio-br-regiao-centro-oeste",
+        "title": "Centro-Oeste",
+        "tileShape": "SQUARE",
+        "catalogSources": [
+          {
+            "addonId": "com.williamfortuna.radio-br",
+            "type": "tv",
+            "catalogId": "radio-br-region-centro-oeste"
+          }
+        ]
+      },
+      {
+        "id": "radio-br-regiao-sudeste",
+        "title": "Sudeste",
+        "tileShape": "SQUARE",
+        "catalogSources": [
+          {
+            "addonId": "com.williamfortuna.radio-br",
+            "type": "tv",
+            "catalogId": "radio-br-region-sudeste"
+          }
+        ]
+      },
+      {
+        "id": "radio-br-regiao-sul",
+        "title": "Sul",
+        "tileShape": "SQUARE",
+        "catalogSources": [
+          {
+            "addonId": "com.williamfortuna.radio-br",
+            "type": "tv",
+            "catalogId": "radio-br-region-sul"
+          }
+        ]
+      }
+    ]
+  }
+]

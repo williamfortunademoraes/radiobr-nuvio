@@ -8,9 +8,6 @@ import { top25Ranking } from '../editorial/top-25-ranking.js'
 import { resolveHandlerConfig } from '../config/addon-config.js'
 import type { EnrichmentSnapshot } from '../enrichment/snapshot.js'
 import { applySnapshot } from '../enrichment/resolve.js'
-import { genreDefinitions } from '../stations/tags.js'
-import { REGIONS } from '../catalog/geography.js'
-import { genreCover, regionCover, stateCover } from '../catalog/covers.js'
 
 export function createMetadataService(
   client: RadioBrowserClient,
@@ -29,50 +26,6 @@ export function createMetadataService(
         delete result.posterShape
         return result
       }
-      if (args.type !== 'tv' || !args.id.startsWith('radio-br:'))
-        if (args.type === 'tv') {
-          const genre = args.id.match(/^radio-br-genre-(.+)$/)?.[1]
-          if (genre) {
-            const definition = genreDefinitions.find(
-              (item) => item.id === genre,
-            )
-            if (definition)
-              return {
-                meta: presentation({
-                  id: args.id,
-                  type: 'tv',
-                  name: definition.name,
-                  poster: genreCover(definition.id),
-                  posterShape: 'square',
-                  description: `Rádios de ${definition.name}`,
-                }),
-              }
-          }
-          const region = args.id.match(/^radio-br-region-(.+)$/)?.[1]
-          const regionDefinition = REGIONS.find((item) => item.id === region)
-          if (regionDefinition)
-            return {
-              meta: presentation({
-                id: args.id,
-                type: 'tv',
-                name: regionDefinition.name,
-                poster: regionCover(regionDefinition.id),
-                posterShape: 'square',
-                description: `Rádios da região ${regionDefinition.name}`,
-              }),
-            }
-          const state = args.id.match(/^radio-br-region-([a-z]{2})$/)?.[1]
-          if (state)
-            return {
-              meta: presentation({
-                id: args.id,
-                type: 'tv',
-                name: state.toUpperCase(),
-                poster: stateCover(state),
-                posterShape: 'square',
-              }),
-            }
-        }
       if (args.type !== 'tv' || !args.id.startsWith('radio-br:'))
         return { meta: {} }
       const stations = applySnapshot(
