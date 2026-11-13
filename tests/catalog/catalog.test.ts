@@ -69,10 +69,25 @@ describe('catalog', () => {
     const result = await createCatalogService(client()).getCatalog({
       type: 'tv',
       id: 'radios-em-destaque',
+      config: defaultConfig(),
     })
     expect(result.metas).toHaveLength(25)
     expect(result.metas[0].name).toContain('Gaúcha')
     expect(result.metas[24].name).toContain('Liberdade')
+  })
+
+  it('uses a square fallback poster for editorial cards without a logo', async () => {
+    const result = await createCatalogService(
+      client(),
+      'https://radio.example/assets/logo.png',
+    ).getCatalog({
+      type: 'tv',
+      id: 'radios-em-destaque',
+    })
+    expect(result.metas[0]).toMatchObject({
+      poster: 'https://radio.example/assets/logo.png',
+      posterShape: 'square',
+    })
   })
 
   it('filters region and state catalogs using explicit state data', async () => {

@@ -99,8 +99,11 @@ export function createCatalogService(
               id: `radio-br:editorial:top25-${item.ranking.position}`,
               type: 'tv' as const,
               name: item.ranking.name,
-              ...(config.o.logos && item.station?.favicon
-                ? { poster: item.station.favicon, posterShape: 'square' }
+              ...(config.o.logos && (item.station?.favicon || fallbackPoster)
+                ? {
+                    poster: item.station?.favicon || fallbackPoster,
+                    posterShape: 'square',
+                  }
                 : {}),
               description: [
                 item.ranking.location,
