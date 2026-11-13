@@ -240,7 +240,7 @@ ${header('inicio')}
           </div>
           <div class="floating-card floating-card--one">
             <span class="floating-icon tone-violet">${icon('star')}</span>
-            <span><strong>Destaques</strong><small>Curadoria editorial</small></span>
+            <span><strong>Rádios em destaque</strong><small>Curadoria editorial</small></span>
           </div>
           <div class="floating-card floating-card--two">
             <span class="floating-icon tone-cyan">${icon('wave')}</span>
@@ -557,7 +557,7 @@ ${header('personalizar')}
             <h2>Resumo</h2>
           </div>
           <dl class="summary-list">
-            <div><dt>Coleções</dt><dd id="summary-collections">Destaques + Todas</dd></div>
+            <div><dt>Coleções</dt><dd id="summary-collections">Rádios em destaque + Todas</dd></div>
             <div><dt>Gêneros</dt><dd id="summary-genres">Nenhum</dd></div>
             <div><dt>Estados</dt><dd id="summary-states">Todos os estados</dd></div>
             <div><dt>Experiência</dt><dd id="summary-options">Logotipos visíveis</dd></div>

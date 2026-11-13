@@ -29,4 +29,15 @@ describe('RADIO BR manifest', () => {
       { name: 'search', isRequired: false },
     ])
   })
+
+  it('keeps the main collection names and puts the national catalog last', () => {
+    expect(manifest.catalogs.slice(-1)[0]).toMatchObject({
+      id: 'radio-br-catalog',
+      name: 'Todas as rádios',
+    })
+    expect(manifest.catalogs[0]).toMatchObject({
+      id: 'radios-em-destaque',
+      name: 'Rádios em destaque',
+    })
+  })
 })

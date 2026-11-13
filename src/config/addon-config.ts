@@ -26,8 +26,8 @@ export interface CollectionDefinition {
 export const COLLECTION_DEFINITIONS = [
   {
     id: 'editorial',
-    name: 'Destaques',
-    short: 'Destaques',
+    name: 'Rádios em destaque',
+    short: 'Rádios em destaque',
     description:
       'As 25 rádios mais bem posicionadas no ranking editorial nacional.',
     catalogId: 'radios-em-destaque',
@@ -35,7 +35,7 @@ export const COLLECTION_DEFINITIONS = [
   },
   {
     id: 'all',
-    name: 'Todas as rádios brasileiras',
+    name: 'Todas as rádios',
     short: 'Todas',
     description:
       'O catálogo completo com as estações brasileiras disponíveis na Radio Browser.',
@@ -340,7 +340,7 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
     catalogs.push({
       type: 'tv',
       id: 'radios-em-destaque',
-      name: 'Destaques',
+      name: 'Rádios em destaque',
       extra: [searchExtra],
     })
 

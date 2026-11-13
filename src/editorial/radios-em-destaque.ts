@@ -8,7 +8,7 @@ function locationParts(location: string): { city?: string; state?: string } {
 
 export const radiosEmDestaque: EditorialCollection = {
   id: 'radios-em-destaque',
-  name: 'Destaques',
+  name: 'Rádios em destaque',
   type: 'editorial',
   scope: 'national-and-regional',
   ordering: 'manual',
@@ -17,7 +17,7 @@ export const radiosEmDestaque: EditorialCollection = {
   items: top25Ranking.map((ranking) => ({
     id: `top25-${ranking.position}`,
     name: ranking.name,
-    category: 'Destaques',
+    category: 'Rádios em destaque',
     ...locationParts(ranking.location),
     sourceUrl: ranking.sourceUrl,
     websiteUrl: ranking.radiosComBrUrl,
