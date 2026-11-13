@@ -1,6 +1,6 @@
 import type { RadioBrowserClient } from '../radio-browser/client.js'
 import type { Station } from '../stations/types.js'
-import { normalizeTag } from '../stations/tags.js'
+import { classifyTags, genreName, normalizeTag } from '../stations/tags.js'
 import { radiosEmDestaque } from '../editorial/radios-em-destaque.js'
 import { resolveEditorialStations } from '../editorial/resolve.js'
 import { matchTop25Editorial } from '../editorial/top-25-match.js'
@@ -66,15 +66,9 @@ function editorialMeta(
   const { editorial, playable } = item
   const editorialDescription = [
     editorial.frequency,
-    editorial.city
-      ? `Cidade: ${link(editorial.city, 'cidades', editorial.city)}`
-      : undefined,
-    editorial.state
-      ? `Estado: ${link(editorial.state, 'estados', editorial.state)}`
-      : undefined,
-    editorial.category
-      ? `Gênero: ${link(editorial.category, 'generos', editorial.category)}`
-      : undefined,
+    editorial.city ? `Cidade: ${editorial.city}` : undefined,
+    editorial.state ? `Estado: ${editorial.state}` : undefined,
+    item.station ? stationDescription(item.station) : undefined,
     playable ? 'Disponível para reprodução' : 'Indisponível para reprodução',
   ]
     .filter(Boolean)
@@ -129,15 +123,17 @@ const genericGenreTags = new Set([
   'webradio',
 ])
 
-function slug(value: string): string {
-  return normalizeTag(value).replace(/\s+/g, '-')
-}
-
-function link(label: string, section: string, value: string): string {
-  return `[${label}](https://radiosbrasil.com.br/${section}/${slug(value)}/)`
+const translatedGenres: Record<string, string> = {
+  'adult contemporary': 'Adulto contemporâneo',
+  'smooth jazz': 'Jazz suave',
+  jazz: 'Jazz',
 }
 
 function displayGenre(tag: string): string {
+  const consolidated = classifyTags([tag])[0]
+  if (consolidated && consolidated !== 'outros') return genreName(consolidated)
+  const translated = translatedGenres[normalizeTag(tag)]
+  if (translated) return translated
   const value = tag.trim()
   return value
     ? `${value[0].toLocaleUpperCase('pt-BR')}${value.slice(1)}`
@@ -146,12 +142,15 @@ function displayGenre(tag: string): string {
 
 export function stationDescription(station: Station): string {
   const lines: string[] = []
-  if (station.city)
-    lines.push(`Cidade: ${link(station.city, 'cidades', station.city)}`)
-  if (station.state)
-    lines.push(`Estado: ${link(station.state, 'estados', station.state)}`)
+  if (station.city) lines.push(`Cidade: ${station.city}`)
+  if (station.state) lines.push(`Estado: ${station.state}`)
 
-  const genres = station.tags.filter((tag) => {
+  const tags: string[] = Array.isArray(station.tags)
+    ? station.tags
+    : String(station.tags)
+        .split(',')
+        .map((tag: string) => tag.trim())
+  const genres = tags.filter((tag) => {
     const normalized = normalizeTag(tag)
     return normalized && !genericGenreTags.has(normalized)
   })
@@ -159,11 +158,9 @@ export function stationDescription(station: Station): string {
     ...new Map(genres.map((tag) => [normalizeTag(tag), tag])).values(),
   ]
   if (uniqueGenres.length)
-    lines.push(
-      `Gênero: ${uniqueGenres
-        .map((tag) => link(displayGenre(tag), 'generos', tag))
-        .join(', ')}`,
-    )
+    lines.push(`Gênero: ${uniqueGenres.map(displayGenre).join(', ')}`)
+
+  lines.push(`Slogan: ${station.slogan || 'Não informado'}`)
 
   const format = [
     station.codec,

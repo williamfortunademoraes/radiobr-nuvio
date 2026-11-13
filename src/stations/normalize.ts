@@ -30,6 +30,7 @@ export function normalizeStation(raw: RadioBrowserStation): Station | null {
     urlResolved: raw.url_resolved,
     favicon: raw.favicon || undefined,
     homepage: raw.homepage || undefined,
+    slogan: raw.slogan || undefined,
     countryCode: 'BR',
     city: raw.city || undefined,
     state: raw.state || undefined,

@@ -9,6 +9,7 @@ export interface Station {
   urlResolved?: string
   favicon?: string
   homepage?: string
+  slogan?: string
   countryCode: 'BR'
   city?: string
   state?: string

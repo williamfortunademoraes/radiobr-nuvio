@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createMetadataService } from '../../src/metadata/metadata.js'
+import {
+  createMetadataService,
+  stationDescription,
+} from '../../src/metadata/metadata.js'
 import { validStation } from '../fixtures/station.js'
 import { radiosEmDestaque } from '../../src/editorial/radios-em-destaque.js'
 describe('metadata', () => {
@@ -11,6 +14,7 @@ describe('metadata', () => {
       countryCode: 'BR' as const,
       tags: ['news'],
       city: 'Rio de Janeiro',
+      slogan: 'A rádio que informa você',
       hls: false,
     }
     const result = await createMetadataService({
@@ -22,15 +26,11 @@ describe('metadata', () => {
       poster: station.favicon,
     })
     const description = (result.meta as { description?: string }).description!
-    expect(description).toContain(
-      'Cidade: [Rio de Janeiro](https://radiosbrasil.com.br/cidades/rio-de-janeiro/)',
-    )
-    expect(description).toContain(
-      'Estado: [SP](https://radiosbrasil.com.br/estados/sp/)',
-    )
-    expect(description).toContain(
-      'Gênero: [News](https://radiosbrasil.com.br/generos/news/)',
-    )
+    expect(description).toContain('Cidade: Rio de Janeiro')
+    expect(description).toContain('Estado: SP')
+    expect(description).toContain('Gênero: Notícias e esportes')
+    expect(description).toContain('Slogan: A rádio que informa você')
+    expect(description).not.toContain('https://')
     expect(description).not.toContain('portuguese')
     expect(description).not.toContain('Brasil')
     await expect(
@@ -39,6 +39,20 @@ describe('metadata', () => {
         id: 'bad',
       }),
     ).resolves.toEqual({ meta: {} })
+  })
+
+  it('shows a Portuguese fallback when the station has no slogan', () => {
+    expect(
+      stationDescription({
+        ...validStation,
+        id: `radio-br:${validStation.stationuuid}`,
+        stationUuid: validStation.stationuuid!,
+        name: 'Rádio sem slogan',
+        tags: ['pop'],
+        countryCode: 'BR',
+        hls: false,
+      }),
+    ).toContain('Slogan: Não informado')
   })
 
   it('keeps editorial radio descriptions free of country wording', async () => {
