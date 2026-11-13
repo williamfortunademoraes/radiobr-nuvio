@@ -1,37 +1,5 @@
 export const genreDefinitions = [
   {
-    id: 'noticias',
-    name: 'Notícias',
-    aliases: [
-      'news',
-      'noticia',
-      'noticias',
-      'jornalismo',
-      'jornalistico',
-      'journalism',
-      'talk',
-      'talk radio',
-      'spoken',
-      'spoken word',
-    ],
-  },
-  {
-    id: 'esportes',
-    name: 'Esportes',
-    aliases: ['sport', 'sports', 'esporte', 'esportes', 'futebol', 'football'],
-  },
-  {
-    id: 'musica',
-    name: 'Música',
-    aliases: [
-      'music',
-      'musica',
-      'musical',
-      'musica variada',
-      'variedades musicais',
-    ],
-  },
-  {
     id: 'sertanejo',
     name: 'Sertanejo',
     aliases: [
@@ -43,16 +11,7 @@ export const genreDefinitions = [
       'moda de viola',
     ],
   },
-  {
-    id: 'pagode',
-    name: 'Pagode',
-    aliases: ['pagode', 'pagode brasileiro'],
-  },
-  {
-    id: 'samba',
-    name: 'Samba',
-    aliases: ['samba', 'samba brasileiro', 'samba de raiz'],
-  },
+  { id: 'pop', name: 'Pop', aliases: ['pop', 'pop music', 'top 40', 'hits'] },
   {
     id: 'rock',
     name: 'Rock',
@@ -61,53 +20,59 @@ export const genreDefinitions = [
       'classic rock',
       'rock nacional',
       'hard rock',
-      'rock alternativo',
       'alternative',
-      'alternativo',
       'indie rock',
       'punk',
-      'punk rock',
     ],
   },
-  {
-    id: 'gospel',
-    name: 'Gospel',
-    aliases: [
-      'gospel',
-      'musica gospel',
-      'christian',
-      'cristao',
-      'crista',
-      'religious',
-      'religioso',
-      'religiosa',
-    ],
-  },
-  {
-    id: 'pop',
-    name: 'Pop',
-    aliases: ['pop', 'pop music', 'top 40', 'hits'],
-  },
-  {
-    id: 'mpb',
-    name: 'MPB',
-    aliases: ['mpb', 'musica popular brasileira'],
-  },
+  { id: 'mpb', name: 'MPB', aliases: ['mpb', 'musica popular brasileira'] },
   {
     id: 'eletronica',
-    name: 'Música eletrônica',
+    name: 'Eletrônica',
     aliases: [
       'eletronica',
+      'musica eletronica',
       'electronic',
-      'electronic music',
       'electronica',
       'dance',
-      'dance music',
       'edm',
       'house',
       'techno',
       'trance',
     ],
+  },
+  {
+    id: 'hip-hop-rap',
+    name: 'Hip-Hop / Rap',
+    aliases: ['hip hop', 'hip-hop', 'rap', 'hiphop'],
+  },
+  {
+    id: 'gospel',
+    name: 'Gospel',
+    aliases: ['gospel', 'musica gospel', 'christian', 'cristao', 'religious'],
+  },
+  { id: 'samba', name: 'Samba', aliases: ['samba', 'samba brasileiro'] },
+  { id: 'pagode', name: 'Pagode', aliases: ['pagode', 'pagode brasileiro'] },
+  { id: 'forro', name: 'Forró', aliases: ['forro', 'forro brasileiro'] },
+  { id: 'axe', name: 'Axé', aliases: ['axe', 'axe music'] },
+  { id: 'funk', name: 'Funk', aliases: ['funk', 'funk carioca', 'baile funk'] },
+  { id: 'jazz', name: 'Jazz', aliases: ['jazz'] },
+  {
+    id: 'classica',
+    name: 'Música Clássica',
+    aliases: ['classica', 'classical', 'musica classica'],
+  },
+  { id: 'reggae', name: 'Reggae', aliases: ['reggae', 'roots reggae'] },
+  { id: 'bossa-nova', name: 'Bossa Nova', aliases: ['bossa nova', 'bossa'] },
+  {
+    id: 'flashback',
+    name: 'Flashback',
+    aliases: ['flashback', 'oldies', 'nostalgia'],
+  },
+  {
+    id: 'noticias',
+    name: 'Notícias',
+    aliases: ['news', 'noticia', 'noticias', 'jornalismo', 'talk', 'spoken'],
   },
   { id: 'outros', name: 'Outros gêneros identificados', aliases: [] },
   { id: 'nao-informado', name: 'Gênero não informado', aliases: [] },
@@ -208,7 +173,8 @@ export function classifyTags(tags: string | readonly string[]): GenreId[] {
 }
 
 export function resolveGenre(value: string): GenreId | undefined {
-  return genreLookup.get(normalizeTag(value))
+  const normalized = normalizeTag(value)
+  return genreLookup.get(normalized) ?? aliasToGenres.get(normalized)?.[0]
 }
 
 export function genreName(id: GenreId): string {

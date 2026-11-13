@@ -4,6 +4,11 @@ import {
   type GenreId,
 } from '../stations/tags.js'
 import type { Station } from '../stations/types.js'
+import {
+  BRAZILIAN_STATES,
+  normalizeBrazilianState,
+  type StateId,
+} from '../stations/locations.js'
 
 export type GenreGroups = Record<GenreId, Station[]>
 
@@ -29,5 +34,23 @@ export function groupStationsByGenre(
   }
 
   groupingCache.set(stations, groups)
+  return groups
+}
+
+export type StateGroups = Record<StateId, Station[]>
+
+export function groupStationsByState(
+  stations: readonly Station[],
+): StateGroups {
+  const groups = Object.fromEntries(
+    BRAZILIAN_STATES.map(({ id }) => [id, [] as Station[]]),
+  ) as StateGroups
+  const seen = new Set<string>()
+  for (const station of stations) {
+    if (seen.has(station.stationUuid)) continue
+    const state = normalizeBrazilianState(station.state)
+    if (state) groups[state].push(station)
+    seen.add(station.stationUuid)
+  }
   return groups
 }

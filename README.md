@@ -7,7 +7,7 @@ Addon independente para Stremio e Nuvio que transforma o diretório público Rad
 ## O que o RADIO BR faz
 
 - Consulta estações brasileiras dinamicamente no Radio Browser.
-- Expõe os catálogos Rádios em destaque, Rádios por gênero e Rádios do Brasil, com pesquisa, metadados e streams pelo protocolo de addons do Stremio.
+- Expõe as coleções Gêneros Musicais e Regiões, navegação por estados, além de Rádios em destaque, Rádios por gênero e Rádios do Brasil, com pesquisa, metadados e streams pelo protocolo de addons do Stremio.
 - Classifica estações por gênero usando somente as tags reais da Radio Browser, com aliases explícitos e sem inferência por nome ou domínio.
 - Usa IDs estáveis derivados do `stationuuid`.
 - Mantém cache em memória com expiração configurável e reaproveita a mesma consulta entre os catálogos.

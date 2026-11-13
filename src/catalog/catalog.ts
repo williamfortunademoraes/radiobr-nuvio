@@ -2,6 +2,16 @@ import type { RadioBrowserClient } from '../radio-browser/client.js'
 import { resolveGenre } from '../stations/tags.js'
 import type { Station } from '../stations/types.js'
 import { groupStationsByGenre } from './grouping.js'
+import { groupStationsByState } from './grouping.js'
+import {
+  BRAZILIAN_REGIONS,
+  normalizeBrazilianState,
+} from '../stations/locations.js'
+import {
+  genreCollections,
+  regionCollections,
+  stateCollections,
+} from './collections.js'
 import { rankFeaturedStations } from './ranking.js'
 
 export interface CatalogArgs {
@@ -15,6 +25,11 @@ const catalogIds = [
   'radio-br-featured',
   'radio-br-genre',
 ] as const
+
+const isCollectionCatalog = (id: string) =>
+  id === 'radio-br-genres' ||
+  id === 'radio-br-regions' ||
+  /^radio-br-(genre|region|state)-/.test(id)
 
 export function stationPreview(station: Station) {
   return {
@@ -32,7 +47,8 @@ export function createCatalogService(client: RadioBrowserClient) {
     async getCatalog(args: CatalogArgs) {
       if (
         args.type !== 'tv' ||
-        !catalogIds.includes(args.id as (typeof catalogIds)[number])
+        (!catalogIds.includes(args.id as (typeof catalogIds)[number]) &&
+          !isCollectionCatalog(args.id))
       )
         return { metas: [] }
 
@@ -40,6 +56,30 @@ export function createCatalogService(client: RadioBrowserClient) {
         search: args.extra?.search,
         offset: args.extra?.skip ?? 0,
       })
+
+      if (args.id === 'radio-br-genres') return { metas: genreCollections() }
+      if (args.id === 'radio-br-regions') return { metas: regionCollections() }
+      const genreMatch = args.id.match(/^radio-br-genre-(.+)$/)
+      if (genreMatch) {
+        const genre = resolveGenre(genreMatch[1])
+        return genre
+          ? { metas: groupStationsByGenre(stations)[genre].map(stationPreview) }
+          : { metas: [] }
+      }
+      const regionMatch = args.id.match(/^radio-br-region-(.+)$/)
+      if (regionMatch) {
+        const region = BRAZILIAN_REGIONS.find(
+          (item) => item.id === regionMatch[1],
+        )
+        return region ? { metas: stateCollections(region.id) } : { metas: [] }
+      }
+      const stateMatch = args.id.match(/^radio-br-state-(.+)$/)
+      if (stateMatch) {
+        const state = normalizeBrazilianState(stateMatch[1])
+        return state
+          ? { metas: groupStationsByState(stations)[state].map(stationPreview) }
+          : { metas: [] }
+      }
 
       if (args.id === 'radio-br-featured')
         return { metas: rankFeaturedStations(stations).map(stationPreview) }

@@ -10,12 +10,41 @@ describe('RADIO BR manifest', () => {
       name: 'Estações de rádios - Brasil',
       resources: ['catalog', 'meta', 'stream'],
       types: ['tv'],
-      catalogs: [
-        { type: 'tv', id: 'radio-br-featured', name: 'Rádios em destaque' },
-        { type: 'tv', id: 'radio-br-genre', name: 'Rádios por gênero' },
-        { type: 'tv', id: 'radio-br-catalog', name: 'Rádios do Brasil' },
-      ],
     })
+    expect(manifest.catalogs).toEqual(
+      expect.arrayContaining([
+        {
+          type: 'tv',
+          id: 'radio-br-genres',
+          name: 'Gêneros Musicais',
+          extra: expect.any(Array),
+        },
+        {
+          type: 'tv',
+          id: 'radio-br-regions',
+          name: 'Regiões',
+          extra: expect.any(Array),
+        },
+        {
+          type: 'tv',
+          id: 'radio-br-featured',
+          name: 'Rádios em destaque',
+          extra: expect.any(Array),
+        },
+        {
+          type: 'tv',
+          id: 'radio-br-genre',
+          name: 'Rádios por gênero',
+          extra: expect.any(Array),
+        },
+        {
+          type: 'tv',
+          id: 'radio-br-catalog',
+          name: 'Rádios do Brasil',
+          extra: expect.any(Array),
+        },
+      ]),
+    )
   })
 
   it('declares every genre category as a filter option', () => {

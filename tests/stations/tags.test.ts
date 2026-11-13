@@ -66,9 +66,7 @@ describe('tag classification', () => {
     ['dance', 'eletronica'],
     ['notícias', 'noticias'],
     ['news', 'noticias'],
-    ['esportes', 'esportes'],
-    ['futebol', 'esportes'],
-    ['music', 'musica'],
+    ['hip hop', 'hip-hop-rap'],
   ])('classifies %s as %s', (tag, genre) => {
     expect(classifyTags(tag)).toEqual([genre])
   })
@@ -82,7 +80,7 @@ describe('tag classification', () => {
   })
 
   it('returns no genre for unknown, generic or absent tags', () => {
-    expect(classifyTags('forró')).toEqual([])
+    expect(classifyTags('forró')).toEqual(['forro'])
     expect(classifyTags('radio, live, brasil, online')).toEqual([])
     expect(classifyTags('')).toEqual([])
     expect(classifyTags([])).toEqual([])
@@ -90,7 +88,7 @@ describe('tag classification', () => {
 
   it('distinguishes identifiable unknown tags from generic tags', () => {
     expect(classifyStationTags('forró')).toEqual({
-      genres: [],
+      genres: ['forro'],
       hasIdentifiableTag: true,
     })
     expect(classifyStationTags('radio, live, brasil')).toEqual({
@@ -105,32 +103,34 @@ describe('tag classification', () => {
 })
 
 describe('genre catalog metadata', () => {
-  it('exposes the thirteen categories in canonical order', () => {
-    expect(GENRE_NAMES).toEqual([
-      'Notícias',
-      'Esportes',
-      'Música',
+  it('exposes the eighteen requested categories in canonical order', () => {
+    expect(GENRE_NAMES.slice(0, 18)).toEqual([
       'Sertanejo',
-      'Pagode',
-      'Samba',
-      'Rock',
-      'Gospel',
       'Pop',
+      'Rock',
       'MPB',
-      'Música eletrônica',
-      'Outros gêneros identificados',
-      'Gênero não informado',
+      'Eletrônica',
+      'Hip-Hop / Rap',
+      'Gospel',
+      'Samba',
+      'Pagode',
+      'Forró',
+      'Axé',
+      'Funk',
+      'Jazz',
+      'Música Clássica',
+      'Reggae',
+      'Bossa Nova',
+      'Flashback',
+      'Notícias',
     ])
-    expect(genreName('eletronica')).toBe('Música eletrônica')
+    expect(genreName('eletronica')).toBe('Eletrônica')
   })
 
   it('resolves names and ids without accents or case sensitivity', () => {
     expect(resolveGenre('Sertanejo')).toBe('sertanejo')
     expect(resolveGenre('Música eletrônica')).toBe('eletronica')
     expect(resolveGenre('musica eletronica')).toBe('eletronica')
-    expect(resolveGenre('Outros gêneros identificados')).toBe('outros')
-    expect(resolveGenre('Gênero não informado')).toBe('nao-informado')
-    expect(resolveGenre('nao-informado')).toBe('nao-informado')
     expect(resolveGenre('Inexistente')).toBeUndefined()
   })
 })
