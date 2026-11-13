@@ -73,7 +73,9 @@ function editorialMeta(
 ) {
   const { editorial, playable } = item
   const editorialDescription = [
-    item.station ? stationDescription(item.station) : undefined,
+    item.station
+      ? stationDescription(item.station, editorial.name)
+      : frequencyLine(editorial.name),
     editorial.frequency,
     !item.station && editorial.city ? `Cidade: ${editorial.city}` : undefined,
     editorial.state ? `Estado: ${editorial.state}` : undefined,
@@ -161,9 +163,36 @@ function displayGenre(tag: string): string {
     : value
 }
 
-export function stationDescription(station: Station): string {
+const frequencyPattern =
+  /\b\d{2,3}(?:[.,]\d+)?\s*(?:(?:MHz)\s*)?(?:AM|FM|MHz)\b/gi
+
+export function extractFrequencies(text: string): string[] {
+  const frequencies: string[] = []
+  for (const match of text.matchAll(frequencyPattern)) {
+    const frequency = match[0]
+      .replace(/\s+/g, ' ')
+      .replace(/\.(?=\d)/g, ',')
+      .toLocaleUpperCase('pt-BR')
+    if (!frequencies.includes(frequency)) frequencies.push(frequency)
+  }
+  return frequencies
+}
+
+function frequencyLine(text?: string): string | undefined {
+  const frequencies = text ? extractFrequencies(text) : []
+  return frequencies.length
+    ? `Frequência: ${frequencies.join(', ')}`
+    : undefined
+}
+
+export function stationDescription(
+  station: Station,
+  fallbackName?: string,
+): string {
   const lines: string[] = []
   if (station.slogan?.trim()) lines.push(station.slogan.trim())
+  const frequency = frequencyLine(station.name) ?? frequencyLine(fallbackName)
+  if (frequency) lines.push(frequency)
   if (station.city) lines.push(`Cidade: ${station.city}`)
   if (station.state)
     lines.push(

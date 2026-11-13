@@ -75,6 +75,55 @@ describe('metadata', () => {
     expect(description).not.toContain('smooth jazz')
   })
 
+  it('shows an explicit frequency above the station location', () => {
+    const description = stationDescription({
+      ...validStation,
+      id: `radio-br:${validStation.stationuuid}`,
+      stationUuid: validStation.stationuuid!,
+      name: 'Rádio Exemplo 99.9 FM',
+      city: 'São Paulo',
+      state: 'SP',
+      tags: ['news'],
+      countryCode: 'BR',
+      hls: false,
+    })
+
+    expect(description.split('\n')).toEqual(
+      expect.arrayContaining(['Frequência: 99,9 FM', 'Cidade: São Paulo']),
+    )
+    expect(description.indexOf('Frequência:')).toBeLessThan(
+      description.indexOf('Cidade:'),
+    )
+  })
+
+  it('shows multiple explicit frequencies without inventing a value', () => {
+    const description = stationDescription({
+      ...validStation,
+      id: `radio-br:${validStation.stationuuid}`,
+      stationUuid: validStation.stationuuid!,
+      name: 'Rádio Exemplo 610 AM 95.7 FM',
+      tags: ['news'],
+      countryCode: 'BR',
+      hls: false,
+    })
+
+    expect(description).toContain('Frequência: 610 AM, 95,7 FM')
+  })
+
+  it('omits the frequency line when the name has no explicit frequency', () => {
+    const description = stationDescription({
+      ...validStation,
+      id: `radio-br:${validStation.stationuuid}`,
+      stationUuid: validStation.stationuuid!,
+      name: 'Rádio Exemplo',
+      tags: ['news'],
+      countryCode: 'BR',
+      hls: false,
+    })
+
+    expect(description).not.toContain('Frequência:')
+  })
+
   it('applies an optional enrichment snapshot without changing the station id', async () => {
     const snapshot: EnrichmentSnapshot = {
       version: 1,
