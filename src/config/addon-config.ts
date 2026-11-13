@@ -379,13 +379,12 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
       extra: [searchExtra],
     })
 
-  if (collections.has('all'))
-    catalogs.push({
-      type: 'tv',
-      id: 'radio-br-catalog',
-      name: 'Todas as rádios',
-      extra: [searchExtra],
-    })
+  catalogs.push({
+    type: 'tv',
+    id: 'radio-br-catalog',
+    name: 'Todas as rádios',
+    extra: [searchExtra],
+  })
 
   return catalogs
 }

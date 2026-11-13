@@ -136,7 +136,7 @@ it('keeps direct regional sources and includes only the selected genres', () => 
     ]),
   )
 })
-it('generates a canonical public URL and its dynamic manifest on the server', async () => {
+it('keeps Todas as rádios in a personalized manifest', async () => {
   const response = await fetch(base + '/api/configuration', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -147,7 +147,7 @@ it('generates a canonical public URL and its dynamic manifest on the server', as
   expect(body.url).toMatch(/^https:\/\/radio.example\/%7B/)
   const manifest = await (await fetch(base + new URL(body.url).pathname)).json()
   expect(manifest).toEqual(body.manifest)
-  expect(manifest.catalogs.map((c: { id: string }) => c.id)).not.toContain(
+  expect(manifest.catalogs.map((c: { id: string }) => c.id)).toContain(
     'radio-br-catalog',
   )
 })
