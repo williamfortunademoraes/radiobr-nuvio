@@ -100,7 +100,7 @@ button {
   overflow: hidden;
   background: #08050f;
 }
-.radio-visual { position: absolute; inset: 0; background: radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--radio-primary) 38%, transparent), transparent 35%), linear-gradient(135deg, #08050f, #120b22); }
+.radio-visual { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,5,15,.28), rgba(8,5,15,.72)), url('/assets/radio-landscapes/brazil-sunset.png') center/cover, linear-gradient(135deg, #08050f, #120b22); animation: radio-landscape 18s ease-in-out infinite alternate; }
 .radio-grid { position: absolute; inset: 0; opacity: .2; background-image: linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px); background-size: 56px 56px; transform: perspective(500px) rotateX(58deg) scale(1.5); transform-origin: center bottom; }
 .radio-orb { position: absolute; width: 42vw; height: 42vw; border-radius: 50%; filter: blur(24px); opacity: .52; animation: radio-drift 12s ease-in-out infinite alternate; }
 .radio-orb-a { background: var(--radio-primary); left: -12vw; top: 12vh; }
@@ -116,6 +116,7 @@ button {
 .radio-about { max-width: 620px; margin-top: 24px; color: rgba(255,255,255,.72); line-height: 1.75; }
 .radio-panel audio { width: min(560px, 100%); margin-top: 30px; accent-color: var(--radio-secondary); }
 @keyframes radio-drift { from { transform: translate3d(-4%, -3%, 0) scale(.92); } to { transform: translate3d(6%, 5%, 0) scale(1.12); } }
+@keyframes radio-landscape { from { background-position: center center; } to { background-position: 52% 48%; } }
 
 h1,
 h2,
