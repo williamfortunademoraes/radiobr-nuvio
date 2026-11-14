@@ -10,6 +10,7 @@ export interface Station {
   favicon?: string
   homepage?: string
   slogan?: string
+  about?: string
   countryCode: 'BR'
   city?: string
   state?: string

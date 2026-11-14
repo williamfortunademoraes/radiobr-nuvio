@@ -64,6 +64,7 @@ export function resolveEnrichment(
     stateName: station.stateName,
     categories: station.categories ?? station.tags,
     slogan: station.slogan,
+    about: station.about,
     logo: station.favicon,
   })
   const data: EnrichmentRecord['data'] = { ...existing }
@@ -99,6 +100,7 @@ export function applyEnrichment(
     ...(record.data.stateName ? { stateName: record.data.stateName } : {}),
     ...(record.data.categories ? { categories: record.data.categories } : {}),
     ...(record.data.slogan ? { slogan: record.data.slogan } : {}),
+    ...(record.data.about ? { about: record.data.about } : {}),
     ...(record.data.logo ? { favicon: record.data.logo } : {}),
   }
 }

@@ -36,9 +36,7 @@ describe('metadata', () => {
     })
     const description = (result.meta as { description?: string }).description!
     expect(description.split('\n')[0]).toBe('A rádio que informa você')
-    expect(description).toContain(
-      'Sobre: Estação de rádio de Notícias e esportes em Rio de Janeiro (SP).',
-    )
+    expect(description).not.toContain('Sobre:')
     expect(description).toContain('Cidade: Rio de Janeiro')
     expect(description).toContain('Estado: SP')
     expect(description).toContain('Gênero: Notícias e esportes')
@@ -68,7 +66,7 @@ describe('metadata', () => {
     ).not.toContain('Slogan')
   })
 
-  it('adds a factual Sobre section after the station details', () => {
+  it('shows Sobre only when a station history is provided', () => {
     const description = stationDescription({
       ...validStation,
       id: `radio-br:${validStation.stationuuid}`,
@@ -77,11 +75,12 @@ describe('metadata', () => {
       city: 'São Paulo',
       state: 'SP',
       tags: ['smooth jazz'],
+      about: 'Fundada em 1985, dedica-se ao jazz e à música instrumental.',
       countryCode: 'BR',
       hls: false,
     })
     expect(description).toContain(
-      'Sobre: Estação de rádio de Jazz suave em São Paulo (SP).',
+      'Sobre: Fundada em 1985, dedica-se ao jazz e à música instrumental.',
     )
   })
 

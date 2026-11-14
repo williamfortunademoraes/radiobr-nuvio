@@ -222,15 +222,9 @@ export function stationDescription(
   const uniqueGenres = [
     ...new Map(genres.map((tag) => [normalizeTag(tag), tag])).values(),
   ]
-  const aboutParts = ['Estação de rádio']
   if (uniqueGenres.length)
     lines.push(`Gênero: ${uniqueGenres.map(displayGenre).join(', ')}`)
-  if (uniqueGenres.length) aboutParts.push(`de ${uniqueGenres.map(displayGenre).join(', ')}`)
-  const location = station.city && station.state
-    ? `${station.city} (${station.state})`
-    : station.city || station.state
-  if (location) aboutParts.push(`em ${location}`)
-  lines.push(`Sobre: ${aboutParts.join(' ')}.`)
+  if (station.about?.trim()) lines.push(`Sobre: ${station.about.trim()}`)
 
   const format = [
     station.codec,

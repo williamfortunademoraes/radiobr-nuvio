@@ -50,6 +50,7 @@ export function normalizeEnrichedData(
       ? { categories: normalizeCategories(value.categories) }
       : {}),
     ...(value.slogan?.trim() ? { slogan: value.slogan.trim() } : {}),
+    ...(value.about?.trim() ? { about: value.about.trim() } : {}),
     ...(value.logo?.trim() ? { logo: value.logo.trim() } : {}),
   }
 }
