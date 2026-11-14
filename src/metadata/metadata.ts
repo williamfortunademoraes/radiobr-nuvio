@@ -26,6 +26,7 @@ export function createMetadataService(
         const result = { ...meta }
         delete result.poster
         delete result.posterShape
+        delete result.background
         return result
       }
       if (args.type !== 'tv' || !args.id.startsWith('radio-br:'))
@@ -96,13 +97,15 @@ function editorialMeta(
   ]
     .filter(Boolean)
     .join('\n')
+  const poster = editorial.logoUrl || item.station?.favicon
   return {
     id: `radio-br:editorial:${editorial.id}`,
     type: 'tv',
     name: editorial.name,
-    ...(editorial.logoUrl || item.station?.favicon
+    ...(poster
       ? {
-          poster: editorial.logoUrl || item.station?.favicon,
+          poster,
+          background: poster,
           posterShape: 'square',
         }
       : {}),
@@ -116,15 +119,16 @@ export function stationMeta(station: Station, baseUrl?: string) {
     slogan: station.slogan || curatedSlogan(station.name),
     about: station.about || curatedAbout(station.name),
   })
+  const poster =
+    curatedLandscapePosterForStation(station.name, baseUrl) || station.favicon
   return {
     id: station.id,
     type: 'tv',
     name: station.name,
-    ...(curatedLandscapePosterForStation(station.name, baseUrl) || station.favicon
+    ...(poster
       ? {
-          poster:
-            curatedLandscapePosterForStation(station.name, baseUrl) ||
-            station.favicon,
+          poster,
+          background: poster,
           posterShape: 'square',
         }
       : {}),
