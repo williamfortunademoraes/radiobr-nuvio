@@ -153,9 +153,9 @@ export function stationPreview(
     id: station.id,
     type: 'tv',
     name: station.name,
-    ...(showLogos && (curatedPosterUrl || station.favicon || fallbackPoster)
+    ...(showLogos && (curatedPosterUrl || station.favicon)
       ? {
-          poster: curatedPosterUrl || station.favicon || fallbackPoster,
+          poster: curatedPosterUrl || station.favicon,
           posterShape: 'square',
         }
       : {}),
