@@ -364,5 +364,17 @@
     "file": "assets/logos/stations/radio-89-rock-curitiba.jfif",
     "source": "user",
     "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "LIGA SAMBA WEB RÁDIO",
+    "file": "assets/logos/stations/radio-liga-samba.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Cultura FM 103.3",
+    "file": "assets/logos/stations/cultura-fm-103-1.webp",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
   }
 ]

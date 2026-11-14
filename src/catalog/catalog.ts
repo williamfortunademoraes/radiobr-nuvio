@@ -45,6 +45,7 @@ const curatedEditorialLogoEntries = [
   ['Rádio 89 FM Rádio Rock', 'radio-89-rock.jfif'],
   ['Rádio Rock - 89,1 FM', 'radio-89-rock.jfif'],
   ['89 A Rádio Rock Curitiba 89.3 FM', 'radio-89-rock-curitiba.jfif'],
+  ['LIGA SAMBA WEB RÁDIO', 'radio-liga-samba.png'],
   ['98 Rock', 'radio-98-rock.webp'],
   ['105 FM - É só alegria!', 'radio-105-fm.png'],
   ['Clube FM 99.1', 'clube-fm-99-1.webp'],
@@ -122,6 +123,7 @@ const curatedEditorialLogoEntries = [
   ['BR - The Classic Rock', 'br-classic-rock.png'],
   ['Rádio Buteco Sertanejo', 'buteco-sertanejo.png'],
   ['Rádio Cultura FM 103.1', 'cultura-fm-103-1.webp'],
+  ['Cultura FM 103.3', 'cultura-fm-103-1.webp'],
   ['Geração Samba e Pagode', 'geracao-samba-pagode.png'],
   ['Rádio Jovem Pan FM Belo Horizonte 99,1', 'jovem-pan-bh-99-1.png'],
   ['Rádio Jovem Pan FM São Paulo 100.9', 'jovem-pan-sp-100-9.png'],
@@ -151,6 +153,7 @@ function curatedFileForStation(name: string): string | undefined {
         return (
           curatedIdentity.brand === identity.brand &&
           (identity.frequencies.length === 0 ||
+            curatedIdentity.frequencies.length === 0 ||
             identity.frequencies.some((frequency) =>
               curatedIdentity.frequencies.includes(frequency),
             ))
