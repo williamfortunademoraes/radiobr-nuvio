@@ -10,6 +10,11 @@ it('renders the station discovery surface on the landing page', () => {
   const html = renderLandingPage()
   expect(html).toContain('station-search')
   expect(html).toContain('/assets/discover.js')
+  expect(html).toContain('global-audio')
+  expect(html).toContain('featured-stations')
+  expect(html).toContain('genre-sections')
+  expect(html).toContain('region-sections')
+  expect(html).toContain('/personalizar')
 })
 
 it('renders a local favorite action on a station player page', () => {

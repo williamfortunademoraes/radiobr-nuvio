@@ -157,10 +157,40 @@ it('searches stations through a bounded JSON endpoint', async () => {
       expect.objectContaining({
         id: `radio-br:${validStation.stationuuid}`,
         name: validStation.name,
+        urlResolved: validStation.url_resolved,
       }),
     ])
     const firstCall = fetcher.mock.calls[0] as unknown as [string]
     expect(firstCall[0]).toContain('limit=20')
+  } finally {
+    server.closeAllConnections()
+    await new Promise<void>((resolve) => server.close(() => resolve()))
+  }
+})
+
+it('serves aggregated portal data without changing addon endpoints', async () => {
+  const fetcher = vi.fn(() =>
+    Promise.resolve(new Response(JSON.stringify([validStation]))),
+  )
+  const app = createApp({
+    client: new RadioBrowserClient(undefined, fetcher),
+    baseUrl: 'http://127.0.0.1:7002',
+  })
+  const server = app.listen(0)
+  await new Promise<void>((resolve) => server.once('listening', resolve))
+  const address = server.address()
+  const base = `http://127.0.0.1:${typeof address === 'object' && address ? address.port : 0}`
+  try {
+    const home = await fetch(`${base}/api/home`)
+    expect(home.status).toBe(200)
+    expect(await home.json()).toEqual(
+      expect.objectContaining({
+        featured: [expect.objectContaining({ name: validStation.name })],
+        genres: expect.any(Array),
+        regions: expect.any(Array),
+      }),
+    )
+    expect((await fetch(`${base}/manifest.json`)).status).toBe(200)
   } finally {
     server.closeAllConnections()
     await new Promise<void>((resolve) => server.close(() => resolve()))

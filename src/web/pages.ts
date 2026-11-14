@@ -194,7 +194,7 @@ function showcaseCard(item: (typeof SHOWCASE)[number]) {
   </article>`
 }
 
-export function renderLandingPage(): string {
+export function renderLegacyLandingPage(): string {
   return `${head(
     'RADIO BR — Suas rádios. Do seu jeito.',
     'Monte sua própria seleção de rádios brasileiras e leve suas coleções favoritas para o Nuvio ou Stremio.',
@@ -345,6 +345,57 @@ ${header('inicio')}
         <a class="btn btn-primary btn-lg" href="/personalizar">Personalizar minhas rádios <span aria-hidden="true">→</span></a>
       </section>
     </main>
+    <script src="/assets/discover.js" defer></script>
+${footer()}`
+}
+
+export function renderLandingPage(): string {
+  return `${head(
+    'RADIO BR — Ouça rádios brasileiras ao vivo',
+    'Descubra, pesquise e ouça rádios brasileiras ao vivo no navegador.',
+  )}
+${header('inicio')}
+    <main id="conteudo" class="portal-main">
+      <section class="portal-hero shell">
+        <div class="portal-hero-copy">
+          <span class="eyebrow"><span class="eyebrow-dot"></span> Portal de rádios do Brasil</span>
+          <h1>Ouça sua rádio.<br><span class="gradient-text">Do seu jeito.</span></h1>
+          <p>Encontre rádios brasileiras ao vivo, salve suas favoritas e continue ouvindo enquanto navega.</p>
+          <a class="btn btn-primary btn-lg" href="#mais-ouvidas">Explorar rádios <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="portal-hero-art" aria-hidden="true">
+          <div class="portal-orb portal-orb--one"></div><div class="portal-orb portal-orb--two"></div>
+          <div class="portal-art-card"><img src="/assets/logo.png" alt=""><span>AO VIVO</span><strong>Rádio brasileira</strong><small>Mais música, mais companhia.</small><div class="portal-equalizer"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+      </section>
+
+      <section class="portal-search shell" aria-labelledby="station-search-title">
+        <div class="portal-search-heading"><span class="eyebrow"><span class="eyebrow-dot"></span> Descobrir</span><h2 id="station-search-title">Qual rádio você quer ouvir?</h2></div>
+        <form class="station-search-form" id="station-search-form" role="search">
+          <label class="sr-only" for="station-search">Nome da rádio</label>
+          <input id="station-search" class="station-search" type="search" placeholder="Busque por nome, cidade ou estilo musical" autocomplete="off">
+          <select id="station-genre" class="station-filter" aria-label="Filtrar por gênero"><option value="">Todos os gêneros</option></select>
+          <select id="station-region" class="station-filter" aria-label="Filtrar por região"><option value="">Todas as regiões</option></select>
+          <button class="btn btn-primary" type="submit">Buscar</button>
+        </form>
+        <p class="station-search-status" id="station-search-status" role="status">Carregando rádios disponíveis…</p>
+        <div class="station-results" id="station-results" aria-live="polite"></div>
+      </section>
+
+      <section class="portal-section shell" id="favoritos" hidden aria-labelledby="favorites-title"><div class="portal-section-head"><div><span class="eyebrow"><span class="eyebrow-dot"></span> Sua seleção</span><h2 id="favorites-title">Favoritas</h2></div></div><div class="radio-grid" id="favorite-stations"></div></section>
+      <section class="portal-section shell" id="mais-ouvidas" aria-labelledby="featured-title"><div class="portal-section-head"><div><span class="eyebrow"><span class="eyebrow-dot"></span> Em destaque</span><h2 id="featured-title">Rádios mais ouvidas</h2></div><span class="section-caption">Escolha uma rádio e aperte o play.</span></div><div class="radio-grid" id="featured-stations"><div class="portal-loading">Carregando destaques…</div></div></section>
+      <section class="portal-section shell" id="generos" aria-labelledby="genres-title"><div class="portal-section-head"><div><span class="eyebrow"><span class="eyebrow-dot"></span> Encontre seu som</span><h2 id="genres-title">Rádios por gênero</h2></div></div><div class="portal-section-stack" id="genre-sections"><div class="portal-loading">Carregando gêneros…</div></div></section>
+      <section class="portal-section shell" id="regioes" aria-labelledby="regions-title"><div class="portal-section-head"><div><span class="eyebrow"><span class="eyebrow-dot"></span> De todo o país</span><h2 id="regions-title">Rádios por região</h2></div></div><div class="portal-section-stack" id="region-sections"><div class="portal-loading">Carregando regiões…</div></div></section>
+
+      <section class="portal-addon shell"><div><span class="eyebrow"><span class="eyebrow-dot"></span> Para Nuvio e Stremio</span><h2>Leve suas rádios para onde quiser.</h2><p>Personalize coleções, gêneros e estados e instale o addon com uma URL exclusiva.</p></div><a class="btn btn-ghost btn-lg" href="/personalizar">Personalizar addon <span aria-hidden="true">→</span></a></section>
+    </main>
+    <div class="global-player" id="global-player" aria-label="Player de rádio" hidden>
+      <div class="global-player-art"><img id="global-player-logo" src="/assets/logo.png" alt=""></div>
+      <div class="global-player-info"><span class="global-player-live"><i></i> AO VIVO</span><strong id="global-player-name">Nenhuma rádio selecionada</strong><small id="global-player-meta">Escolha uma rádio para começar</small></div>
+      <audio id="global-audio" controls preload="none"></audio>
+      <button class="player-favorite" id="global-player-favorite" type="button" aria-label="Adicionar rádio aos favoritos" aria-pressed="false">☆</button>
+      <button class="player-close" id="global-player-close" type="button" aria-label="Fechar player">×</button>
+    </div>
     <script src="/assets/discover.js" defer></script>
 ${footer()}`
 }

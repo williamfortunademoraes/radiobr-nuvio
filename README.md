@@ -13,7 +13,8 @@ Descubra estações, filtre por gênero ou estado, consulte metadados e reproduz
 - Classificação por gênero baseada apenas nas tags reais da Radio Browser, com aliases explícitos.
 - IDs estáveis derivados de `stationuuid`.
 - Cache em memória com TTL configurável e consulta compartilhada entre catálogos.
-- Página inicial e central de personalização em cinco etapas.
+- Portal inicial para descobrir e ouvir rádios brasileiras, com busca, filtros por gênero/região, favoritos locais e player global.
+- Central de personalização em cinco etapas para Nuvio e Stremio.
 - URLs de áudio diretas, sem proxy, retransmissão ou conversão.
 
 Não há conta, banco de dados ou painel administrativo. A personalização gera uma URL compacta e um manifesto próprio para as escolhas de cada usuário.

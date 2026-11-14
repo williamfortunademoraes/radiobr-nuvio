@@ -9,17 +9,14 @@ for (const width of [390, 1440]) {
     page.on('pageerror', (error) => errors.push(error.message))
     await page.goto('/')
     await expect(page.getByRole('heading', { level: 1 })).toContainText(
-      'Suas rádios.',
+      'Ouça sua rádio.',
     )
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= window.innerWidth,
       ),
     ).toBe(true)
-    await page
-      .getByRole('link', { name: 'Personalizar minhas rádios' })
-      .first()
-      .click()
+    await page.getByRole('link', { name: 'Personalizar addon' }).first().click()
     await page
       .locator('input[name="collections"][value="editorial"]')
       .locator('..')
