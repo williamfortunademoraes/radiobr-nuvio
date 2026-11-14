@@ -103,6 +103,7 @@ export function matchTop25Editorial(
     const state = rankingState(entry.location)
     const station = stations.find((candidate) => {
       if (used.has(candidate.id) || !matchesName(entry, candidate)) return false
+      if (!matchesFrequency(entry, candidate)) return false
       return !state || normalizeState(candidate.state) === state
     })
     if (station) used.add(station.id)

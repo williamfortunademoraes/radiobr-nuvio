@@ -67,4 +67,15 @@ describe('Radios.com.br Top 25', () => {
     ])
     expect(result.map((item) => item.stationUuid)).toEqual(['canonical-tupi'])
   })
+
+  it('matches FM O Dia by frequency when multiple RJ stations share the brand', () => {
+    const ranking = top25Ranking.filter((item) =>
+      item.name.includes('FM O Dia 100.5'),
+    )
+    const result = matchTop25Editorial(ranking, [
+      station('Rádio FM O Dia 99.7 FM', 'RJ', 'macae'),
+      station('FM O DIA 100.5', 'RJ', 'rio'),
+    ])
+    expect(result[0].station?.stationUuid).toBe('rio')
+  })
 })
