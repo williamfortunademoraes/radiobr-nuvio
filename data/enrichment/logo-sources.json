@@ -244,5 +244,65 @@
     "file": "assets/logos/stations/radio-reggae-brasil.jfif",
     "source": "user",
     "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Bossa Jazz Brasil",
+    "file": "assets/logos/stations/bossa-jazz-brasil.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Namoro Web Rádio",
+    "file": "assets/logos/stations/namoro-web-radio.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Piatã FM 94.3",
+    "file": "assets/logos/stations/piata-fm-94-3.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Positividade FM 104.5",
+    "file": "assets/logos/stations/positividade-fm.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Café Viola",
+    "file": "assets/logos/stations/radio-cafe-viola.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Flashback FM",
+    "file": "assets/logos/stations/flashback.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Motel",
+    "file": "assets/logos/stations/radio-motel.jpg",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Nova Instrumental",
+    "file": "assets/logos/stations/radio-nova-instrumental.webp",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Disco Funk BR",
+    "file": "assets/logos/stations/radio-disco-funk-br.jfif",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Furacão 2000",
+    "file": "assets/logos/stations/radio-furacao-2000.jfif",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
   }
 ]
