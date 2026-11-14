@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createCatalogService, stationPreview } from '../../src/catalog/catalog.js'
+import {
+  createCatalogService,
+  stationPreview,
+} from '../../src/catalog/catalog.js'
 import { buildCatalogs, defaultConfig } from '../../src/config/addon-config.js'
 import type { Station } from '../../src/stations/types.js'
 import { validStation } from '../fixtures/station.js'
@@ -54,6 +57,7 @@ function client() {
 
 describe('catalog', () => {
   it.each([
+    ['Super Radio Tupi 96.5', 'tupi-96-5.png'],
     ['FM O DIA 100.5', 'fm-o-dia-100-5.png'],
     ['CBN São Paulo', 'cbn-sao-paulo.svg'],
     ['Rádio Disney 91.3 FM', 'radio-disney.png'],
@@ -72,11 +76,7 @@ describe('catalog', () => {
   ])('uses the curated logo for %s', (name, file) => {
     expect(
       stationPreview(
-        station(
-          '88888888-8888-4888-8888-888888888888',
-          name,
-          ['pop'],
-        ),
+        station('88888888-8888-4888-8888-888888888888', name, ['pop']),
         true,
         'https://radio.example/assets/logo.png',
       ),
@@ -139,10 +139,7 @@ describe('catalog', () => {
   it('keeps only the direct genre and state collection sources in the manifest', () => {
     const ids = buildCatalogs(defaultConfig()).map((catalog) => catalog.id)
     expect(ids).toEqual(
-      expect.arrayContaining([
-        'radio-br-genre-sertanejo',
-        'radio-br-state-am',
-      ]),
+      expect.arrayContaining(['radio-br-genre-sertanejo', 'radio-br-state-am']),
     )
     expect(ids).not.toEqual(
       expect.arrayContaining([
@@ -274,11 +271,31 @@ describe('catalog', () => {
 
   it('keeps one canonical Top 25 station and removes same-brand clones', async () => {
     const result = await createCatalogService({
-      searchAllStations: vi.fn().mockResolvedValue([
-        station('a1111111-1111-4111-8111-111111111111', 'Antena 1 FM 94.7 São Paulo', ['pop'], 20, 'SP'),
-        station('b2222222-2222-4222-8222-222222222222', 'Rádio Antena 1 - São Paulo (94.7 FM)', ['pop'], 10, 'SP'),
-        station('c3333333-3333-4333-8333-333333333333', 'Rádio Antena 1 - Porto Alegre', ['pop'], 9, 'RS'),
-      ]),
+      searchAllStations: vi
+        .fn()
+        .mockResolvedValue([
+          station(
+            'a1111111-1111-4111-8111-111111111111',
+            'Antena 1 FM 94.7 São Paulo',
+            ['pop'],
+            20,
+            'SP',
+          ),
+          station(
+            'b2222222-2222-4222-8222-222222222222',
+            'Rádio Antena 1 - São Paulo (94.7 FM)',
+            ['pop'],
+            10,
+            'SP',
+          ),
+          station(
+            'c3333333-3333-4333-8333-333333333333',
+            'Rádio Antena 1 - Porto Alegre',
+            ['pop'],
+            9,
+            'RS',
+          ),
+        ]),
     } as never).getCatalog({ type: 'tv', id: 'radio-br-catalog' })
     expect(result.metas.map((meta) => meta.name)).toEqual([
       'Antena 1 FM 94.7 São Paulo',
@@ -288,11 +305,31 @@ describe('catalog', () => {
 
   it('deduplicates same brand and frequency within one state', async () => {
     const result = await createCatalogService({
-      searchStations: vi.fn().mockResolvedValue([
-        station('d4444444-4444-4444-8444-444444444444', 'Kiss FM - 92.5 - São Paulo', ['rock'], 20, 'SP'),
-        station('e5555555-5555-4555-8555-555555555555', 'Kiss FM São Paulo', ['rock'], 10, 'SP'),
-        station('f6666666-6666-4666-8666-666666666666', 'Kiss FM 92.5', ['rock'], 5, 'SP'),
-      ]),
+      searchStations: vi
+        .fn()
+        .mockResolvedValue([
+          station(
+            'd4444444-4444-4444-8444-444444444444',
+            'Kiss FM - 92.5 - São Paulo',
+            ['rock'],
+            20,
+            'SP',
+          ),
+          station(
+            'e5555555-5555-4555-8555-555555555555',
+            'Kiss FM São Paulo',
+            ['rock'],
+            10,
+            'SP',
+          ),
+          station(
+            'f6666666-6666-4666-8666-666666666666',
+            'Kiss FM 92.5',
+            ['rock'],
+            5,
+            'SP',
+          ),
+        ]),
     } as never).getCatalog({ type: 'tv', id: 'radio-br-catalog' })
     expect(result.metas.map((meta) => meta.name)).toEqual([
       'Kiss FM - 92.5 - São Paulo',
