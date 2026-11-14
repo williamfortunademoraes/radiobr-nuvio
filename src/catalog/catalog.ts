@@ -120,18 +120,27 @@ export function curatedPosterForStation(
 ): string | undefined {
   const exactFile = curatedEditorialLogos[curatedLogoKey(name)]
   const identity = stationIdentityFromName(name)
+  const candidateKey = curatedLogoKey(name)
+  const tokenOverlap = (curatedName: string) =>
+    curatedLogoKey(curatedName)
+      .split(' ')
+      .filter((token) => candidateKey.split(' ').includes(token)).length
   const file =
     exactFile ??
-    curatedEditorialLogoEntries.find(([curatedName]) => {
-      const curatedIdentity = stationIdentityFromName(curatedName)
-      return (
-        curatedIdentity.brand === identity.brand &&
-        identity.frequencies.length > 0 &&
-        identity.frequencies.some((frequency) =>
-          curatedIdentity.frequencies.includes(frequency),
+    curatedEditorialLogoEntries
+      .filter(([curatedName]) => {
+        const curatedIdentity = stationIdentityFromName(curatedName)
+        return (
+          curatedIdentity.brand === identity.brand &&
+          identity.frequencies.length > 0 &&
+          identity.frequencies.some((frequency) =>
+            curatedIdentity.frequencies.includes(frequency),
+          )
         )
-      )
-    })?.[1]
+      })
+      .sort(
+        (left, right) => tokenOverlap(right[0]) - tokenOverlap(left[0]),
+      )[0]?.[1]
   return file && basePoster
     ? new URL(`/assets/logos/stations/${file}`, basePoster).href
     : undefined

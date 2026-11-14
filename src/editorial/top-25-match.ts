@@ -1,6 +1,7 @@
 import { normalizeState } from '../stations/states.js'
 import type { Station } from '../stations/types.js'
 import type { Top25RankingEntry } from './top-25-ranking.js'
+import { stationIdentityFromName } from '../catalog/identity.js'
 
 export interface MatchedTop25Entry {
   ranking: Top25RankingEntry
@@ -57,6 +58,19 @@ function matchesName(ranking: Top25RankingEntry, station: Station): boolean {
   )
 }
 
+function matchesFrequency(
+  ranking: Top25RankingEntry,
+  station: Station,
+): boolean {
+  const expected = stationIdentityFromName(ranking.name).frequencies
+  const actual = stationIdentityFromName(station.name).frequencies
+  return (
+    expected.length === 0 ||
+    actual.length === 0 ||
+    expected.some((frequency) => actual.includes(frequency))
+  )
+}
+
 /** Removes additional Radio Browser records representing a Top 25 station. */
 export function removeTop25Duplicates(
   ranking: readonly Top25RankingEntry[],
@@ -73,7 +87,8 @@ export function removeTop25Duplicates(
       const state = rankingState(entry.location)
       return (
         matchesName(entry, station) &&
-        (!state || normalizeState(station.state) === state)
+        matchesFrequency(entry, station) &&
+        (!state || !station.state || normalizeState(station.state) === state)
       )
     })
   })

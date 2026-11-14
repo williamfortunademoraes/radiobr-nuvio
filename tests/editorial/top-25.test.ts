@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { top25Ranking } from '../../src/editorial/top-25-ranking.js'
-import { matchTop25Editorial } from '../../src/editorial/top-25-match.js'
+import {
+  matchTop25Editorial,
+  removeTop25Duplicates,
+} from '../../src/editorial/top-25-match.js'
 import type { Station } from '../../src/stations/types.js'
 
 function station(name: string, state: string, id = name): Station {
@@ -55,5 +58,13 @@ describe('Radios.com.br Top 25', () => {
     expect(result[0].station?.id).toBe('radio-br:gaucha')
     expect(result[1]).toMatchObject({ matchStatus: 'unmatched' })
     expect(result[1].station).toBeUndefined()
+  })
+
+  it('removes a Top 25 clone even when the upstream clone omits its state', () => {
+    const result = removeTop25Duplicates(top25Ranking.slice(0, 3), [
+      station('Super Rádio Tupi', 'RJ', 'canonical-tupi'),
+      station('Radio Tupi FM 96.5', '', 'clone-tupi'),
+    ])
+    expect(result.map((item) => item.stationUuid)).toEqual(['canonical-tupi'])
   })
 })

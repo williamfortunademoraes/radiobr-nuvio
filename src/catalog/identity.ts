@@ -12,6 +12,9 @@ const frequencyPattern = /\b\d{2,3}(?:[.,]\d+)?\s*(?:mhz|am|fm)?\b/gi
 const combiningMarks = /\p{M}/gu
 const removableCityNames =
   /\b(?:sao paulo|rio de janeiro|belo horizonte|porto alegre|florianopolis|brasilia|recife|fortaleza)\b/gi
+const removableTechnicalTokens = /\[[^\]]*\]|\b(?:zy[a-z]?|qby)-?[a-z0-9-]+\b/gi
+const removableStateCodes =
+  /\b(?:ac|al|ap|am|ba|ce|df|es|go|ma|mt|ms|mg|pa|pb|pr|pe|pi|rj|rn|rs|ro|rr|sc|sp|se|to)\b/gi
 
 function normalizeText(value: string): string {
   return value
@@ -36,7 +39,12 @@ export function stationIdentityFromName(
   name: string,
 ): Pick<StationIdentity, 'brand' | 'frequencies'> {
   const frequencies = frequenciesFromName(name)
-  const brand = normalizeText(name.replace(frequencyPattern, ' '))
+  const brand = normalizeText(
+    name
+      .replace(frequencyPattern, ' ')
+      .replace(removableTechnicalTokens, ' ')
+      .replace(removableStateCodes, ' '),
+  )
     .replace(/\b(?:radio|rádio|fm|am|mhz|aac|mp3)\b/gi, ' ')
     .replace(removableCityNames, ' ')
     .replace(/[^a-z0-9]+/g, ' ')
