@@ -5,7 +5,7 @@ describe('RADIO BR manifest', () => {
   it('declares the stable addon identity and supported resources', () => {
     expect(manifest).toMatchObject({
       id: 'com.williamfortuna.radio-br',
-      version: '0.1.1',
+      version: '0.1.2',
       name: 'Estações de rádios - Brasil',
       resources: ['catalog', 'meta', 'stream'],
       types: ['tv'],

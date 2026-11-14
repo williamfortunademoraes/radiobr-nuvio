@@ -304,5 +304,65 @@
     "file": "assets/logos/stations/radio-furacao-2000.jfif",
     "source": "user",
     "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "98 Rock",
+    "file": "assets/logos/stations/radio-98-rock.webp",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "105 FM - É só alegria!",
+    "file": "assets/logos/stations/radio-105-fm.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Clube FM 99.1",
+    "file": "assets/logos/stations/clube-fm-99-1.webp",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Cultura Brasil (fm77.9)",
+    "file": "assets/logos/stations/cultura-brasil-fm-77-9.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "R.VALE VERDE FM",
+    "file": "assets/logos/stations/r-vale-verde-fm.jfif",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio CBN Campinas 99,1 FM",
+    "file": "assets/logos/stations/cbn-campinas.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Forró",
+    "file": "assets/logos/stations/radio-forro.webp",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Gospel FM 89.3",
+    "file": "assets/logos/stations/radio-gospel-fm-89-3.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Máquina do Tempo (Internacional)",
+    "file": "assets/logos/stations/radio-mpb-maquina-do-tempo.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "89 A Rádio Rock Curitiba 89.3 FM",
+    "file": "assets/logos/stations/radio-89-rock-curitiba.jfif",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
   }
 ]
