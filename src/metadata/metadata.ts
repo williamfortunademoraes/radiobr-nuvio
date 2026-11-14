@@ -252,6 +252,7 @@ export function stationDescription(
     lines.push(`${station.name} – ${station.slogan.trim()}`)
   const frequency = frequencyLine(station.name) ?? frequencyLine(fallbackName)
   if (frequency) lines.push(frequency)
+  if (station.about?.trim()) lines.push(`Sobre: ${station.about.trim()}`)
   if (station.city) lines.push(`Cidade: ${station.city}`)
   if (station.state)
     lines.push(
@@ -274,8 +275,6 @@ export function stationDescription(
   ]
   if (uniqueGenres.length)
     lines.push(`Gênero: ${uniqueGenres.map(displayGenre).join(', ')}`)
-  if (station.about?.trim()) lines.push(`Sobre: ${station.about.trim()}`)
-
   const format = [
     station.codec,
     station.bitrate ? `${station.bitrate} kbps` : undefined,

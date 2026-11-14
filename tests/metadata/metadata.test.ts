@@ -301,6 +301,8 @@ describe('metadata', () => {
     expect(description).toContain(
       'Sobre: Rádio do Grupo RBS com jornalismo, esporte e informação',
     )
+    const lines = description.split('\n')
+    expect(lines[lines.indexOf('Frequência: 93,7 FM') + 1]).toContain('Sobre:')
     expect(description.indexOf('A tua voz')).toBeLessThan(
       description.indexOf('Sobre:'),
     )
