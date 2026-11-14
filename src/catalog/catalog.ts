@@ -148,6 +148,33 @@ function dedupeById(stations: readonly Station[]): Station[] {
   })
 }
 
+function duplicateIdentity(station: Station): string {
+  const normalized = station.name
+    .normalize('NFKD')
+    .replace(/\p{M}/gu, '')
+    .toLowerCase()
+    .replace(/\([^)]*\)|\[[^\]]*\]/g, ' ')
+  const brand = normalized
+    .replace(/\b\d{2,3}[.,]\d\b/g, ' ')
+    .replace(/\b(?:radio|rádio|fm|am|mhz|aac|mp3|sc|sp|rj|mg)\b/g, ' ')
+    .replace(/\b(?:sao paulo|rio de janeiro|belo horizonte|porto alegre|florianopolis|brasilia|recife|fortaleza)\b/g, ' ')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .replace(/\s+/g, ' ')
+  const state = normalizeState(station.state) ?? ''
+  return `${brand}|${state}`
+}
+
+function dedupeStations(stations: readonly Station[]): Station[] {
+  const seen = new Set<string>()
+  return stations.filter((station) => {
+    const key = duplicateIdentity(station)
+    if (!key || seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
 function requestedGenres(config: AddonConfig) {
   return config.g
 }
@@ -243,7 +270,8 @@ export function createCatalogService(
 
       const search = args.extra?.search
       const skip = args.extra?.skip ?? 0
-      const stations = removeTop25Duplicates(
+      const stations = dedupeStations(
+        removeTop25Duplicates(
         top25Ranking,
         applySnapshot(
         args.id === 'radio-br-catalog' &&
@@ -252,6 +280,7 @@ export function createCatalogService(
           ? (await client.searchAllStations()).slice(skip, skip + 100)
           : await client.searchStations({ search, offset: skip }),
         snapshot,
+        ),
         ),
       )
 

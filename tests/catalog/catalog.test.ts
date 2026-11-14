@@ -278,6 +278,19 @@ describe('catalog', () => {
     ])
   })
 
+  it('deduplicates same brand and frequency within one state', async () => {
+    const result = await createCatalogService({
+      searchStations: vi.fn().mockResolvedValue([
+        station('d4444444-4444-4444-8444-444444444444', 'Kiss FM - 92.5 - São Paulo', ['rock'], 20, 'SP'),
+        station('e5555555-5555-4555-8555-555555555555', 'Kiss FM São Paulo', ['rock'], 10, 'SP'),
+        station('f6666666-6666-4666-8666-666666666666', 'Kiss FM 92.5', ['rock'], 5, 'SP'),
+      ]),
+    } as never).getCatalog({ type: 'tv', id: 'radio-br-catalog' })
+    expect(result.metas.map((meta) => meta.name)).toEqual([
+      'Kiss FM - 92.5 - São Paulo',
+    ])
+  })
+
   it('filters grouped region and state catalogs with extras', async () => {
     const radio = createCatalogService({
       searchStations: vi
