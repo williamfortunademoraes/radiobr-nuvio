@@ -49,6 +49,7 @@ const curatedEditorialLogoEntries = [
   ['Rádio Antena 1 Rio de Janeiro 103.7 FM', 'antena-1-rio-103-7.jpg'],
   ['Rádio BandNews SP 96.9 FM', 'bandnews-sp-96-9.jpg'],
   ['Rádio Band News 90.3', 'bandnews-90-3.jpg'],
+  ['Rádio BandNews RJ 90.3 FM', 'bandnews-90-3.jpg'],
   ['Radio Saudade 99.7 FM', 'saudade-99-7.png'],
   ['Rádio Clube 105.5 FM', 'clube-105-5.png'],
   ['Rádio Alpha 101.7 FM', 'alpha-101-7.jpg'],

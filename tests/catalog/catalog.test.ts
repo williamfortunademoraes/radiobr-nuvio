@@ -59,6 +59,7 @@ describe('catalog', () => {
   it.each([
     ['Super Radio Tupi 96.5', 'tupi-96-5.png'],
     ['Antena 1 São Paulo, SP (ZYD823 94,7 MHz FM) [aac]', 'antena-1-94-7.png'],
+    ['Rádio BandNews RJ 90.3 FM', 'bandnews-90-3.jpg'],
     ['FM O DIA 100.5', 'fm-o-dia-100-5.png'],
     ['CBN São Paulo', 'cbn-sao-paulo.svg'],
     ['Rádio Disney 91.3 FM', 'radio-disney.png'],
