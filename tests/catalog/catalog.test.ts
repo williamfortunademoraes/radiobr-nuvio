@@ -81,6 +81,7 @@ describe('catalog', () => {
 
   it.each([
     ['Rádio 106.7 Sertaneja', '106-7-sertaneja.jfif'],
+    ['Smooth Jazz Lounge', 'smooth-jazz-lounge.jpg'],
     ['Energia FM (97 FM)', 'energia-fm-97.jfif'],
     ['Kiss FM São Paulo', 'kiss-fm-sao-paulo.jfif'],
     ['Rádio Nova Paradiso 89.5 FM', 'nova-paradiso-89-5.jfif'],

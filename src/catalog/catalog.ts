@@ -64,6 +64,7 @@ const curatedEditorialLogos: Record<string, string> = Object.fromEntries(
     ['Rádio Kiss FM 92.5', 'kiss-92-5.png'],
     ['Rádio Flashback', 'flashback.png'],
     ['Smooth Jazz Lounge Radio', 'smooth-jazz-lounge.jpg'],
+    ['Smooth Jazz Lounge', 'smooth-jazz-lounge.jpg'],
     ['Rádio Mix 106.3 FM', 'mix-106-3.jpg'],
     ['Rádio Jangadeiro 88.9 FM', 'jangadeiro-88-9.jfif'],
     ['Rádio Disney 91.3 FM', 'radio-disney.png'],
