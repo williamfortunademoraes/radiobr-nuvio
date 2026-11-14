@@ -202,5 +202,47 @@
     "file": "assets/logos/stations/jovem-pan-belo-horizonte.png",
     "source": "user",
     "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio 99.5 FM Goiânia",
+    "file": "assets/logos/stations/99-5-fm-goiania.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Jovem Pan FM Florianópolis",
+    "file": "assets/logos/stations/jovem-pan-florianopolis-sc.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Rap Brasil",
+    "file": "assets/logos/stations/radio-rap-brasil.jpg",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Transamérica",
+    "file": "assets/logos/stations/radio-transamerica.webp",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio FM O Dia 99.7 Macaé",
+    "file": "assets/logos/stations/fm-o-dia-99-7-macae.jfif",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Animu",
+    "file": "assets/logos/stations/radio-animu.jfif",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Reggae Brasil",
+    "file": "assets/logos/stations/radio-reggae-brasil.jfif",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
   }
 ]

@@ -62,6 +62,13 @@ describe('catalog', () => {
     ['Rádio 105 FM', 'radio-105-fm.jfif'],
     ['Rádio Rock - 89,1 FM', 'radio-89-rock.jfif'],
     ['Jovem Pan FM - Belo Horizonte 99,1', 'jovem-pan-bh-99-1.png'],
+    ['Rádio 99.5 FM Goiânia', '99-5-fm-goiania.png'],
+    ['Jovem Pan FM Florianópolis', 'jovem-pan-florianopolis-sc.png'],
+    ['Rádio Rap Brasil', 'radio-rap-brasil.jpg'],
+    ['Rádio Transamérica', 'radio-transamerica.webp'],
+    ['Rádio FM O Dia 99.7 Macaé', 'fm-o-dia-99-7-macae.jfif'],
+    ['Rádio Animu', 'radio-animu.jfif'],
+    ['Rádio Reggae Brasil', 'radio-reggae-brasil.jfif'],
   ])('uses the curated logo for %s', (name, file) => {
     expect(
       stationPreview(
