@@ -121,7 +121,7 @@ describe('metadata', () => {
       'https://radio.example',
     ).getMetadata({ type: 'tv', id: station.id })
     expect(result.meta).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/fm-o-dia-100-5.png',
+      poster: 'https://radio.example/assets/logos/stations/fm-o-dia-100-5-landscape.jpg',
     })
   })
 

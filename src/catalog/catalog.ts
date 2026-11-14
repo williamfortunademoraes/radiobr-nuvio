@@ -111,7 +111,10 @@ const curatedEditorialLogos: Record<string, string> = Object.fromEntries(
 export function curatedPosterForStation(name: string, basePoster?: string): string | undefined {
   const file = curatedEditorialLogos[curatedLogoKey(name)]
   return file && basePoster
-    ? new URL(`/assets/logos/stations/${file}`, basePoster).href
+    ? new URL(
+        `/assets/logos/stations/${file.replace(/\.[^.]+$/, '-landscape.jpg')}`,
+        basePoster,
+      ).href
     : undefined
 }
 

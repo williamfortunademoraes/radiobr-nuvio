@@ -81,7 +81,7 @@ describe('catalog', () => {
         'https://radio.example/assets/logo.png',
       ),
     ).toMatchObject({
-      poster: `https://radio.example/assets/logos/stations/${file}`,
+      poster: `https://radio.example/assets/logos/stations/${file.replace(/\.[^.]+$/, '-landscape.jpg')}`,
       posterShape: 'square',
     })
   })
@@ -110,7 +110,7 @@ describe('catalog', () => {
         'https://radio.example/assets/logo.png',
       ),
     ).toMatchObject({
-      poster: `https://radio.example/assets/logos/stations/${file}`,
+      poster: `https://radio.example/assets/logos/stations/${file.replace(/\.[^.]+$/, '-landscape.jpg')}`,
       posterShape: 'square',
     })
   })
@@ -186,7 +186,7 @@ describe('catalog', () => {
     })
     expect(result.metas[6]).toMatchObject({
       poster:
-        'https://radio.example/assets/logos/stations/bandnews-sp-96-9.jpg',
+        'https://radio.example/assets/logos/stations/bandnews-sp-96-9-landscape.jpg',
       posterShape: 'square',
     })
   })
@@ -203,7 +203,7 @@ describe('catalog', () => {
 
     expect(result.metas[1]).toMatchObject({
       poster:
-        'https://radio.example/assets/logos/stations/bandeirantes-107-3.jfif',
+        'https://radio.example/assets/logos/stations/bandeirantes-107-3-landscape.jpg',
       posterShape: 'square',
     })
   })
@@ -219,7 +219,7 @@ describe('catalog', () => {
     })
 
     expect(result.metas[0]).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/gaucha-93-7.png',
+      poster: 'https://radio.example/assets/logos/stations/gaucha-93-7-landscape.jpg',
       posterShape: 'square',
     })
   })
@@ -235,16 +235,16 @@ describe('catalog', () => {
     })
 
     expect(result.metas[7]).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/grenal-95-9.png',
+      poster: 'https://radio.example/assets/logos/stations/grenal-95-9-landscape.jpg',
     })
     expect(result.metas[10]).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/band-96-1.png',
+      poster: 'https://radio.example/assets/logos/stations/band-96-1-landscape.jpg',
     })
     expect(result.metas[12]).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/jb-fm-99-9.png',
+      poster: 'https://radio.example/assets/logos/stations/jb-fm-99-9-landscape.jpg',
     })
     expect(result.metas[16]).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/radio-89-rock.jfif',
+      poster: 'https://radio.example/assets/logos/stations/radio-89-rock-landscape.jpg',
     })
   })
 
