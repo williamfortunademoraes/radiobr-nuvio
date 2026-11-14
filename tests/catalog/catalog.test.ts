@@ -264,6 +264,20 @@ describe('catalog', () => {
     expect(result.metas.map((meta) => meta.name)).toEqual(['Rádio Rio'])
   })
 
+  it('keeps one canonical Top 25 station and removes same-brand clones', async () => {
+    const result = await createCatalogService({
+      searchAllStations: vi.fn().mockResolvedValue([
+        station('a1111111-1111-4111-8111-111111111111', 'Antena 1 FM 94.7 São Paulo', ['pop'], 20, 'SP'),
+        station('b2222222-2222-4222-8222-222222222222', 'Rádio Antena 1 - São Paulo (94.7 FM)', ['pop'], 10, 'SP'),
+        station('c3333333-3333-4333-8333-333333333333', 'Rádio Antena 1 - Porto Alegre', ['pop'], 9, 'RS'),
+      ]),
+    } as never).getCatalog({ type: 'tv', id: 'radio-br-catalog' })
+    expect(result.metas.map((meta) => meta.name)).toEqual([
+      'Antena 1 FM 94.7 São Paulo',
+      'Rádio Antena 1 - Porto Alegre',
+    ])
+  })
+
   it('filters grouped region and state catalogs with extras', async () => {
     const radio = createCatalogService({
       searchStations: vi

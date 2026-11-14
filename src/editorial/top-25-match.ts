@@ -57,6 +57,28 @@ function matchesName(ranking: Top25RankingEntry, station: Station): boolean {
   )
 }
 
+/** Removes additional Radio Browser records representing a Top 25 station. */
+export function removeTop25Duplicates(
+  ranking: readonly Top25RankingEntry[],
+  stations: readonly Station[],
+): Station[] {
+  const canonicalIds = new Set(
+    matchTop25Editorial(ranking, stations)
+      .map((item) => item.station?.id)
+      .filter((id): id is string => Boolean(id)),
+  )
+  return stations.filter((station) => {
+    if (canonicalIds.has(station.id)) return true
+    return !ranking.some((entry) => {
+      const state = rankingState(entry.location)
+      return (
+        matchesName(entry, station) &&
+        (!state || normalizeState(station.state) === state)
+      )
+    })
+  })
+}
+
 export function matchTop25Editorial(
   ranking: readonly Top25RankingEntry[],
   stations: readonly Station[],

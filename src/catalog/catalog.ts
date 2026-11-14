@@ -9,7 +9,10 @@ import {
 } from '../config/addon-config.js'
 import { groupStationsByGenre } from './grouping.js'
 import { radiosEmDestaque } from '../editorial/radios-em-destaque.js'
-import { matchTop25Editorial } from '../editorial/top-25-match.js'
+import {
+  matchTop25Editorial,
+  removeTop25Duplicates,
+} from '../editorial/top-25-match.js'
 import { top25Ranking } from '../editorial/top-25-ranking.js'
 import { REGIONS, stationRegion } from './geography.js'
 import type { EnrichmentSnapshot } from '../enrichment/snapshot.js'
@@ -240,13 +243,16 @@ export function createCatalogService(
 
       const search = args.extra?.search
       const skip = args.extra?.skip ?? 0
-      const stations = applySnapshot(
+      const stations = removeTop25Duplicates(
+        top25Ranking,
+        applySnapshot(
         args.id === 'radio-br-catalog' &&
           !search?.trim() &&
           typeof client.searchAllStations === 'function'
           ? (await client.searchAllStations()).slice(skip, skip + 100)
           : await client.searchStations({ search, offset: skip }),
         snapshot,
+        ),
       )
 
       const matchesState = stateFilter(config.s)
