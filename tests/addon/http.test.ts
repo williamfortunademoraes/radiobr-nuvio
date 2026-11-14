@@ -42,7 +42,7 @@ it('serves both catalogs, genre filters, streams and PNG assets through the SDK 
         'radios-em-destaque',
         'radio-br-genre-sertanejo',
         'radio-br-catalog',
-        'radio-br-region-sudeste',
+        'radio-br-state-sp',
       ]),
     )
     expect(manifest.catalogs.map((c: { id: string }) => c.id)).not.toEqual(

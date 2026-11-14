@@ -116,7 +116,7 @@ it('rejects malformed percent encoding', async () => {
 })
 it('keeps direct regional sources and includes only the selected genres', () => {
   expect(buildCatalogs(defaultConfig()).map((c) => c.id)).toContain(
-    'radio-br-region-sudeste',
+    'radio-br-state-sp',
   )
   const result = validateConfig(payload)
   if (!result.ok) throw new Error(result.error)
@@ -168,7 +168,7 @@ it('filters catalogs and metadata while preserving streams and shared cache', as
   expect(
     (await json('/catalog/tv/radio-br-genre-sertanejo.json')).metas[0],
   ).not.toHaveProperty('poster')
-  expect((await json('/catalog/tv/radio-br-region-mg.json')).metas).toEqual([])
+  expect((await json('/catalog/tv/radio-br-state-mg.json')).metas).toEqual([])
   expect((await json('/catalog/tv/radio-br-genre-rock.json')).metas).toEqual([])
   expect(
     (await json(`/meta/tv/radio-br:${validStation.stationuuid}.json`)).meta,

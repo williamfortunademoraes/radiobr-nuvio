@@ -14,7 +14,7 @@ describe('RADIO BR manifest', () => {
       expect.arrayContaining([
         'radios-em-destaque',
         'radio-br-genre-sertanejo',
-        'radio-br-region-sudeste',
+        'radio-br-state-sp',
         'radio-br-catalog',
       ]),
     )

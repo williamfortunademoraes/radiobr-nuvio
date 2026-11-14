@@ -1,6 +1,6 @@
 import type { RadioBrowserClient } from '../radio-browser/client.js'
 import { genreDefinitions, resolveGenre } from '../stations/tags.js'
-import { normalizeState, type StateCode } from '../stations/states.js'
+import { normalizeState, STATES, type StateCode } from '../stations/states.js'
 import type { Station } from '../stations/types.js'
 import {
   catalogAllowed,
@@ -17,7 +17,7 @@ import { top25Ranking } from '../editorial/top-25-ranking.js'
 import { REGIONS, stationRegion } from './geography.js'
 import type { EnrichmentSnapshot } from '../enrichment/snapshot.js'
 import { applySnapshot } from '../enrichment/resolve.js'
-import { genreCover, regionCover } from './covers.js'
+import { genreCover, regionCover, stateCover } from './covers.js'
 
 function curatedLogoKey(name: string): string {
   return name
@@ -226,14 +226,14 @@ export function createCatalogService(
             posterShape: 'square' as const,
           })),
         }
-      if (args.id === 'radio-br-regions')
+      if (args.id === 'radio-br-states')
         return {
-          metas: REGIONS.map((region) => ({
-            id: `radio-br-region-${region.id}`,
+          metas: STATES.map((state) => ({
+            id: `radio-br-state-${state.code.toLowerCase()}`,
             type: 'tv' as const,
-            name: region.name,
+            name: state.name,
             poster: new URL(
-              regionCover(region.id),
+              stateCover(state.code),
               fallbackPoster ?? 'http://127.0.0.1',
             ).href,
             posterShape: 'square' as const,
@@ -371,6 +371,7 @@ export function createCatalogService(
               (station) =>
                 normalizeState(station.state)?.toLowerCase() === region,
             )
+            .filter(matchesState)
             .map(preview),
         }
 
@@ -383,6 +384,16 @@ export function createCatalogService(
           return {
             metas: newsSports.filter(matchesState).map(preview),
           }
+
+      const stateCode = STATES.find(
+        (state) => args.id === `radio-br-state-${state.code.toLowerCase()}`,
+      )?.code
+      if (stateCode)
+        return {
+          metas: stations
+            .filter((station) => normalizeState(station.state) === stateCode)
+            .map(preview),
+        }
         }
 
         case 'radio-br-outros':

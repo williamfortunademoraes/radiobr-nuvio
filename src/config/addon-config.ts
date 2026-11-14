@@ -6,6 +6,7 @@ import {
 } from '../stations/tags.js'
 import {
   STATE_CODES,
+  STATES,
   normalizeState,
   type StateCode,
 } from '../stations/states.js'
@@ -355,10 +356,10 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
       name: genreName(genre),
       extra: [searchExtra],
     })),
-    ...REGIONS.map((region) => ({
+    ...STATES.map((state) => ({
       type: 'tv' as const,
-      id: `radio-br-region-${region.id}`,
-      name: region.name,
+      id: `radio-br-state-${state.code.toLowerCase()}`,
+      name: state.name,
       extra: [searchExtra],
     })),
   )
@@ -393,12 +394,13 @@ export function catalogAllowed(id: string, config: AddonConfig): boolean {
   if (id.startsWith('radio-br-genre-'))
     return config.g.some((genre) => id === `radio-br-genre-${genre}`)
   if (id === 'radio-br-region' || id === 'radio-br-state') return true
+  if (id.startsWith('radio-br-state-'))
+    return (config.s.length ? config.s : STATE_CODES).some(
+      (state) => id === `radio-br-state-${state.toLowerCase()}`,
+    )
   if (REGIONS.some((region) => id === `radio-br-region-${region.id}`))
     return true
-  if (id.startsWith('radio-br-region-'))
-    return (config.s.length ? config.s : STATE_CODES).some(
-      (state) => id === `radio-br-region-${state.toLowerCase()}`,
-    )
+  if (id.startsWith('radio-br-region-')) return true
   switch (id) {
     case 'radios-em-destaque':
       return config.c.includes('editorial')
