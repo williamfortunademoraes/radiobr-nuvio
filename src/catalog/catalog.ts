@@ -125,10 +125,7 @@ const curatedEditorialLogos: Record<string, string> = Object.fromEntries(
   ]),
 )
 
-export function curatedPosterForStation(
-  name: string,
-  basePoster?: string,
-): string | undefined {
+function curatedFileForStation(name: string): string | undefined {
   const exactFile = curatedEditorialLogos[curatedLogoKey(name)]
   const identity = stationIdentityFromName(name)
   const candidateKey = curatedLogoKey(name)
@@ -143,15 +140,23 @@ export function curatedPosterForStation(
         const curatedIdentity = stationIdentityFromName(curatedName)
         return (
           curatedIdentity.brand === identity.brand &&
-          identity.frequencies.length > 0 &&
-          identity.frequencies.some((frequency) =>
-            curatedIdentity.frequencies.includes(frequency),
-          )
+          (identity.frequencies.length === 0 ||
+            identity.frequencies.some((frequency) =>
+              curatedIdentity.frequencies.includes(frequency),
+            ))
         )
       })
       .sort(
         (left, right) => tokenOverlap(right[0]) - tokenOverlap(left[0]),
       )[0]?.[1]
+  return file
+}
+
+export function curatedPosterForStation(
+  name: string,
+  basePoster?: string,
+): string | undefined {
+  const file = curatedFileForStation(name)
   return file && basePoster
     ? new URL(`/assets/logos/stations/${file}`, basePoster).href
     : undefined
@@ -161,7 +166,7 @@ export function curatedLandscapePosterForStation(
   name: string,
   basePoster?: string,
 ): string | undefined {
-  const file = curatedEditorialLogos[curatedLogoKey(name)]
+  const file = curatedFileForStation(name)
   return file && basePoster
     ? new URL(
         `/assets/logos/stations/${file.replace(/\.[^.]+$/, '-landscape.jpg')}`,

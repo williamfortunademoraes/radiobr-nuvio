@@ -12,7 +12,7 @@ import {
  */
 export const manifest = {
   id: 'com.williamfortuna.radio-br',
-  version: '0.1.0',
+  version: '0.1.1',
   name: 'Estações de rádios - Brasil',
   description:
     'RADIO BR reúne estações brasileiras com pesquisa, rádios em destaque, navegação por gênero e informações das emissoras para descobrir e reproduzir streams diretos no Nuvio.',
