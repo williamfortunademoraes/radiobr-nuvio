@@ -62,12 +62,16 @@ test('searches, starts, switches and favorites a radio in the global player', as
           state: 'SP',
           codec: 'MP3',
           bitrate: 128,
+          urlResolved: 'https://stream.example/horizonte.mp3',
         },
       ],
     }),
   )
   await page.goto('/')
   await expect(page.locator('#featured-stations .radio-card')).toHaveCount(2)
+  await page.locator('#station-search').fill('Horizonte')
+  await page.getByRole('button', { name: 'Buscar' }).click()
+  await expect(page.locator('#station-results .radio-card')).toHaveCount(1)
   await page
     .locator('#featured-stations .radio-card')
     .first()

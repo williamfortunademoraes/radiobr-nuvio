@@ -90,7 +90,10 @@ export function createApp(options: CreateAppOptions = {}): Express {
       const stations = await (typeof client.searchAllStations === 'function'
         ? client.searchAllStations()
         : client.searchStations())
-      res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300')
+      res.setHeader(
+        'Cache-Control',
+        'public, max-age=60, stale-while-revalidate=300',
+      )
       res.json(buildHomePortalData(stations))
     } catch (error) {
       next(error)
@@ -115,8 +118,13 @@ export function createApp(options: CreateAppOptions = {}): Express {
           favicon: station.favicon,
           homepage: station.homepage,
           state: station.state,
+          city: station.city,
+          stateName: station.stateName,
           codec: station.codec,
           bitrate: station.bitrate,
+          url: station.url,
+          urlResolved: station.urlResolved,
+          tags: station.tags,
         })),
       )
     } catch (error) {

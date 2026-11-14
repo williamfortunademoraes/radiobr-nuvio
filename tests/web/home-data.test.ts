@@ -23,15 +23,24 @@ describe('buildHomePortalData', () => {
   it('preserves playable station metadata and groups sections', () => {
     const data = buildHomePortalData([
       station({ stationuuid: 'one', name: 'Rádio São Paulo' }),
-      station({ stationuuid: 'two', name: 'Rádio Rio', state: 'RJ', tags: 'sertanejo' }),
+      station({
+        stationuuid: 'two',
+        name: 'Rádio Rio',
+        state: 'RJ',
+        tags: 'sertanejo',
+      }),
     ])
 
     expect(data.featured.map((item) => item.name)).toEqual([
       'Rádio São Paulo',
       'Rádio Rio',
     ])
-    expect(data.genres.find((section) => section.id === 'rock')?.stations).toHaveLength(1)
-    expect(data.regions.find((section) => section.id === 'sudeste')?.stations).toHaveLength(2)
+    expect(
+      data.genres.find((section) => section.id === 'rock')?.stations,
+    ).toHaveLength(1)
+    expect(
+      data.regions.find((section) => section.id === 'sudeste')?.stations,
+    ).toHaveLength(2)
     expect(data.featured[0]).toMatchObject({
       id: expect.any(String),
       stationUuid: 'one',
@@ -42,11 +51,17 @@ describe('buildHomePortalData', () => {
 
   it('deduplicates stations and excludes stations without a stream', () => {
     const duplicate = station({ stationuuid: 'same' })
-    const noStream = { ...station({ stationuuid: 'none' }), url: '', urlResolved: '' }
+    const noStream = {
+      ...station({ stationuuid: 'none' }),
+      url: '',
+      urlResolved: '',
+    }
     const data = buildHomePortalData([duplicate, duplicate, noStream])
 
     expect(data.featured).toHaveLength(1)
-    expect(data.featured.every((item) => item.url || item.urlResolved)).toBe(true)
+    expect(data.featured.every((item) => item.url || item.urlResolved)).toBe(
+      true,
+    )
   })
 
   it('limits each section to the requested maximum', () => {
@@ -58,7 +73,11 @@ describe('buildHomePortalData', () => {
     )
 
     expect(data.featured).toHaveLength(3)
-    expect(data.genres.every((section) => section.stations.length <= 3)).toBe(true)
-    expect(data.regions.every((section) => section.stations.length <= 3)).toBe(true)
+    expect(data.genres.every((section) => section.stations.length <= 3)).toBe(
+      true,
+    )
+    expect(data.regions.every((section) => section.stations.length <= 3)).toBe(
+      true,
+    )
   })
 })

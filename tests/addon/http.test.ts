@@ -157,6 +157,7 @@ it('searches stations through a bounded JSON endpoint', async () => {
       expect.objectContaining({
         id: `radio-br:${validStation.stationuuid}`,
         name: validStation.name,
+        urlResolved: validStation.url_resolved,
       }),
     ])
     const firstCall = fetcher.mock.calls[0] as unknown as [string]
