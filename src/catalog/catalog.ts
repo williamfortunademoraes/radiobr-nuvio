@@ -16,39 +16,59 @@ import type { EnrichmentSnapshot } from '../enrichment/snapshot.js'
 import { applySnapshot } from '../enrichment/resolve.js'
 import { genreCover, regionCover } from './covers.js'
 
-const curatedEditorialLogos: Record<string, string> = {
-  'Rádio Gaúcha 93.7 FM': 'gaucha-93-7.png',
-  'Rádio Bandeirantes 107.3 FM': 'bandeirantes-107-3.jfif',
-  'Super Rádio Tupi 96.5 FM': 'tupi-96-5.png',
-  'Rádio Itatiaia 610 AM 95.7 FM': 'itatiaia-610-am-95-7.jpg',
-  'Rádio Jovem Pan News': 'jovem-pan-news.png',
-  'Rádio CBN São Paulo 90.5 FM': 'cbn-sao-paulo-90-5.png',
-  'Rádio Band 96.1 FM': 'band-96-1.png',
-  'Rádio Grenal 95.9 FM': 'grenal-95-9.png',
-  'Rádio JB FM 99.9': 'jb-fm-99-9.png',
-  'Rádio 89 FM Rádio Rock': 'radio-89-rock.webp',
-  'Rádio Antena 1 94.7 FM': 'antena-1-94-7.jfif',
-  'Rádio BandNews SP 96.9 FM': 'bandnews-sp-96-9.jpg',
-  'Radio Saudade 99.7 FM': 'saudade-99-7.png',
-  'Rádio Clube 105.5 FM': 'clube-105-5.png',
-  'Rádio Alpha 101.7 FM': 'alpha-101-7.jpg',
-  'Rádio Metropolitana 98.5 FM': 'metropolitana-98-5.png',
-  'Rádio Nativa 95.3 FM': 'nativa-95-3.png',
-  'Rádio FM O Dia 100.5': 'fm-o-dia-100-5.png',
-  'Rádio Liberdade 92.9 FM': 'liberdade-92-9.jpg',
-  'Rádio Aparecida 104.3 FM': 'aparecida-104-3.jpg',
-  'Rádio Jornal de Recife 90.3 FM': 'jornal-recife-90-3.jpg',
-  'Rádio Melodia 97.5 FM': 'melodia-97-5.png',
-  'Rádio TMC 100.1 FM': 'tmc-100-1.webp',
-  'Rádio Kiss FM 92.5': 'kiss-92-5.png',
-  'Rádio Flashback': 'flashback.png',
-  'Smooth Jazz Lounge Radio': 'smooth-jazz-lounge.jpg',
-  'Rádio Mix 106.3 FM': 'mix-106-3.jpg',
-  'Rádio Jangadeiro 88.9 FM': 'jangadeiro-88-9.jfif',
+function curatedLogoKey(name: string): string {
+  return name
+    .normalize('NFKD')
+    .replace(/\p{M}/gu, '')
+    .toLowerCase()
+    .replace(/^radio\s+/, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .replace(/\s+/g, ' ')
 }
 
+const curatedEditorialLogos: Record<string, string> = Object.fromEntries(
+  [
+    ['Rádio Gaúcha 93.7 FM', 'gaucha-93-7.png'],
+    ['Rádio Bandeirantes 107.3 FM', 'bandeirantes-107-3.jfif'],
+    ['Super Rádio Tupi 96.5 FM', 'tupi-96-5.png'],
+    ['Rádio Itatiaia 610 AM 95.7 FM', 'itatiaia-610-am-95-7.jpg'],
+    ['Rádio Jovem Pan News', 'jovem-pan-news.png'],
+    ['Rádio CBN São Paulo 90.5 FM', 'cbn-sao-paulo.svg'],
+    ['CBN São Paulo', 'cbn-sao-paulo.svg'],
+    ['Rádio Band 96.1 FM', 'band-96-1.png'],
+    ['Rádio Grenal 95.9 FM', 'grenal-95-9.png'],
+    ['Rádio JB FM 99.9', 'jb-fm-99-9.png'],
+    ['Rádio 89 FM Rádio Rock', 'radio-89-rock.jfif'],
+    ['Rádio Rock - 89,1 FM', 'radio-89-rock.jfif'],
+    ['Rádio Antena 1 94.7 FM', 'antena-1-94-7.jfif'],
+    ['Rádio BandNews SP 96.9 FM', 'bandnews-sp-96-9.jpg'],
+    ['Radio Saudade 99.7 FM', 'saudade-99-7.png'],
+    ['Rádio Clube 105.5 FM', 'clube-105-5.png'],
+    ['Rádio Alpha 101.7 FM', 'alpha-101-7.jpg'],
+    ['Rádio Metropolitana 98.5 FM', 'metropolitana-98-5.png'],
+    ['Rádio Nativa 95.3 FM', 'nativa-95-3.png'],
+    ['Rádio FM O Dia 100.5', 'fm-o-dia-100-5.png'],
+    ['Rádio Liberdade 92.9 FM', 'liberdade-92-9.jpg'],
+    ['Rádio Aparecida 104.3 FM', 'aparecida-104-3.jpg'],
+    ['Rádio Jornal de Recife 90.3 FM', 'jornal-recife-90-3.jpg'],
+    ['Rádio Melodia 97.5 FM', 'melodia-97-5.png'],
+    ['Rádio TMC 100.1 FM', 'tmc-100-1.webp'],
+    ['Rádio Kiss FM 92.5', 'kiss-92-5.png'],
+    ['Rádio Flashback', 'flashback.png'],
+    ['Smooth Jazz Lounge Radio', 'smooth-jazz-lounge.jpg'],
+    ['Rádio Mix 106.3 FM', 'mix-106-3.jpg'],
+    ['Rádio Jangadeiro 88.9 FM', 'jangadeiro-88-9.jfif'],
+    ['Rádio Disney 91.3 FM', 'radio-disney.png'],
+    ['Rádio Globo - Rio de Janeiro', 'radio-globo.png'],
+    ['Mix Rio 102.1 Rio de Janeiro, RJ', 'mix-rio-102-1.jfif'],
+    ['Rádio 105 FM', 'radio-105-fm.jfif'],
+    ['Jovem Pan FM - Belo Horizonte 99,1', 'jovem-pan-belo-horizonte.png'],
+  ].map(([name, file]) => [curatedLogoKey(name), file]),
+)
+
 function curatedPoster(name: string, basePoster?: string): string | undefined {
-  const file = curatedEditorialLogos[name]
+  const file = curatedEditorialLogos[curatedLogoKey(name)]
   return file && basePoster
     ? new URL(`/assets/logos/stations/${file}`, basePoster).href
     : undefined

@@ -79,7 +79,7 @@
   },
   {
     "station": "Rádio CBN São Paulo 90.5 FM",
-    "file": "assets/logos/stations/cbn-sao-paulo-90-5.png",
+    "file": "assets/logos/stations/cbn-sao-paulo.svg",
     "source": "user",
     "reference": "Fornecido pelo usuário"
   },
@@ -103,7 +103,7 @@
   },
   {
     "station": "Rádio 89 FM Rádio Rock",
-    "file": "assets/logos/stations/radio-89-rock.webp",
+    "file": "assets/logos/stations/radio-89-rock.jfif",
     "source": "user",
     "reference": "Fornecido pelo usuário"
   },
@@ -164,6 +164,42 @@
   {
     "station": "Super Rádio Tupi 96.5 FM",
     "file": "assets/logos/stations/tupi-96-5.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Disney 91.3 FM",
+    "file": "assets/logos/stations/radio-disney.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Globo - Rio de Janeiro",
+    "file": "assets/logos/stations/radio-globo.png",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Mix Rio 102.1 Rio de Janeiro, RJ",
+    "file": "assets/logos/stations/mix-rio-102-1.jfif",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio 105 FM",
+    "file": "assets/logos/stations/radio-105-fm.jfif",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Rádio Rock - 89,1 FM",
+    "file": "assets/logos/stations/radio-89-rock.jfif",
+    "source": "user",
+    "reference": "Fornecido pelo usuário"
+  },
+  {
+    "station": "Jovem Pan FM - Belo Horizonte 99,1",
+    "file": "assets/logos/stations/jovem-pan-belo-horizonte.png",
     "source": "user",
     "reference": "Fornecido pelo usuário"
   }

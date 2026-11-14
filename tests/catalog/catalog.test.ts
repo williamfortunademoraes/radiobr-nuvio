@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createCatalogService } from '../../src/catalog/catalog.js'
+import { createCatalogService, stationPreview } from '../../src/catalog/catalog.js'
 import { buildCatalogs, defaultConfig } from '../../src/config/addon-config.js'
 import type { Station } from '../../src/stations/types.js'
 import { validStation } from '../fixtures/station.js'
@@ -53,6 +53,32 @@ function client() {
 }
 
 describe('catalog', () => {
+  it.each([
+    ['FM O DIA 100.5', 'fm-o-dia-100-5.png'],
+    ['CBN São Paulo', 'cbn-sao-paulo.svg'],
+    ['Rádio Disney 91.3 FM', 'radio-disney.png'],
+    ['Rádio Globo - Rio de Janeiro', 'radio-globo.png'],
+    ['Mix Rio 102.1 Rio de Janeiro, RJ', 'mix-rio-102-1.jfif'],
+    ['Rádio 105 FM', 'radio-105-fm.jfif'],
+    ['Rádio Rock - 89,1 FM', 'radio-89-rock.jfif'],
+    ['Jovem Pan FM - Belo Horizonte 99,1', 'jovem-pan-belo-horizonte.png'],
+  ])('uses the curated logo for %s', (name, file) => {
+    expect(
+      stationPreview(
+        station(
+          '88888888-8888-4888-8888-888888888888',
+          name,
+          ['pop'],
+        ),
+        true,
+        'https://radio.example/assets/logo.png',
+      ),
+    ).toMatchObject({
+      poster: `https://radio.example/assets/logos/stations/${file}`,
+      posterShape: 'square',
+    })
+  })
+
   it('exposes each genre as a collection of real stations, never collection cards', async () => {
     const catalogIds = buildCatalogs(defaultConfig()).map(
       (catalog) => catalog.id,
@@ -182,7 +208,7 @@ describe('catalog', () => {
       poster: 'https://radio.example/assets/logos/stations/jb-fm-99-9.png',
     })
     expect(result.metas[16]).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/radio-89-rock.webp',
+      poster: 'https://radio.example/assets/logos/stations/radio-89-rock.jfif',
     })
   })
 
