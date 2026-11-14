@@ -21,6 +21,7 @@ import {
   renderLandingPage,
   renderRadioPlayerPage,
 } from './web/pages.js'
+import { buildHomePortalData } from './web/home-data.js'
 
 const require = createRequire(import.meta.url)
 const { getRouter } =
@@ -83,6 +84,17 @@ export function createApp(options: CreateAppOptions = {}): Express {
   app.get('/health', (_req, res) => {
     res.setHeader('Cache-Control', 'no-store')
     res.json({ status: 'ok' })
+  })
+  app.get('/api/home', async (_req, res, next) => {
+    try {
+      const stations = await (typeof client.searchAllStations === 'function'
+        ? client.searchAllStations()
+        : client.searchStations())
+      res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300')
+      res.json(buildHomePortalData(stations))
+    } catch (error) {
+      next(error)
+    }
   })
   app.get('/api/stations', async (req, res, next) => {
     try {
