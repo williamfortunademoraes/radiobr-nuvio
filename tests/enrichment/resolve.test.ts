@@ -87,6 +87,8 @@ describe('enrichment resolution', () => {
         stateName: 'Rio de Janeiro',
         categories: ['Notícias'],
         slogan: 'A rádio atual',
+        website: 'https://official.example/radio',
+        radiosComBrUrl: 'https://radios.com.br/aovivo/radio/1',
         logo: 'https://official.example/logo.png',
       },
       provenance: {},
@@ -102,7 +104,18 @@ describe('enrichment resolution', () => {
       stateName: 'Rio de Janeiro',
       categories: ['Notícias'],
       slogan: 'A rádio atual',
+      homepage: 'https://official.example/radio',
       favicon: 'https://official.example/logo.png',
     })
+  })
+
+  it('preserves the existing homepage when no official website is supplied', () => {
+    const result = applyEnrichment(station, {
+      stationUuid: 'uuid',
+      data: { about: 'História da emissora.' },
+      provenance: {},
+      updatedAt: '2026-11-12T00:00:00.000Z',
+    })
+    expect(result.homepage).toBeUndefined()
   })
 })
