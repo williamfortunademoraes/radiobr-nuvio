@@ -68,23 +68,50 @@ test('searches, starts, switches and favorites a radio in the global player', as
   )
   await page.goto('/')
   await expect(page.locator('#featured-stations .radio-card')).toHaveCount(2)
-  await page.locator('#featured-stations .radio-card').first().getByRole('button', { name: /ouvir/i }).click()
+  await page
+    .locator('#featured-stations .radio-card')
+    .first()
+    .getByRole('button', { name: /ouvir/i })
+    .click()
   await expect(page.locator('#global-player')).toBeVisible()
-  await expect(page.locator('#global-player-name')).toHaveText('Rádio Horizonte')
-  await expect(page.locator('#global-audio')).toHaveAttribute('src', fixture.featured[0].urlResolved)
+  await expect(page.locator('#global-player-name')).toHaveText(
+    'Rádio Horizonte',
+  )
+  await expect(page.locator('#global-audio')).toHaveAttribute(
+    'src',
+    fixture.featured[0].urlResolved,
+  )
   await page.locator('#global-player-favorite').click()
-  await expect(page.locator('#global-player-favorite')).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.locator('#global-player-favorite')).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
   await page.reload()
   await expect(page.locator('#favoritos')).toBeVisible()
-  await page.locator('#featured-stations .radio-card').nth(1).getByRole('button', { name: /ouvir/i }).click()
+  await expect(page.locator('#global-player')).toBeVisible()
+  await expect(page.locator('#global-player-name')).toHaveText(
+    'Rádio Horizonte',
+  )
+  await page
+    .locator('#featured-stations .radio-card')
+    .nth(1)
+    .getByRole('button', { name: /ouvir/i })
+    .click()
   await expect(page.locator('#global-player-name')).toHaveText('Rádio Sertão')
-  await expect(page.locator('#global-audio')).toHaveAttribute('src', fixture.featured[1].urlResolved)
+  await expect(page.locator('#global-audio')).toHaveAttribute(
+    'src',
+    fixture.featured[1].urlResolved,
+  )
 })
 
 test('keeps the player inside the viewport on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await page.route('**/api/home', (route) => route.fulfill({ json: fixture }))
   await page.goto('/')
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true)
   await expect(page.locator('#global-player')).toBeHidden()
 })

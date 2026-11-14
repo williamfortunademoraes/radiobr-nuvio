@@ -194,7 +194,7 @@ function showcaseCard(item: (typeof SHOWCASE)[number]) {
   </article>`
 }
 
-function renderLegacyLandingPage(): string {
+export function renderLegacyLandingPage(): string {
   return `${head(
     'RADIO BR — Suas rádios. Do seu jeito.',
     'Monte sua própria seleção de rádios brasileiras e leve suas coleções favoritas para o Nuvio ou Stremio.',

@@ -2,8 +2,9 @@
 
 ## Página e configuração
 
-- `GET /`: apresentação RADIO BR.
+- `GET /`: portal de descoberta e reprodução de rádios brasileiras, com player global no navegador.
 - `GET /health`: verifica se o processo HTTP está disponível, sem consultar a Radio Browser.
+- `GET /api/home`: catálogo agregado da home com destaques, gêneros, regiões e URLs diretas de reprodução; usa cache público curto.
 - `GET /api/stations?search=...&limit=...`: busca até 20 estações para descoberta na página própria; não retorna URLs de áudio.
 - `GET /personalizar`, `GET /configure`: central em cinco etapas.
 - `GET /assets/*`: imagens, CSS e JavaScript.
