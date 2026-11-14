@@ -9,6 +9,8 @@ export type EnrichmentField =
   | 'categories'
   | 'slogan'
   | 'about'
+  | 'website'
+  | 'radiosComBrUrl'
   | 'logo'
 
 export interface EnrichedStationData {
@@ -19,6 +21,8 @@ export interface EnrichedStationData {
   categories?: string[]
   slogan?: string
   about?: string
+  website?: string
+  radiosComBrUrl?: string
   logo?: string
 }
 

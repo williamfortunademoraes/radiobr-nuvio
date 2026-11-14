@@ -51,6 +51,10 @@ export function normalizeEnrichedData(
       : {}),
     ...(value.slogan?.trim() ? { slogan: value.slogan.trim() } : {}),
     ...(value.about?.trim() ? { about: value.about.trim() } : {}),
+    ...(value.website?.trim() ? { website: value.website.trim() } : {}),
+    ...(value.radiosComBrUrl?.trim()
+      ? { radiosComBrUrl: value.radiosComBrUrl.trim() }
+      : {}),
     ...(value.logo?.trim() ? { logo: value.logo.trim() } : {}),
   }
 }

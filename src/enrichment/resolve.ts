@@ -101,6 +101,7 @@ export function applyEnrichment(
     ...(record.data.categories ? { categories: record.data.categories } : {}),
     ...(record.data.slogan ? { slogan: record.data.slogan } : {}),
     ...(record.data.about ? { about: record.data.about } : {}),
+    ...(record.data.website ? { homepage: record.data.website } : {}),
     ...(record.data.logo ? { favicon: record.data.logo } : {}),
   }
 }
