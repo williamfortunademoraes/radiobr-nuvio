@@ -43,6 +43,27 @@ foreach ($source in $files) {
   $backgroundColor = [System.Drawing.Color]::FromArgb($rgb[0], $rgb[1], $rgb[2])
   $graphics.Clear($backgroundColor)
 
+  # The Nuvio detail view uses the background as the hero artwork. Keep the
+  # logo visible, contained and to the right so it does not compete with the
+  # title and metadata rendered on the left.
+  $logoScale = [Math]::Min(460 / $image.Width, 460 / $image.Height)
+  $logoWidth = [int]($image.Width * $logoScale)
+  $logoHeight = [int]($image.Height * $logoScale)
+  $logoX = 900 - [int]($logoWidth / 2)
+  $logoY = [int]((720 - $logoHeight) / 2)
+  $logoBounds = [System.Drawing.Rectangle]::new($logoX, $logoY, $logoWidth, $logoHeight)
+  $radius = [int]([Math]::Min(36, [Math]::Min($logoWidth, $logoHeight) / 8))
+  $roundedPath = [System.Drawing.Drawing2D.GraphicsPath]::new()
+  $roundedPath.AddArc($logoX, $logoY, $radius * 2, $radius * 2, 180, 90)
+  $roundedPath.AddArc($logoX + $logoWidth - $radius * 2, $logoY, $radius * 2, $radius * 2, 270, 90)
+  $roundedPath.AddArc($logoX + $logoWidth - $radius * 2, $logoY + $logoHeight - $radius * 2, $radius * 2, $radius * 2, 0, 90)
+  $roundedPath.AddArc($logoX, $logoY + $logoHeight - $radius * 2, $radius * 2, $radius * 2, 90, 90)
+  $roundedPath.CloseFigure()
+  $graphics.SetClip($roundedPath)
+  $graphics.DrawImage($image, $logoX, $logoY, $logoWidth, $logoHeight)
+  $graphics.ResetClip()
+  $roundedPath.Dispose()
+
   $quality = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object MimeType -eq 'image/jpeg'
   $encoderParams = [System.Drawing.Imaging.EncoderParameters]::new(1)
   $encoderParams.Param[0] = [System.Drawing.Imaging.EncoderParameter]::new([System.Drawing.Imaging.Encoder]::Quality, 90L)
