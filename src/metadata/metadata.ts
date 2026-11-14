@@ -222,8 +222,16 @@ export function stationDescription(
   const uniqueGenres = [
     ...new Map(genres.map((tag) => [normalizeTag(tag), tag])).values(),
   ]
+  const aboutParts = ['Estação de rádio']
   if (uniqueGenres.length)
     lines.push(`Gênero: ${uniqueGenres.map(displayGenre).join(', ')}`)
+  if (uniqueGenres.length) aboutParts.push(`de ${uniqueGenres.map(displayGenre).join(', ')}`)
+  const location = [station.city, station.state]
+    .filter(Boolean)
+    .join(' (')
+    .replace(/\)$/, '')
+  if (location) aboutParts.push(`em ${location}${station.city && station.state ? ')' : ''}`)
+  lines.push(`Sobre: ${aboutParts.join(' ')}.`)
 
   const format = [
     station.codec,

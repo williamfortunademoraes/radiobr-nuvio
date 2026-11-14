@@ -36,6 +36,9 @@ describe('metadata', () => {
     })
     const description = (result.meta as { description?: string }).description!
     expect(description.split('\n')[0]).toBe('A rádio que informa você')
+    expect(description).toContain(
+      'Sobre: Estação de rádio de Notícias e esportes em Rio de Janeiro (SP).',
+    )
     expect(description).toContain('Cidade: Rio de Janeiro')
     expect(description).toContain('Estado: SP')
     expect(description).toContain('Gênero: Notícias e esportes')
@@ -63,6 +66,23 @@ describe('metadata', () => {
         hls: false,
       }),
     ).not.toContain('Slogan')
+  })
+
+  it('adds a factual Sobre section after the station details', () => {
+    const description = stationDescription({
+      ...validStation,
+      id: `radio-br:${validStation.stationuuid}`,
+      stationUuid: validStation.stationuuid!,
+      name: 'Rádio Jazz 99.9 FM',
+      city: 'São Paulo',
+      state: 'SP',
+      tags: ['smooth jazz'],
+      countryCode: 'BR',
+      hls: false,
+    })
+    expect(description).toContain(
+      'Sobre: Estação de rádio de Jazz suave em São Paulo (SP).',
+    )
   })
 
   it('translates common English genre terms in the radio description', () => {
