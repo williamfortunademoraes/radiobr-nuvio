@@ -188,21 +188,30 @@ function duplicateIdentity(station: Station): string {
     .replace(/\([^)]*\)|\[[^\]]*\]/g, ' ')
   const brand = normalized
     .replace(/\b\d{2,3}[.,]\d\b/g, ' ')
-    .replace(/\b(?:radio|rádio|fm|am|mhz|aac|mp3|sc|sp|rj|mg)\b/g, ' ')
+    .replace(/\b(?:radio|rádio|fm|am|mhz|aac|mp3)\b/g, ' ')
     .replace(/\b(?:sao paulo|rio de janeiro|belo horizonte|porto alegre|florianopolis|brasilia|recife|fortaleza)\b/g, ' ')
     .replace(/[^a-z0-9]+/g, ' ')
     .trim()
     .replace(/\s+/g, ' ')
   const state = normalizeState(station.state) ?? ''
-  return `${brand}|${state}`
+  const city = station.city
+    ?.normalize('NFKD')
+    .replace(/\p{M}/gu, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .replace(/\s+/g, ' ')
+  return `${brand}|${city ?? ''}|${state}`
 }
 
 function dedupeStations(stations: readonly Station[]): Station[] {
   const seen = new Set<string>()
   return stations.filter((station) => {
-    const key = duplicateIdentity(station)
-    if (!key || seen.has(key)) return false
-    seen.add(key)
+    const keys = [
+      duplicateIdentity(station),
+    ].filter(Boolean) as string[]
+    if (keys.some((key) => seen.has(key))) return false
+    keys.forEach((key) => seen.add(key))
     return true
   })
 }
@@ -385,6 +394,16 @@ export function createCatalogService(
             .map(preview),
         }
 
+      const stateCode = STATES.find(
+        (state) => args.id === `radio-br-state-${state.code.toLowerCase()}`,
+      )?.code
+      if (stateCode)
+        return {
+          metas: stations
+            .filter((station) => normalizeState(station.state) === stateCode)
+            .map(preview),
+        }
+
       switch (args.id) {
         case 'radio-br-catalog':
           return { metas: stations.filter(matchesState).map(preview) }
@@ -395,15 +414,6 @@ export function createCatalogService(
             metas: newsSports.filter(matchesState).map(preview),
           }
 
-      const stateCode = STATES.find(
-        (state) => args.id === `radio-br-state-${state.code.toLowerCase()}`,
-      )?.code
-      if (stateCode)
-        return {
-          metas: stations
-            .filter((station) => normalizeState(station.state) === stateCode)
-            .map(preview),
-        }
         }
 
         case 'radio-br-outros':
