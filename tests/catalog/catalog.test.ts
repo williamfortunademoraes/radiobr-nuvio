@@ -61,7 +61,7 @@ describe('catalog', () => {
     ['Mix Rio 102.1 Rio de Janeiro, RJ', 'mix-rio-102-1.jfif'],
     ['Rádio 105 FM', 'radio-105-fm.jfif'],
     ['Rádio Rock - 89,1 FM', 'radio-89-rock.jfif'],
-    ['Jovem Pan FM - Belo Horizonte 99,1', 'jovem-pan-belo-horizonte.png'],
+    ['Jovem Pan FM - Belo Horizonte 99,1', 'jovem-pan-bh-99-1.png'],
   ])('uses the curated logo for %s', (name, file) => {
     expect(
       stationPreview(
@@ -70,6 +70,34 @@ describe('catalog', () => {
           name,
           ['pop'],
         ),
+        true,
+        'https://radio.example/assets/logo.png',
+      ),
+    ).toMatchObject({
+      poster: `https://radio.example/assets/logos/stations/${file}`,
+      posterShape: 'square',
+    })
+  })
+
+  it.each([
+    ['Rádio 106.7 Sertaneja', '106-7-sertaneja.jfif'],
+    ['Energia FM (97 FM)', 'energia-fm-97.jfif'],
+    ['Kiss FM São Paulo', 'kiss-fm-sao-paulo.jfif'],
+    ['Rádio Nova Paradiso 89.5 FM', 'nova-paradiso-89-5.jfif'],
+    ['Alpha MPB', 'radio-alpha-mpb.webp'],
+    ['Rádio Alvorada FM 94.9', 'radio-alvorada.png'],
+    ['Rádio Anos 80', 'radio-anos-80.png'],
+    ['BR - The Classic Rock', 'br-classic-rock.png'],
+    ['Rádio Buteco Sertanejo', 'buteco-sertanejo.png'],
+    ['Rádio Cultura FM 103.1', 'cultura-fm-103-1.webp'],
+    ['Geração Samba e Pagode', 'geracao-samba-pagode.png'],
+    ['Rádio Jovem Pan FM São Paulo 100.9', 'jovem-pan-sp-100-9.png'],
+    ['Maracutaia FM', 'maracutaia-fm.png'],
+    ['Rádio Nativa 95.3 São Paulo', 'nativa-sp-95-3.png'],
+  ])('uses the fifth selection logo for %s', (name, file) => {
+    expect(
+      stationPreview(
+        station('99999999-9999-4999-8999-999999999999', name, ['radio']),
         true,
         'https://radio.example/assets/logo.png',
       ),
