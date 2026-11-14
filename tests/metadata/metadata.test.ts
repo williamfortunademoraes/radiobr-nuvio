@@ -276,6 +276,49 @@ describe('metadata', () => {
     )
   })
 
+  it('publishes curated website, slogan and Sobre for a Top 25 station', async () => {
+    const result = await createMetadataService({
+      searchStations: vi.fn().mockResolvedValue([
+        {
+          ...validStation,
+          id: 'radio-br:gaucha',
+          stationUuid: 'gaucha',
+          name: 'Rádio Gaúcha',
+          state: 'RS',
+          city: 'Porto Alegre',
+        },
+      ]),
+    } as never).getMetadata({
+      type: 'tv',
+      id: 'radio-br:editorial:top25-1',
+    })
+
+    expect(result.meta).toMatchObject({
+      website: 'https://gauchazh.clicrbs.com.br/',
+    })
+    const description = (result.meta as { description?: string }).description!
+    expect(description.split('\n')[0]).toBe('Rádio Gaúcha – A tua voz')
+    expect(description).toContain(
+      'Sobre: Rádio do Grupo RBS com jornalismo, esporte e informação',
+    )
+    expect(description.indexOf('A tua voz')).toBeLessThan(
+      description.indexOf('Sobre:'),
+    )
+  })
+
+  it('does not duplicate location when a featured station is not playable', async () => {
+    const result = await createMetadataService({
+      searchStations: vi.fn().mockResolvedValue([]),
+    } as never).getMetadata({
+      type: 'tv',
+      id: 'radio-br:editorial:top25-1',
+    })
+    const description = (result.meta as { description?: string }).description!
+    expect(description.match(/Cidade:/g)).toHaveLength(1)
+    expect(description.match(/Estado:/g)).toHaveLength(1)
+    expect(description).toContain('Sobre: Rádio do Grupo RBS')
+  })
+
   it('uses the editorial city and UF once for a featured station', async () => {
     const result = await createMetadataService({
       searchStations: vi.fn().mockResolvedValue([

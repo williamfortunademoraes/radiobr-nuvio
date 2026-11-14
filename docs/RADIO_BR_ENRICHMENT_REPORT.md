@@ -20,6 +20,7 @@ Foram adicionados:
 - `src/enrichment/storage.ts`: leitura e gravação opcional do snapshot.
 - `scripts/enrich-stations.ts`: comando operacional `npm run enrich`.
 - `data/enrichment/logo-sources.json`: origem dos logos incorporados.
+- `src/editorial/top-25-enrichment.ts`: mapa curado das 25 rádios em destaque, com slogan, site oficial, URL do Radios.com.br, texto “Sobre” e origem/data de verificação.
 
 ## Fontes
 
@@ -27,7 +28,7 @@ A rotina prioriza Radios.com.br quando existe URL editorial conhecida, usa o sit
 
 ## Campos
 
-O overlay suporta nome, cidade, UF, nome do estado, categorias, slogan e logo. O modelo original continua preservando `stationUuid`, `id`, `url`, `urlResolved`, codec, bitrate e reprodução.
+O overlay suporta nome, cidade, UF, nome do estado, categorias, slogan, “Sobre”, site oficial, URL do Radios.com.br e logo. O modelo original continua preservando `stationUuid`, `id`, `url`, `urlResolved`, codec, bitrate e reprodução. Nas entradas editoriais Top 25, o metadata publica o site oficial e mantém slogan/frequência/localização antes do texto “Sobre”.
 
 ## Logos incorporados
 

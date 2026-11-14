@@ -9,6 +9,7 @@ import { resolveHandlerConfig } from '../config/addon-config.js'
 import type { EnrichmentSnapshot } from '../enrichment/snapshot.js'
 import { applySnapshot } from '../enrichment/resolve.js'
 import { curatedLandscapePosterForStation } from '../catalog/catalog.js'
+import { getTop25Enrichment } from '../editorial/top-25-enrichment.js'
 
 export function createMetadataService(
   client: RadioBrowserClient,
@@ -77,6 +78,10 @@ function editorialMeta(
   item: ReturnType<typeof resolveEditorialStations>[number],
 ) {
   const { editorial, playable } = item
+  const top25Position = Number(editorial.id.match(/^top25-(\d+)$/)?.[1])
+  const enrichment = Number.isInteger(top25Position)
+    ? getTop25Enrichment(top25Position)
+    : undefined
   const station = item.station
     ? {
         ...item.station,
@@ -84,12 +89,27 @@ function editorialMeta(
         ...(editorial.state
           ? { state: editorial.state, stateName: undefined }
           : {}),
+        ...(enrichment
+          ? {
+              slogan: enrichment.slogan,
+              about: enrichment.about,
+              homepage: enrichment.website,
+            }
+          : {}),
       }
     : undefined
   const editorialDescription = [
     station
       ? stationDescription(station, editorial.name)
-      : frequencyLine(editorial.name),
+      : [
+          enrichment?.slogan
+            ? `${editorial.name} – ${enrichment.slogan}`
+            : undefined,
+          frequencyLine(editorial.name),
+          enrichment?.about ? `Sobre: ${enrichment.about}` : undefined,
+        ]
+          .filter(Boolean)
+          .join('\n'),
     editorial.frequency,
     !station && editorial.city ? `Cidade: ${editorial.city}` : undefined,
     !station && editorial.state ? `Estado: ${editorial.state}` : undefined,
@@ -110,7 +130,9 @@ function editorialMeta(
         }
       : {}),
     description: editorialDescription,
-    ...(editorial.websiteUrl ? { website: editorial.websiteUrl } : {}),
+    ...(enrichment?.website || editorial.websiteUrl
+      ? { website: enrichment?.website ?? editorial.websiteUrl }
+      : {}),
   }
 }
 export function stationMeta(station: Station, baseUrl?: string) {
