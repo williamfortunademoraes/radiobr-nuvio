@@ -4,6 +4,7 @@ import {
   type CollectionId,
 } from '../config/addon-config.js'
 import { STATES, STATE_REGIONS } from '../stations/states.js'
+import type { Station } from '../stations/types.js'
 
 const GITHUB_URL = 'https://github.com/williamfortunademoraes/radiobr-nuvio'
 const RADIO_BROWSER_URL = 'https://www.radio-browser.info/'
@@ -328,6 +329,42 @@ ${header('inicio')}
       </section>
     </main>
 ${footer()}`
+}
+
+export function renderRadioPlayerPage(station: Station, baseUrl: string): string {
+  const name = escapeHtml(station.name)
+  const slogan = escapeHtml(station.slogan ?? '')
+  const about = escapeHtml(station.about ?? '')
+  const logo = escapeHtml(station.favicon ?? `${baseUrl}/assets/logo.png`)
+  const stream = escapeHtml(station.urlResolved ?? station.url ?? '')
+  const primary = /fm\s+o\s+dia/i.test(station.name)
+    ? '#ef233c'
+    : /smooth|jazz/i.test(station.name)
+      ? '#b91c3b'
+      : '#7c3aed'
+  const secondary = /fm\s+o\s+dia/i.test(station.name)
+    ? '#fbbf24'
+    : /smooth|jazz/i.test(station.name)
+      ? '#f4e4b5'
+      : '#22d3ee'
+  return `${head(`${name} — RADIO BR`, `Ouça ${name} ao vivo.`, false)}
+<main class="radio-player" style="--radio-primary:${primary};--radio-secondary:${secondary}">
+  <div class="radio-visual" aria-hidden="true"><div class="radio-orb radio-orb-a"></div><div class="radio-orb radio-orb-b"></div><div class="radio-grid"></div><div class="radio-bars">${Array.from({ length: 28 }, () => '<i></i>').join('')}</div></div>
+  <section class="radio-panel">
+    <a class="radio-back" href="/">← RADIO BR</a>
+    <img class="radio-logo" src="${logo}" alt="Logo de ${name}">
+    <p class="radio-live">● AO VIVO</p>
+    <h1>${name}</h1>
+    ${slogan ? `<p class="radio-slogan">${name} – ${slogan}</p>` : ''}
+    ${about ? `<p class="radio-about">${about}</p>` : ''}
+    <audio controls autoplay preload="none" src="${stream}"></audio>
+  </section>
+</main>
+<script>
+  const bars=[...document.querySelectorAll('.radio-bars i')];
+  function animate(){bars.forEach((bar,i)=>bar.style.height=(18+Math.abs(Math.sin(Date.now()/420+i*.73))*68+Math.random()*12)+'%');requestAnimationFrame(animate)} animate();
+</script>
+</body></html>`
 }
 
 function collectionCards() {

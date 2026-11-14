@@ -16,7 +16,7 @@ import {
 } from './config/addon-config.js'
 import { loadConfig, type AppConfig } from './config/index.js'
 import { RadioBrowserClient } from './radio-browser/client.js'
-import { renderConfigPage, renderLandingPage } from './web/pages.js'
+import { renderConfigPage, renderLandingPage, renderRadioPlayerPage } from './web/pages.js'
 
 const require = createRequire(import.meta.url)
 const { getRouter } =
@@ -80,6 +80,23 @@ export function createApp(options: CreateAppOptions = {}): Express {
   app.get('/configure', (_req, res) => sendPage(res, renderConfigPage()))
   app.get('/config', (_req, res) => res.redirect(302, '/personalizar'))
   app.get('/sobre', (_req, res) => res.redirect(302, '/#sobre'))
+  app.get('/radio/:stationUuid', async (req, res, next) => {
+    try {
+      const stations = await (typeof client.searchAllStations === 'function'
+        ? client.searchAllStations()
+        : client.searchStations())
+      const station = stations.find(
+        (item) => item.stationUuid === req.params.stationUuid,
+      )
+      if (!station) {
+        res.status(404).send('Rádio não encontrada')
+        return
+      }
+      sendPage(res, renderRadioPlayerPage(station, baseUrl))
+    } catch (error) {
+      next(error)
+    }
+  })
 
   app.post('/api/configuration', express.json({ limit: '2kb' }), (req, res) => {
     const result = validateConfig(req.body)
