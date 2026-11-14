@@ -226,11 +226,10 @@ export function stationDescription(
   if (uniqueGenres.length)
     lines.push(`Gênero: ${uniqueGenres.map(displayGenre).join(', ')}`)
   if (uniqueGenres.length) aboutParts.push(`de ${uniqueGenres.map(displayGenre).join(', ')}`)
-  const location = [station.city, station.state]
-    .filter(Boolean)
-    .join(' (')
-    .replace(/\)$/, '')
-  if (location) aboutParts.push(`em ${location}${station.city && station.state ? ')' : ''}`)
+  const location = station.city && station.state
+    ? `${station.city} (${station.state})`
+    : station.city || station.state
+  if (location) aboutParts.push(`em ${location}`)
   lines.push(`Sobre: ${aboutParts.join(' ')}.`)
 
   const format = [
