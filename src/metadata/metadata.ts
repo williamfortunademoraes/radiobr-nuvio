@@ -8,7 +8,7 @@ import { top25Ranking } from '../editorial/top-25-ranking.js'
 import { resolveHandlerConfig } from '../config/addon-config.js'
 import type { EnrichmentSnapshot } from '../enrichment/snapshot.js'
 import { applySnapshot } from '../enrichment/resolve.js'
-import { curatedPosterForStation } from '../catalog/catalog.js'
+import { curatedLandscapePosterForStation } from '../catalog/catalog.js'
 
 export function createMetadataService(
   client: RadioBrowserClient,
@@ -120,9 +120,11 @@ export function stationMeta(station: Station, baseUrl?: string) {
     id: station.id,
     type: 'tv',
     name: station.name,
-    ...(curatedPosterForStation(station.name, baseUrl) || station.favicon
+    ...(curatedLandscapePosterForStation(station.name, baseUrl) || station.favicon
       ? {
-          poster: curatedPosterForStation(station.name, baseUrl) || station.favicon,
+          poster:
+            curatedLandscapePosterForStation(station.name, baseUrl) ||
+            station.favicon,
           posterShape: 'square',
         }
       : {}),

@@ -81,7 +81,7 @@ describe('catalog', () => {
         'https://radio.example/assets/logo.png',
       ),
     ).toMatchObject({
-      poster: `https://radio.example/assets/logos/stations/${file.replace(/\.[^.]+$/, '-landscape.jpg')}`,
+      poster: `https://radio.example/assets/logos/stations/${file}`,
       posterShape: 'square',
     })
   })
@@ -110,7 +110,7 @@ describe('catalog', () => {
         'https://radio.example/assets/logo.png',
       ),
     ).toMatchObject({
-      poster: `https://radio.example/assets/logos/stations/${file.replace(/\.[^.]+$/, '-landscape.jpg')}`,
+      poster: `https://radio.example/assets/logos/stations/${file}`,
       posterShape: 'square',
     })
   })
@@ -136,12 +136,12 @@ describe('catalog', () => {
     ])
   })
 
-  it('keeps only the direct genre and region collection sources in the manifest', () => {
+  it('keeps only the direct genre and state collection sources in the manifest', () => {
     const ids = buildCatalogs(defaultConfig()).map((catalog) => catalog.id)
     expect(ids).toEqual(
       expect.arrayContaining([
         'radio-br-genre-sertanejo',
-        'radio-br-region-norte',
+        'radio-br-state-am',
       ]),
     )
     expect(ids).not.toEqual(
@@ -186,7 +186,7 @@ describe('catalog', () => {
     })
     expect(result.metas[6]).toMatchObject({
       poster:
-        'https://radio.example/assets/logos/stations/bandnews-sp-96-9-landscape.jpg',
+        'https://radio.example/assets/logos/stations/bandnews-sp-96-9.jpg',
       posterShape: 'square',
     })
   })
@@ -203,7 +203,7 @@ describe('catalog', () => {
 
     expect(result.metas[1]).toMatchObject({
       poster:
-        'https://radio.example/assets/logos/stations/bandeirantes-107-3-landscape.jpg',
+        'https://radio.example/assets/logos/stations/bandeirantes-107-3.jfif',
       posterShape: 'square',
     })
   })
@@ -219,7 +219,7 @@ describe('catalog', () => {
     })
 
     expect(result.metas[0]).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/gaucha-93-7-landscape.jpg',
+      poster: 'https://radio.example/assets/logos/stations/gaucha-93-7.png',
       posterShape: 'square',
     })
   })
@@ -235,16 +235,16 @@ describe('catalog', () => {
     })
 
     expect(result.metas[7]).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/grenal-95-9-landscape.jpg',
+      poster: 'https://radio.example/assets/logos/stations/grenal-95-9.png',
     })
     expect(result.metas[10]).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/band-96-1-landscape.jpg',
+      poster: 'https://radio.example/assets/logos/stations/band-96-1.png',
     })
     expect(result.metas[12]).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/jb-fm-99-9-landscape.jpg',
+      poster: 'https://radio.example/assets/logos/stations/jb-fm-99-9.png',
     })
     expect(result.metas[16]).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/radio-89-rock-landscape.jpg',
+      poster: 'https://radio.example/assets/logos/stations/radio-89-rock.jfif',
     })
   })
 
