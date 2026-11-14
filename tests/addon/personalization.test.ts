@@ -128,6 +128,10 @@ it('keeps direct regional sources and includes only the selected genres', () => 
     ]),
   )
   expect(ids).not.toContain('radio-br-genre-rock')
+  expect(ids.filter((id) => id.startsWith('radio-br-state-'))).toEqual([
+    'radio-br-state-rj',
+    'radio-br-state-sp',
+  ])
   expect(ids).not.toEqual(
     expect.arrayContaining([
       'radio-br-genre',

@@ -78,4 +78,74 @@ describe('Radio Browser client', () => {
     expect(fetcher).toHaveBeenCalledTimes(2)
     expect(fetcher.mock.calls[1][0] as string).toContain('offset=100')
   })
+
+  it('stops aggregate collection at the configured page limit', async () => {
+    const fetcher = vi
+      .fn()
+      .mockImplementation(() =>
+        Promise.resolve(response(Array(100).fill(validStation))),
+      )
+    const client = new RadioBrowserClient(
+      {
+        radioBrowserBaseUrl: 'https://api.test',
+        userAgent: 'RADIO-BR/test',
+        cacheTtlMs: 1000,
+        port: 7000,
+        radioBrowserMaxPages: 1,
+      },
+      fetcher,
+    )
+
+    await expect(client.searchAllStations()).rejects.toThrow(
+      'maximum page limit',
+    )
+    expect(fetcher).toHaveBeenCalledTimes(1)
+  })
+
+  it('aborts a Radio Browser request after the configured timeout', async () => {
+    const fetcher = vi.fn(
+      (_input: string, init?: RequestInit) =>
+        new Promise<Response>((_resolve, reject) => {
+          init?.signal?.addEventListener('abort', () =>
+            reject(new Error('request aborted')),
+          )
+        }),
+    )
+    const client = new RadioBrowserClient(
+      {
+        radioBrowserBaseUrl: 'https://api.test',
+        userAgent: 'RADIO-BR/test',
+        cacheTtlMs: 1000,
+        port: 7000,
+        radioBrowserTimeoutMs: 10,
+      },
+      fetcher,
+    )
+
+    await expect(client.searchStations()).rejects.toThrow('request aborted')
+  })
+
+  it('reports request metrics without including station URLs', async () => {
+    const fetcher = vi.fn().mockResolvedValue(response([validStation]))
+    const onRequest = vi.fn()
+    const client = new RadioBrowserClient(
+      {
+        radioBrowserBaseUrl: 'https://api.test',
+        userAgent: 'RADIO-BR/test',
+        cacheTtlMs: 1000,
+        port: 7000,
+      },
+      fetcher,
+      undefined,
+      { onRequest },
+    )
+
+    await client.searchStations({ search: 'prova' })
+    expect(onRequest).toHaveBeenCalledWith(
+      expect.objectContaining({ ok: true, stationCount: 1 }),
+    )
+    expect(JSON.stringify(onRequest.mock.calls[0][0])).not.toContain(
+      'example.test/radio.mp3',
+    )
+  })
 })

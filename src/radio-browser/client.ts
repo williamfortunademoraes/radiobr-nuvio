@@ -5,12 +5,27 @@ import type { RadioBrowserStation, SearchOptions } from './types.js'
 import { MemoryCache } from './cache.js'
 
 export type FetchLike = (input: string, init?: RequestInit) => Promise<Response>
+export interface RadioBrowserRequestMetric {
+  search?: string
+  offset: number
+  limit: number
+  durationMs: number
+  ok: boolean
+  stationCount?: number
+  error?: string
+}
+
+export interface RadioBrowserClientHooks {
+  onRequest?: (metric: RadioBrowserRequestMetric) => void
+}
+
 export class RadioBrowserClient {
   private readonly inFlight = new Map<string, Promise<Station[]>>()
   constructor(
     private readonly config: AppConfig = loadConfig(),
     private readonly fetcher: FetchLike = fetch,
     private readonly cache = new MemoryCache<Station[]>(config.cacheTtlMs),
+    private readonly hooks: RadioBrowserClientHooks = {},
   ) {}
   async searchStations(options: SearchOptions = {}): Promise<Station[]> {
     const limit = Math.min(Math.max(options.limit ?? 100, 1), 100)
@@ -24,10 +39,30 @@ export class RadioBrowserClient {
     if (cached) return cached
     const pending = this.inFlight.get(cacheKey)
     if (pending) return pending
+    const startedAt = Date.now()
     const request = this.fetchStations(options.search, limit, offset).then(
       (stations) => {
+        this.hooks.onRequest?.({
+          search: options.search,
+          offset,
+          limit,
+          durationMs: Date.now() - startedAt,
+          ok: true,
+          stationCount: stations.length,
+        })
         this.cache.set(cacheKey, stations)
         return stations
+      },
+      (error: unknown) => {
+        this.hooks.onRequest?.({
+          search: options.search,
+          offset,
+          limit,
+          durationMs: Date.now() - startedAt,
+          ok: false,
+          error: error instanceof Error ? error.message : 'unknown_error',
+        })
+        throw error
       },
     )
     this.inFlight.set(cacheKey, request)
@@ -44,7 +79,10 @@ export class RadioBrowserClient {
     if (cached) return cached
 
     const stations: Station[] = []
-    for (let offset = 0; ; offset += 100) {
+    const maxPages = Math.max(1, this.config.radioBrowserMaxPages ?? 25)
+    for (let pageNumber = 0, offset = 0; ; pageNumber += 1, offset += 100) {
+      if (pageNumber >= maxPages)
+        throw new Error('Radio Browser maximum page limit reached')
       const page = await this.searchStations({ offset, limit: 100 })
       stations.push(...page)
       if (page.length < 100) break
@@ -84,15 +122,26 @@ export class RadioBrowserClient {
       offset: String(offset),
     })
     if (search?.trim()) params.set('name', search.trim())
-    const response = await this.fetcher(
-      `${this.config.radioBrowserBaseUrl}/json/stations/search?${params}`,
-      {
-        headers: {
-          'User-Agent': this.config.userAgent,
-          Accept: 'application/json',
-        },
-      },
+    const controller = new AbortController()
+    const timeout = setTimeout(
+      () => controller.abort(),
+      Math.max(1, this.config.radioBrowserTimeoutMs ?? 10_000),
     )
+    let response: Response
+    try {
+      response = await this.fetcher(
+        `${this.config.radioBrowserBaseUrl}/json/stations/search?${params}`,
+        {
+          headers: {
+            'User-Agent': this.config.userAgent,
+            Accept: 'application/json',
+          },
+          signal: controller.signal,
+        },
+      )
+    } finally {
+      clearTimeout(timeout)
+    }
     if (!response.ok)
       throw new Error(`Radio Browser request failed: HTTP ${response.status}`)
     let data: unknown

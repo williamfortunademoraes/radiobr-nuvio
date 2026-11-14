@@ -23,6 +23,7 @@
 ### Task 1: Resolução normalizada de logos curadas
 
 **Files:**
+
 - Modify: `src/catalog/catalog.ts`
 - Test: `tests/catalog/catalog.test.ts`
 

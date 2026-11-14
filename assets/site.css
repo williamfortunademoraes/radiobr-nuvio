@@ -100,23 +100,150 @@ button {
   overflow: hidden;
   background: color-mix(in srgb, var(--radio-primary) 12%, #08050f);
 }
-.radio-visual { position: absolute; inset: 0; background: linear-gradient(180deg, color-mix(in srgb, var(--radio-primary) 24%, transparent), rgba(8,5,15,.78)), radial-gradient(circle at 18% 24%, color-mix(in srgb, var(--radio-primary) 55%, transparent), transparent 38%), radial-gradient(circle at 84% 78%, color-mix(in srgb, var(--radio-secondary) 30%, transparent), transparent 34%), url('/assets/radio-landscapes/brazil-sunset.png') center/cover, linear-gradient(135deg, #08050f, #120b22); animation: radio-landscape 18s ease-in-out infinite alternate; }
-.radio-grid { position: absolute; inset: 0; opacity: .2; background-image: linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px); background-size: 56px 56px; transform: perspective(500px) rotateX(58deg) scale(1.5); transform-origin: center bottom; }
-.radio-orb { position: absolute; width: 42vw; height: 42vw; border-radius: 50%; filter: blur(24px); opacity: .52; animation: radio-drift 12s ease-in-out infinite alternate; }
-.radio-orb-a { background: var(--radio-primary); left: -12vw; top: 12vh; }
-.radio-orb-b { background: var(--radio-secondary); right: -14vw; bottom: 2vh; animation-delay: -5s; }
-.radio-bars { position: absolute; left: 10%; right: 10%; bottom: 10%; height: 35%; display: flex; align-items: end; gap: 1.2%; opacity: .7; }
-.radio-bars i { flex: 1; min-height: 8%; height: 30%; border-radius: 999px 999px 0 0; background: linear-gradient(var(--radio-secondary), var(--radio-primary)); box-shadow: 0 0 22px color-mix(in srgb, var(--radio-primary) 55%, transparent); transition: height .25s ease; }
-.radio-panel { position: relative; z-index: 2; width: min(720px, calc(100% - 40px)); min-height: 100vh; margin: 0 auto; padding: 48px 0 72px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-.radio-back { align-self: flex-start; color: rgba(255,255,255,.72); margin-bottom: 32px; }
-.radio-logo { width: 190px; height: 190px; object-fit: cover; border-radius: 28px; border: 1px solid color-mix(in srgb, var(--radio-secondary) 50%, white 20%); box-shadow: 0 24px 80px color-mix(in srgb, var(--radio-primary) 35%, black); background: #151021; }
-.radio-live { color: var(--radio-secondary); font-size: .75rem; letter-spacing: .18em; font-weight: 700; margin: 24px 0 10px; }
-.radio-panel h1 { font-size: clamp(2rem, 5vw, 4rem); text-shadow: 0 8px 36px rgba(0,0,0,.4); }
-.radio-slogan { margin-top: 12px; color: rgba(255,255,255,.88); font-size: 1.1rem; }
-.radio-about { max-width: 620px; margin-top: 24px; color: rgba(255,255,255,.72); line-height: 1.75; }
-.radio-panel audio { width: min(560px, 100%); margin-top: 30px; accent-color: var(--radio-secondary); }
-@keyframes radio-drift { from { transform: translate3d(-4%, -3%, 0) scale(.92); } to { transform: translate3d(6%, 5%, 0) scale(1.12); } }
-@keyframes radio-landscape { from { background-position: center center; } to { background-position: 52% 48%; } }
+.radio-visual {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--radio-primary) 24%, transparent),
+      rgba(8, 5, 15, 0.78)
+    ),
+    radial-gradient(
+      circle at 18% 24%,
+      color-mix(in srgb, var(--radio-primary) 55%, transparent),
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 84% 78%,
+      color-mix(in srgb, var(--radio-secondary) 30%, transparent),
+      transparent 34%
+    ),
+    url('/assets/radio-landscapes/brazil-sunset.png') center/cover,
+    linear-gradient(135deg, #08050f, #120b22);
+  animation: radio-landscape 18s ease-in-out infinite alternate;
+}
+.radio-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.2;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 56px 56px;
+  transform: perspective(500px) rotateX(58deg) scale(1.5);
+  transform-origin: center bottom;
+}
+.radio-orb {
+  position: absolute;
+  width: 42vw;
+  height: 42vw;
+  border-radius: 50%;
+  filter: blur(24px);
+  opacity: 0.52;
+  animation: radio-drift 12s ease-in-out infinite alternate;
+}
+.radio-orb-a {
+  background: var(--radio-primary);
+  left: -12vw;
+  top: 12vh;
+}
+.radio-orb-b {
+  background: var(--radio-secondary);
+  right: -14vw;
+  bottom: 2vh;
+  animation-delay: -5s;
+}
+.radio-bars {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 10%;
+  height: 35%;
+  display: flex;
+  align-items: end;
+  gap: 1.2%;
+  opacity: 0.7;
+}
+.radio-bars i {
+  flex: 1;
+  min-height: 8%;
+  height: 30%;
+  border-radius: 999px 999px 0 0;
+  background: linear-gradient(var(--radio-secondary), var(--radio-primary));
+  box-shadow: 0 0 22px color-mix(in srgb, var(--radio-primary) 55%, transparent);
+  transition: height 0.25s ease;
+}
+.radio-panel {
+  position: relative;
+  z-index: 2;
+  width: min(720px, calc(100% - 40px));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 48px 0 72px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.radio-back {
+  align-self: flex-start;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 32px;
+}
+.radio-logo {
+  width: 190px;
+  height: 190px;
+  object-fit: cover;
+  border-radius: 28px;
+  border: 1px solid color-mix(in srgb, var(--radio-secondary) 50%, white 20%);
+  box-shadow: 0 24px 80px color-mix(in srgb, var(--radio-primary) 35%, black);
+  background: #151021;
+}
+.radio-live {
+  color: var(--radio-secondary);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  margin: 24px 0 10px;
+}
+.radio-panel h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  text-shadow: 0 8px 36px rgba(0, 0, 0, 0.4);
+}
+.radio-slogan {
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 1.1rem;
+}
+.radio-about {
+  max-width: 620px;
+  margin-top: 24px;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.75;
+}
+.radio-panel audio {
+  width: min(560px, 100%);
+  margin-top: 30px;
+  accent-color: var(--radio-secondary);
+}
+@keyframes radio-drift {
+  from {
+    transform: translate3d(-4%, -3%, 0) scale(0.92);
+  }
+  to {
+    transform: translate3d(6%, 5%, 0) scale(1.12);
+  }
+}
+@keyframes radio-landscape {
+  from {
+    background-position: center center;
+  }
+  to {
+    background-position: 52% 48%;
+  }
+}
 
 h1,
 h2,
@@ -2437,5 +2564,113 @@ code {
   }
   50% {
     transform: translateY(-9px);
+  }
+}
+
+.station-discovery {
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.1));
+  border-radius: 28px;
+  padding: clamp(24px, 4vw, 48px);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.station-search-form {
+  display: flex;
+  gap: 12px;
+  max-width: 760px;
+}
+
+.station-search {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.15));
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  color: inherit;
+  padding: 14px 16px;
+  font: inherit;
+}
+
+.station-search:focus-visible,
+.favorite-station:focus-visible {
+  outline: 3px solid rgba(34, 211, 238, 0.5);
+  outline-offset: 3px;
+}
+
+.station-search-status {
+  min-height: 24px;
+  color: var(--muted, #aaa);
+}
+
+.station-results {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.station-result {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.1));
+  border-radius: 16px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.station-result:hover {
+  border-color: rgba(34, 211, 238, 0.5);
+  transform: translateY(-2px);
+}
+
+.station-result-logo {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  color: #22d3ee;
+  font-size: 24px;
+}
+
+.station-result-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.station-result strong,
+.station-result small {
+  display: block;
+}
+
+.station-result small {
+  margin-top: 4px;
+  color: var(--muted, #aaa);
+}
+
+.favorite-station {
+  border: 1px solid color-mix(in srgb, var(--radio-secondary), transparent 40%);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  padding: 9px 14px;
+  cursor: pointer;
+  font: inherit;
+}
+
+@media (max-width: 620px) {
+  .station-search-form,
+  .station-results {
+    grid-template-columns: 1fr;
+  }
+
+  .station-search-form {
+    display: grid;
   }
 }

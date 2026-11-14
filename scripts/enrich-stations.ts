@@ -66,7 +66,8 @@ const curatedLogos: Record<string, string> = {
   [normalize('Rádio 99.5 FM Goiânia')]: '99-5-fm-goiania.png',
   [normalize('99.5 FM Goiânia')]: '99-5-fm-goiania.png',
   [normalize('Jovem Pan FM Florianópolis')]: 'jovem-pan-florianopolis-sc.png',
-  [normalize('Jovem Pan FM - Florianópolis - SC')]: 'jovem-pan-florianopolis-sc.png',
+  [normalize('Jovem Pan FM - Florianópolis - SC')]:
+    'jovem-pan-florianopolis-sc.png',
   [normalize('Nativa FM 95.3 São Paulo')]: 'nativa-sp-95-3.png',
   [normalize('Rádio Rap Brasil')]: 'radio-rap-brasil.jpg',
   [normalize('Rap Brasil')]: 'radio-rap-brasil.jpg',

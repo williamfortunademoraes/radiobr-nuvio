@@ -80,6 +80,37 @@ export function createApp(options: CreateAppOptions = {}): Express {
   })
 
   app.get('/', (_req, res) => sendPage(res, renderLandingPage()))
+  app.get('/health', (_req, res) => {
+    res.setHeader('Cache-Control', 'no-store')
+    res.json({ status: 'ok' })
+  })
+  app.get('/api/stations', async (req, res, next) => {
+    try {
+      const search =
+        typeof req.query.search === 'string'
+          ? req.query.search.slice(0, 100)
+          : undefined
+      const parsedLimit = Number(req.query.limit ?? 12)
+      const limit = Number.isFinite(parsedLimit)
+        ? Math.min(Math.max(Math.trunc(parsedLimit), 1), 20)
+        : 12
+      const stations = await client.searchStations({ search, limit })
+      res.setHeader('Cache-Control', 'public, max-age=60')
+      res.json(
+        stations.map((station) => ({
+          id: station.id,
+          name: station.name,
+          favicon: station.favicon,
+          homepage: station.homepage,
+          state: station.state,
+          codec: station.codec,
+          bitrate: station.bitrate,
+        })),
+      )
+    } catch (error) {
+      next(error)
+    }
+  })
   app.get('/personalizar', (_req, res) => sendPage(res, renderConfigPage()))
   app.get('/configure', (_req, res) => sendPage(res, renderConfigPage()))
   app.get('/config', (_req, res) => res.redirect(302, '/personalizar'))

@@ -336,6 +336,9 @@ const searchExtra: ManifestCatalogExtra = {
 export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
   const catalogs: ManifestCatalog[] = []
   const collections = new Set(config.c)
+  const states = config.s.length
+    ? STATES.filter((state) => config.s.includes(state.code))
+    : STATES
 
   if (collections.has('editorial'))
     catalogs.push({
@@ -356,7 +359,7 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
       name: genreName(genre),
       extra: [searchExtra],
     })),
-    ...STATES.map((state) => ({
+    ...states.map((state) => ({
       type: 'tv' as const,
       id: `radio-br-state-${state.code.toLowerCase()}`,
       name: state.name,

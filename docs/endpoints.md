@@ -3,6 +3,8 @@
 ## Página e configuração
 
 - `GET /`: apresentação RADIO BR.
+- `GET /health`: verifica se o processo HTTP está disponível, sem consultar a Radio Browser.
+- `GET /api/stations?search=...&limit=...`: busca até 20 estações para descoberta na página própria; não retorna URLs de áudio.
 - `GET /personalizar`, `GET /configure`: central em cinco etapas.
 - `GET /assets/*`: imagens, CSS e JavaScript.
 - `POST /api/configuration`: JSON de até 2 KiB; retorna `{ url, manifest }` após validar e canonicalizar. A URL usa `ADDON_BASE_URL`.

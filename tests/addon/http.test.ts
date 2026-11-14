@@ -4,6 +4,7 @@ import { createAddon } from '../../src/addon/create-addon.js'
 import { createManifest } from '../../src/addon/manifest.js'
 import { RadioBrowserClient } from '../../src/radio-browser/client.js'
 import { validStation } from '../fixtures/station.js'
+import { createApp } from '../../src/server.js'
 
 const require = createRequire(import.meta.url)
 const { serveHTTP } =
@@ -119,4 +120,49 @@ it('uses the configured public origin and rejects non-HTTP image origins', () =>
     'https://radio.example/assets/logo.png',
   )
   expect(() => createManifest('file:///tmp')).toThrow('HTTP(S)')
+})
+
+it('exposes a process health endpoint without consulting Radio Browser', async () => {
+  const app = createApp({ baseUrl: 'http://127.0.0.1:7002' })
+  const server = app.listen(0)
+  await new Promise<void>((resolve) => server.once('listening', resolve))
+  const address = server.address()
+  const base = `http://127.0.0.1:${typeof address === 'object' && address ? address.port : 0}`
+  try {
+    const response = await fetch(`${base}/health`)
+    expect(response.status).toBe(200)
+    expect(await response.json()).toEqual({ status: 'ok' })
+  } finally {
+    server.closeAllConnections()
+    await new Promise<void>((resolve) => server.close(() => resolve()))
+  }
+})
+
+it('searches stations through a bounded JSON endpoint', async () => {
+  const fetcher = vi.fn(() =>
+    Promise.resolve(new Response(JSON.stringify([validStation]))),
+  )
+  const app = createApp({
+    client: new RadioBrowserClient(undefined, fetcher),
+    baseUrl: 'http://127.0.0.1:7002',
+  })
+  const server = app.listen(0)
+  await new Promise<void>((resolve) => server.once('listening', resolve))
+  const address = server.address()
+  const base = `http://127.0.0.1:${typeof address === 'object' && address ? address.port : 0}`
+  try {
+    const response = await fetch(`${base}/api/stations?search=prova&limit=100`)
+    expect(response.status).toBe(200)
+    expect(await response.json()).toEqual([
+      expect.objectContaining({
+        id: `radio-br:${validStation.stationuuid}`,
+        name: validStation.name,
+      }),
+    ])
+    const firstCall = fetcher.mock.calls[0] as unknown as [string]
+    expect(firstCall[0]).toContain('limit=20')
+  } finally {
+    server.closeAllConnections()
+    await new Promise<void>((resolve) => server.close(() => resolve()))
+  }
 })

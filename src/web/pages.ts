@@ -257,6 +257,23 @@ ${header('inicio')}
         <div class="stat"><strong>0</strong><span>contas ou cadastros</span></div>
       </section>
 
+      <section class="section shell station-discovery" aria-labelledby="station-search-title">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow"><span class="eyebrow-dot"></span> Descobrir</span>
+            <h2 id="station-search-title">Encontre uma rádio agora.</h2>
+          </div>
+          <p>Pesquise pelo nome e abra uma página de reprodução. Seus favoritos ficam salvos apenas neste navegador.</p>
+        </div>
+        <form class="station-search-form" id="station-search-form" role="search">
+          <label class="sr-only" for="station-search">Nome da rádio</label>
+          <input id="station-search" class="station-search" type="search" placeholder="Ex.: Rádio Gaúcha, MPB, Jovem Pan" autocomplete="off">
+          <button class="btn btn-primary" type="submit">Buscar</button>
+        </form>
+        <p class="station-search-status" id="station-search-status" role="status">Digite pelo menos 2 caracteres para começar.</p>
+        <div class="station-results" id="station-results" aria-live="polite"></div>
+      </section>
+
       <section class="section shell" id="colecoes">
         <div class="section-head">
           <div>
@@ -328,6 +345,7 @@ ${header('inicio')}
         <a class="btn btn-primary btn-lg" href="/personalizar">Personalizar minhas rádios <span aria-hidden="true">→</span></a>
       </section>
     </main>
+    <script src="/assets/discover.js" defer></script>
 ${footer()}`
 }
 
@@ -358,6 +376,7 @@ export function renderRadioPlayerPage(
     <img class="radio-logo" src="${logo}" alt="Logo de ${name}">
     <p class="radio-live">● AO VIVO</p>
     <h1>${name}</h1>
+    <button class="favorite-station" type="button" data-station-id="${escapeHtml(station.id)}" data-station-name="${name}" aria-pressed="false">☆ Adicionar aos favoritos</button>
     ${slogan ? `<p class="radio-slogan">${name} – ${slogan}</p>` : ''}
     ${about ? `<p class="radio-about">${about}</p>` : ''}
     <audio controls autoplay preload="none" src="${stream}"></audio>

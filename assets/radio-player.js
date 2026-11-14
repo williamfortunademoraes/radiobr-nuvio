@@ -1,4 +1,4 @@
-/* global Event, requestAnimationFrame */
+/* global Event, localStorage, requestAnimationFrame */
 
 ;(() => {
   'use strict'
@@ -7,6 +7,34 @@
   const logo = document.querySelector('.radio-logo')
   const bars = [...document.querySelectorAll('.radio-bars i')]
   if (!page || !logo) return
+
+  const favorite = document.querySelector('.favorite-station')
+  if (favorite) {
+    const key = `radio-br-favorite:${favorite.dataset.stationId}`
+    const updateFavorite = (active) => {
+      favorite.setAttribute('aria-pressed', String(active))
+      favorite.textContent = active
+        ? '★ Remover dos favoritos'
+        : '☆ Adicionar aos favoritos'
+    }
+    let active = false
+    try {
+      active = localStorage.getItem(key) === '1'
+    } catch {
+      // Local storage may be disabled; the button remains usable for the session.
+    }
+    updateFavorite(active)
+    favorite.addEventListener('click', () => {
+      active = !active
+      try {
+        if (active) localStorage.setItem(key, '1')
+        else localStorage.removeItem(key)
+      } catch {
+        // Keep the visual state even when persistence is unavailable.
+      }
+      updateFavorite(active)
+    })
+  }
 
   function animate() {
     bars.forEach((bar, index) => {

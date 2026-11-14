@@ -31,6 +31,7 @@ Depois, abra:
 - `http://localhost:7000/` — página inicial;
 - `http://localhost:7000/personalizar` — central de personalização;
 - `http://localhost:7000/manifest.json` — manifesto padrão para instalar no Stremio ou Nuvio.
+- `http://localhost:7000/health` — health check simples para monitoramento.
 
 Para testar sem substituir uma instalação existente do Nuvio, use outra porta e um perfil separado:
 
@@ -62,6 +63,8 @@ As variáveis estão documentadas em [.env.example](.env.example):
 | `RADIO_BROWSER_BASE_URL`     | Servidor da API Radio Browser.                   |
 | `RADIO_BROWSER_USER_AGENT`   | User-Agent enviado nas consultas.                |
 | `RADIO_BROWSER_CACHE_TTL_MS` | Tempo de vida do cache em memória.               |
+| `RADIO_BROWSER_MAX_PAGES`    | Limite de páginas usadas no diretório agregado.  |
+| `RADIO_BROWSER_TIMEOUT_MS`   | Timeout de cada consulta à Radio Browser.        |
 | `PORT`                       | Porta HTTP local ou definida pelo provedor.      |
 | `ADDON_BASE_URL`             | Origem pública usada no manifesto e nas imagens. |
 

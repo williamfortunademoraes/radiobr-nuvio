@@ -121,7 +121,8 @@ describe('metadata', () => {
       'https://radio.example',
     ).getMetadata({ type: 'tv', id: station.id })
     expect(result.meta).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/fm-o-dia-100-5-landscape.jpg',
+      poster:
+        'https://radio.example/assets/logos/stations/fm-o-dia-100-5-landscape.jpg',
     })
   })
 
@@ -232,9 +233,7 @@ describe('metadata', () => {
       'Estado: RJ - Rio de Janeiro',
     )
     const description = (result.meta as { description?: string }).description!
-    expect(description.split('\n')[0]).toBe(
-      'Rádio Prova – A rádio atual',
-    )
+    expect(description.split('\n')[0]).toBe('Rádio Prova – A rádio atual')
     expect(description).not.toContain('Slogan:')
   })
 

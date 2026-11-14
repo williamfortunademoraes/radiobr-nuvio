@@ -2,7 +2,14 @@ export type EnrichmentSource =
   'radios-com-br' | 'official-website' | 'radio-browser' | 'public' | 'user'
 
 export type EnrichmentField =
-  'name' | 'city' | 'state' | 'stateName' | 'categories' | 'slogan' | 'about' | 'logo'
+  | 'name'
+  | 'city'
+  | 'state'
+  | 'stateName'
+  | 'categories'
+  | 'slogan'
+  | 'about'
+  | 'logo'
 
 export interface EnrichedStationData {
   name?: string
