@@ -1,12 +1,35 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
   createMetadataService,
+  stationMeta,
   stationDescription,
 } from '../../src/metadata/metadata.js'
 import { validStation } from '../fixtures/station.js'
 import { radiosEmDestaque } from '../../src/editorial/radios-em-destaque.js'
 import type { EnrichmentSnapshot } from '../../src/enrichment/snapshot.js'
 describe('metadata', () => {
+  it('uses the square logo as poster and landscape artwork as background', () => {
+    const result = stationMeta(
+      {
+        ...validStation,
+        id: `radio-br:${validStation.stationuuid}`,
+        stationUuid: validStation.stationuuid!,
+        name: 'Rádio TMC 100.1 FM',
+        countryCode: 'BR',
+        tags: [],
+        hls: false,
+      },
+      'https://radio.example',
+    )
+
+    expect(result).toMatchObject({
+      poster: 'https://radio.example/assets/logos/stations/tmc-100-1.webp',
+      background:
+        'https://radio.example/assets/logos/stations/tmc-100-1-landscape.jpg',
+      posterShape: 'square',
+    })
+  })
+
   it('does not manufacture a TV channel for a genre collection', async () => {
     const result = await createMetadataService({
       searchStations: vi.fn().mockResolvedValue([]),
@@ -121,7 +144,8 @@ describe('metadata', () => {
       'https://radio.example',
     ).getMetadata({ type: 'tv', id: station.id })
     expect(result.meta).toMatchObject({
-      poster:
+      poster: 'https://radio.example/assets/logos/stations/fm-o-dia-100-5.png',
+      background:
         'https://radio.example/assets/logos/stations/fm-o-dia-100-5-landscape.jpg',
     })
   })

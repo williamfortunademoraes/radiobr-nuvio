@@ -8,7 +8,10 @@ import { top25Ranking } from '../editorial/top-25-ranking.js'
 import { resolveHandlerConfig } from '../config/addon-config.js'
 import type { EnrichmentSnapshot } from '../enrichment/snapshot.js'
 import { applySnapshot } from '../enrichment/resolve.js'
-import { curatedLandscapePosterForStation } from '../catalog/catalog.js'
+import {
+  curatedLandscapePosterForStation,
+  curatedPosterForStation,
+} from '../catalog/catalog.js'
 import { getTop25Enrichment } from '../editorial/top-25-enrichment.js'
 
 export function createMetadataService(
@@ -48,13 +51,16 @@ export function createMetadataService(
           )[0]
           return {
             meta: presentation(
-              editorialMeta({
-                editorial,
-                station: matched.station,
-                playable: Boolean(
-                  matched.station?.urlResolved || matched.station?.url,
-                ),
-              }),
+              editorialMeta(
+                {
+                  editorial,
+                  station: matched.station,
+                  playable: Boolean(
+                    matched.station?.urlResolved || matched.station?.url,
+                  ),
+                },
+                baseUrl,
+              ),
             ),
           }
         }
@@ -63,7 +69,7 @@ export function createMetadataService(
         )
         if (!item) return { meta: {} }
         const resolved = resolveEditorialStations([item], stations)[0]
-        return { meta: presentation(editorialMeta(resolved)) }
+        return { meta: presentation(editorialMeta(resolved, baseUrl)) }
       }
       const station = stations.find((item) => item.id === args.id)
       if (!station) return { meta: {} }
@@ -76,6 +82,7 @@ export function createMetadataService(
 
 function editorialMeta(
   item: ReturnType<typeof resolveEditorialStations>[number],
+  baseUrl?: string,
 ) {
   const { editorial, playable } = item
   const top25Position = Number(editorial.id.match(/^top25-(\d+)$/)?.[1])
@@ -117,7 +124,12 @@ function editorialMeta(
   ]
     .filter(Boolean)
     .join('\n')
-  const poster = editorial.logoUrl || item.station?.favicon
+  const poster =
+    editorial.logoUrl ||
+    curatedPosterForStation(editorial.name, baseUrl) ||
+    item.station?.favicon
+  const background =
+    curatedLandscapePosterForStation(editorial.name, baseUrl) || poster
   return {
     id: `radio-br:editorial:${editorial.id}`,
     type: 'tv',
@@ -125,7 +137,7 @@ function editorialMeta(
     ...(poster
       ? {
           poster,
-          background: poster,
+          background,
           posterShape: 'square',
         }
       : {}),
@@ -142,7 +154,9 @@ export function stationMeta(station: Station, baseUrl?: string) {
     about: station.about || curatedAbout(station.name),
   })
   const poster =
-    curatedLandscapePosterForStation(station.name, baseUrl) || station.favicon
+    curatedPosterForStation(station.name, baseUrl) || station.favicon
+  const background =
+    curatedLandscapePosterForStation(station.name, baseUrl) || poster
   return {
     id: station.id,
     type: 'tv',
@@ -150,7 +164,7 @@ export function stationMeta(station: Station, baseUrl?: string) {
     ...(poster
       ? {
           poster,
-          background: poster,
+          background,
           posterShape: 'square',
         }
       : {}),
