@@ -19,7 +19,7 @@ export function createAddon(
     : undefined
   const snapshot = loadEnrichmentSnapshot()
   const catalog = createCatalogService(client, fallbackPoster, snapshot)
-  const metadata = createMetadataService(client, snapshot)
+  const metadata = createMetadataService(client, snapshot, baseUrl)
   const streams = createStreamService(client)
   const builder = new AddonBuilder(baseUrl ? createManifest(baseUrl) : manifest)
   builder.defineCatalogHandler((args: any) => catalog.getCatalog(args))

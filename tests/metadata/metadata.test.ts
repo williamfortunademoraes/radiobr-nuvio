@@ -104,6 +104,27 @@ describe('metadata', () => {
     )
   })
 
+  it('uses the curated station logo instead of an unrelated favicon', async () => {
+    const station = {
+      ...validStation,
+      id: 'radio-br:fm-o-dia',
+      stationUuid: 'fm-o-dia',
+      name: 'FM O DIA 100.5',
+      favicon: 'https://radio.example/favicon-99-7.png',
+      tags: ['pop'],
+      countryCode: 'BR' as const,
+      hls: false,
+    }
+    const result = await createMetadataService(
+      { searchStations: vi.fn().mockResolvedValue([station]) } as never,
+      undefined,
+      'https://radio.example',
+    ).getMetadata({ type: 'tv', id: station.id })
+    expect(result.meta).toMatchObject({
+      poster: 'https://radio.example/assets/logos/stations/fm-o-dia-100-5.png',
+    })
+  })
+
   it('translates common English genre terms in the radio description', () => {
     const description = stationDescription({
       ...validStation,

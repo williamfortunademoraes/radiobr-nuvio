@@ -108,12 +108,14 @@ const curatedEditorialLogos: Record<string, string> = Object.fromEntries(
   ].map(([name, file]) => [curatedLogoKey(name), file]),
 )
 
-function curatedPoster(name: string, basePoster?: string): string | undefined {
+export function curatedPosterForStation(name: string, basePoster?: string): string | undefined {
   const file = curatedEditorialLogos[curatedLogoKey(name)]
   return file && basePoster
     ? new URL(`/assets/logos/stations/${file}`, basePoster).href
     : undefined
 }
+
+const curatedPoster = curatedPosterForStation
 
 export interface CatalogArgs {
   type: string

@@ -8,10 +8,12 @@ import { top25Ranking } from '../editorial/top-25-ranking.js'
 import { resolveHandlerConfig } from '../config/addon-config.js'
 import type { EnrichmentSnapshot } from '../enrichment/snapshot.js'
 import { applySnapshot } from '../enrichment/resolve.js'
+import { curatedPosterForStation } from '../catalog/catalog.js'
 
 export function createMetadataService(
   client: RadioBrowserClient,
   snapshot?: EnrichmentSnapshot,
+  baseUrl?: string,
 ) {
   return {
     async getMetadata(args: { type: string; id: string; config?: unknown }) {
@@ -63,7 +65,9 @@ export function createMetadataService(
       }
       const station = stations.find((item) => item.id === args.id)
       if (!station) return { meta: {} }
-      return { meta: presentation(stationMeta(station)) }
+      return {
+        meta: presentation(stationMeta(station, baseUrl)),
+      }
     },
   }
 }
@@ -106,7 +110,7 @@ function editorialMeta(
     ...(editorial.websiteUrl ? { website: editorial.websiteUrl } : {}),
   }
 }
-export function stationMeta(station: Station) {
+export function stationMeta(station: Station, baseUrl?: string) {
   const description = stationDescription({
     ...station,
     slogan: station.slogan || curatedSlogan(station.name),
@@ -116,8 +120,11 @@ export function stationMeta(station: Station) {
     id: station.id,
     type: 'tv',
     name: station.name,
-    ...(station.favicon
-      ? { poster: station.favicon, posterShape: 'square' }
+    ...(curatedPosterForStation(station.name, baseUrl) || station.favicon
+      ? {
+          poster: curatedPosterForStation(station.name, baseUrl) || station.favicon,
+          posterShape: 'square',
+        }
       : {}),
     ...(description ? { description } : {}),
     ...(station.homepage ? { website: station.homepage } : {}),
