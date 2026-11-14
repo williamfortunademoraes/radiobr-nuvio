@@ -35,7 +35,9 @@ describe('metadata', () => {
       poster: station.favicon,
     })
     const description = (result.meta as { description?: string }).description!
-    expect(description.split('\n')[0]).toBe('A rádio que informa você')
+    expect(description.split('\n')[0]).toBe(
+      'Rádio Prova – A rádio que informa você',
+    )
     expect(description).not.toContain('Sobre:')
     expect(description).toContain('Cidade: Rio de Janeiro')
     expect(description).toContain('Estado: SP')
@@ -191,7 +193,9 @@ describe('metadata', () => {
       'Estado: RJ - Rio de Janeiro',
     )
     const description = (result.meta as { description?: string }).description!
-    expect(description.split('\n')[0]).toBe('A rádio atual')
+    expect(description.split('\n')[0]).toBe(
+      'Rádio Prova – A rádio atual',
+    )
     expect(description).not.toContain('Slogan:')
   })
 

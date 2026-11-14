@@ -107,7 +107,10 @@ function editorialMeta(
   }
 }
 export function stationMeta(station: Station) {
-  const description = stationDescription(station)
+  const description = stationDescription({
+    ...station,
+    slogan: station.slogan || curatedSlogan(station.name),
+  })
   return {
     id: station.id,
     type: 'tv',
@@ -118,6 +121,10 @@ export function stationMeta(station: Station) {
     ...(description ? { description } : {}),
     ...(station.homepage ? { website: station.homepage } : {}),
   }
+}
+
+function curatedSlogan(name: string): string | undefined {
+  return /fm\s+o\s+dia/i.test(name) ? 'Alegria que Irradia' : undefined
 }
 
 const genericGenreTags = new Set([
@@ -199,7 +206,8 @@ export function stationDescription(
   fallbackName?: string,
 ): string {
   const lines: string[] = []
-  if (station.slogan?.trim()) lines.push(station.slogan.trim())
+  if (station.slogan?.trim())
+    lines.push(`${station.name} – ${station.slogan.trim()}`)
   const frequency = frequencyLine(station.name) ?? frequencyLine(fallbackName)
   if (frequency) lines.push(frequency)
   if (station.city) lines.push(`Cidade: ${station.city}`)
