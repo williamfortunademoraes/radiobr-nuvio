@@ -331,7 +331,10 @@ ${header('inicio')}
 ${footer()}`
 }
 
-export function renderRadioPlayerPage(station: Station, baseUrl: string): string {
+export function renderRadioPlayerPage(
+  station: Station,
+  baseUrl: string,
+): string {
   const name = escapeHtml(station.name)
   const slogan = escapeHtml(station.slogan ?? '')
   const about = escapeHtml(station.about ?? '')
@@ -360,10 +363,7 @@ export function renderRadioPlayerPage(station: Station, baseUrl: string): string
     <audio controls autoplay preload="none" src="${stream}"></audio>
   </section>
 </main>
-<script>
-  const bars=[...document.querySelectorAll('.radio-bars i')];
-  function animate(){bars.forEach((bar,i)=>bar.style.height=(18+Math.abs(Math.sin(Date.now()/420+i*.73))*68+Math.random()*12)+'%');requestAnimationFrame(animate)} animate();
-</script>
+<script src="/assets/radio-player.js" defer></script>
 </body></html>`
 }
 

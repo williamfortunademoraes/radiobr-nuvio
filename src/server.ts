@@ -16,7 +16,11 @@ import {
 } from './config/addon-config.js'
 import { loadConfig, type AppConfig } from './config/index.js'
 import { RadioBrowserClient } from './radio-browser/client.js'
-import { renderConfigPage, renderLandingPage, renderRadioPlayerPage } from './web/pages.js'
+import {
+  renderConfigPage,
+  renderLandingPage,
+  renderRadioPlayerPage,
+} from './web/pages.js'
 
 const require = createRequire(import.meta.url)
 const { getRouter } =
@@ -70,7 +74,7 @@ export function createApp(options: CreateAppOptions = {}): Express {
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin')
     res.setHeader(
       'Content-Security-Policy',
-      "default-src 'self'; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'",
+      "default-src 'self'; img-src 'self' https: data:; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'",
     )
     next()
   })
