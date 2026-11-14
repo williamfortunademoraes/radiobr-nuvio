@@ -110,6 +110,7 @@ export function stationMeta(station: Station) {
   const description = stationDescription({
     ...station,
     slogan: station.slogan || curatedSlogan(station.name),
+    about: station.about || curatedAbout(station.name),
   })
   return {
     id: station.id,
@@ -125,6 +126,12 @@ export function stationMeta(station: Station) {
 
 function curatedSlogan(name: string): string | undefined {
   return /fm\s+o\s+dia/i.test(name) ? 'Alegria que Irradia' : undefined
+}
+
+function curatedAbout(name: string): string | undefined {
+  return /fm\s+o\s+dia/i.test(name)
+    ? 'O Rio de Janeiro tem muita música, irreverência, festa, gente bonita e a sua Rádio preferida, que junta tudo isso e muito mais numa única sintonia. A FM O Dia vai além daquilo que se espera de uma emissora, ela representa uma janela pronta pra ser aberta a qualquer momento, onde basta entrar nos 100,5 Mhz do dial carioca para curtir um mundo de ALEGRIA, INOVAÇÃO e SUCESSO.'
+    : undefined
 }
 
 const genericGenreTags = new Set([

@@ -86,6 +86,24 @@ describe('metadata', () => {
     )
   })
 
+  it('uses the provided FM O Dia history', async () => {
+    const station = {
+      ...validStation,
+      id: 'radio-br:fm-o-dia',
+      stationUuid: 'fm-o-dia',
+      name: 'FM O DIA 100.5',
+      tags: ['pop'],
+      countryCode: 'BR' as const,
+      hls: false,
+    }
+    const result = await createMetadataService({
+      searchStations: vi.fn().mockResolvedValue([station]),
+    } as never).getMetadata({ type: 'tv', id: station.id })
+    expect((result.meta as { description?: string }).description).toContain(
+      'Sobre: O Rio de Janeiro tem muita música, irreverência, festa',
+    )
+  })
+
   it('translates common English genre terms in the radio description', () => {
     const description = stationDescription({
       ...validStation,
