@@ -2501,6 +2501,9 @@ code {
 
 /* Radio portal */
 .portal-main {
+  padding-bottom: 32px;
+}
+body:has(.global-player:not([hidden])) .portal-main {
   padding-bottom: 130px;
 }
 .portal-main > section {
@@ -2795,7 +2798,7 @@ code {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 70px;
+  margin-bottom: 24px;
   padding: 30px;
   border: 1px solid rgba(192, 132, 252, 0.25);
   border-radius: 24px;

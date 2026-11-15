@@ -71,6 +71,11 @@ test('searches, starts, switches and favorites a radio in the global player', as
     }),
   )
   await page.goto('/')
+  const addonBox = await page.locator('.portal-addon').boundingBox()
+  const footerBox = await page.locator('.site-footer').boundingBox()
+  expect(addonBox).not.toBeNull()
+  expect(footerBox).not.toBeNull()
+  expect(footerBox!.y - (addonBox!.y + addonBox!.height)).toBeLessThan(80)
   await expect(page.locator('#featured-stations .radio-card')).toHaveCount(2)
   await expect(
     page.locator('#genre-sections .portal-subsection-content').first(),
