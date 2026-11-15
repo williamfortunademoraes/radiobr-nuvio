@@ -32,6 +32,7 @@
     playerFavorite: $('#global-player-favorite'),
     playerClose: $('#global-player-close'),
     playerMinimize: $('#global-player-minimize'),
+    playToggle: $('#global-play-toggle'),
     volume: $('#global-volume'),
     mute: $('#global-mute'),
   }
@@ -115,6 +116,13 @@
     const muted = els.audio.muted || home.volume === 0
     els.mute.textContent = muted ? '🔇' : '🔊'
     els.mute.setAttribute('aria-label', muted ? 'Ativar som' : 'Silenciar')
+  }
+  function updatePlayToggle() {
+    if (!els.playToggle) return
+    const playing = !els.audio.paused
+    els.playToggle.textContent = playing ? '❚❚' : '▶'
+    els.playToggle.setAttribute('aria-label', playing ? 'Pausar' : 'Reproduzir')
+    els.player.classList.toggle('is-playing', playing)
   }
   function setVolume(value) {
     home.volume = Math.min(1, Math.max(0, Number(value)))
@@ -369,12 +377,18 @@
     )
     els.playerMinimize.setAttribute('aria-expanded', String(!minimized))
   })
+  els.playToggle?.addEventListener('click', () => {
+    if (els.audio.paused) els.audio.play().catch(() => {})
+    else els.audio.pause()
+  })
   els.volume?.addEventListener('input', () => setVolume(els.volume.value))
   els.mute?.addEventListener('click', () => {
     els.audio.muted = !els.audio.muted
     updateMuteButton()
   })
   els.audio?.addEventListener('volumechange', updateMuteButton)
+  els.audio?.addEventListener('play', updatePlayToggle)
+  els.audio?.addEventListener('pause', updatePlayToggle)
   els.audio?.addEventListener('error', () => {
     els.status.textContent =
       'Esta rádio não respondeu. Escolha outra estação para continuar ouvindo.'
@@ -382,5 +396,6 @@
   loadVolume()
   els.audio.volume = home.volume
   updateMuteButton()
+  updatePlayToggle()
   loadHome()
 })()

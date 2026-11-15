@@ -116,6 +116,8 @@ test('searches, starts, switches and favorites a radio in the global player', as
   await expect(page.locator('#global-player-name')).toHaveText(
     'Rádio Horizonte',
   )
+  await expect(page.locator('#global-play-toggle')).toBeVisible()
+  await expect(page.locator('.player-wave')).toBeVisible()
   await page.locator('#global-player-minimize').click()
   await expect(page.locator('#global-player')).toHaveClass(/is-minimized/)
   await expect(page.locator('#global-audio')).toBeHidden()
