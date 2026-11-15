@@ -3064,10 +3064,9 @@ body {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 .global-player {
-  grid-template-columns: 48px minmax(160px, 1fr) minmax(240px, 420px) minmax(
-      120px,
-      170px
-    ) 34px 30px;
+  grid-template-columns:
+    48px minmax(160px, 1fr) minmax(240px, 420px) minmax(120px, 170px)
+    34px 30px;
 }
 .global-player-volume {
   display: flex;
@@ -3094,10 +3093,9 @@ body {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .global-player {
-    grid-template-columns: 48px minmax(140px, 1fr) minmax(180px, 1fr) minmax(
-        100px,
-        140px
-      ) 30px 24px;
+    grid-template-columns:
+      48px minmax(140px, 1fr) minmax(180px, 1fr) minmax(100px, 140px)
+      30px 24px;
   }
 }
 @media (max-width: 760px) {
@@ -3126,6 +3124,17 @@ body {
   .portal-subsection-content .radio-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* The active player is a full-width dock, matching the portal reference. */
+.global-player {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  border-radius: 0;
 }
 
 @media (max-width: 420px) {

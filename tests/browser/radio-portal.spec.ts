@@ -88,6 +88,11 @@ test('searches, starts, switches and favorites a radio in the global player', as
     .getByRole('button', { name: /ouvir/i })
     .click()
   await expect(page.locator('#global-player')).toBeVisible()
+  const playerBox = await page.locator('#global-player').boundingBox()
+  const viewport = page.viewportSize()
+  expect(playerBox).not.toBeNull()
+  expect(playerBox!.x).toBe(0)
+  expect(playerBox!.y + playerBox!.height).toBe(viewport!.height)
   await expect(page.locator('#global-player-name')).toHaveText(
     'Rádio Horizonte',
   )
