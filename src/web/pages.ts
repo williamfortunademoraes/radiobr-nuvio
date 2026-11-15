@@ -119,14 +119,15 @@ function head(title: string, description: string, configPage = false) {
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#090612">
+    <meta name="theme-color" content="#000000">
     <meta name="description" content="${escapeHtml(description)}">
     <title>${escapeHtml(title)}</title>
-    <link rel="icon" href="/assets/logo.png" type="image/png">
+    <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+    <link rel="icon" href="/assets/logo.png" type="image/png" sizes="256x256">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/site.css?v=mini-player-3">
+    <link rel="stylesheet" href="/assets/site.css?v=brand-mark-1">
     ${configPage ? '<script src="/assets/personalizar.js" defer></script>' : ''}
   </head>
   <body>`

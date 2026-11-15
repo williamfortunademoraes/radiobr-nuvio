@@ -7,6 +7,16 @@ This document defines the visual language for RADIO BR: a dense, dark radio-disc
 
 RADIO BR should feel like a late-night broadcast room: near-black surfaces, bright station artwork, compact information hierarchy, one clear active accent, and a persistent player dock that is always ready to take over the listening session. Artwork and station identity do the expressive work; chrome stays quiet and functional.
 
+## Brand Mark
+
+The RADIO BR mark is a dark rounded tile (`256×256`, 56px tile radius) holding a minimal radio receiver: a `#1ed760` outlined body, a broadcast mast, a white transmitter dot and two signal arcs per side.
+
+- Glyph colors are limited to Radio Green, Pure White and the tile surface. No purple, yellow or blue.
+- UI uses `/assets/logo.svg`; favicon, addon manifest and raster-only clients use `/assets/logo.png` (256px).
+- Minimum size is 16px. Keep clear space around the tile of at least the tuner-dial width.
+- The tile carries its own `#2b2b2b` hairline; never place it on a light panel or redraw it as a filled illustration.
+- Hover may add a faint `#1ed760` glow; the resting state stays shadow-quiet.
+
 ## Tokens — Colors
 
 | Name | Value | Token | Role |
