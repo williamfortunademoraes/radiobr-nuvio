@@ -3244,6 +3244,134 @@ body {
   }
 }
 
+/* RADIO BR design.md: compact nocturnal radio command center. */
+:root {
+  --bg: #000000;
+  --bg-soft: #121212;
+  --bg-elevated: #1f1f1f;
+  --surface: #121212;
+  --surface-strong: #1f1f1f;
+  --border: #333333;
+  --border-strong: rgba(30, 215, 96, 0.48);
+  --text: #ffffff;
+  --muted: #b3b3b3;
+  --muted-strong: #c5c5c5;
+  --violet: #1ed760;
+  --violet-deep: #169c45;
+  --violet-soft: #1ed760;
+  --pink: #75f0a0;
+  --blue: #75f0a0;
+  --green: #1ed760;
+  --shadow: rgba(0, 0, 0, 0.35) 0 4px 18px;
+  --radius-sm: 2px;
+  --radius-md: 6px;
+  --radius-lg: 6px;
+  --radius-xl: 6px;
+  --font-display: var(--font-body);
+}
+
+body {
+  background: #000000;
+}
+
+body::before {
+  display: none;
+}
+
+.site-header {
+  background: rgba(0, 0, 0, 0.94);
+  border-bottom-color: #1f1f1f;
+}
+
+.btn-primary,
+.radio-card-play {
+  border-color: #1ed760;
+  background: #1ed760;
+  color: #000000;
+}
+
+.btn-primary:hover,
+.radio-card-play:hover {
+  border-color: #75f0a0;
+  background: #75f0a0;
+  color: #000000;
+}
+
+.portal-search,
+.portal-addon,
+.radio-card,
+.portal-subsection,
+.station-results .radio-card {
+  border-color: #333333;
+  border-radius: 6px;
+  background: #121212;
+  box-shadow: none;
+}
+
+.radio-card:hover,
+.portal-subsection:hover {
+  border-color: #535353;
+  background: #1f1f1f;
+}
+
+.radio-card-art,
+.radio-card-art img {
+  border-radius: 6px;
+}
+
+.station-search,
+.station-filter {
+  border-color: #333333;
+  border-radius: 500px;
+  background: #1f1f1f;
+}
+
+.portal-section-head h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: -0.035em;
+}
+
+.portal-section,
+.portal-addon {
+  margin-bottom: 40px;
+}
+
+.portal-addon {
+  padding: 24px;
+  background: #121212;
+}
+
+.portal-subsection {
+  border-radius: 6px;
+}
+
+.portal-section-toggle {
+  min-height: 68px;
+  padding: 12px 16px;
+}
+
+.portal-section-toggle i {
+  border-color: #535353;
+  color: #1ed760;
+}
+
+.global-player {
+  border-top-color: #333333;
+  background: #121212;
+  box-shadow: rgba(0, 0, 0, 0.5) 0 -8px 24px;
+  backdrop-filter: none;
+}
+
+.global-player-live,
+.global-player-live i {
+  color: #1ed760;
+  background-color: #1ed760;
+}
+
+.global-player-volume input {
+  accent-color: #1ed760;
+}
+
 @keyframes pulse {
   0%,
   100% {
@@ -3381,4 +3509,17 @@ body {
   .station-search-form {
     display: grid;
   }
+}
+
+/* Final design.md surface overrides for the radio portal. */
+.portal-main .station-search {
+  border-color: #333333;
+  border-radius: 500px;
+  background: #1f1f1f;
+}
+
+.portal-main .station-filter {
+  border-color: #333333;
+  border-radius: 500px;
+  background: #1f1f1f;
 }

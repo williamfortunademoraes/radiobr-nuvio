@@ -77,6 +77,12 @@ test('searches, starts, switches and favorites a radio in the global player', as
   expect(footerBox).not.toBeNull()
   expect(footerBox!.y - (addonBox!.y + addonBox!.height)).toBeLessThan(80)
   await expect(page.locator('#featured-stations .radio-card')).toHaveCount(2)
+  expect(
+    await page
+      .locator('#featured-stations .radio-card-play')
+      .first()
+      .evaluate((element) => getComputedStyle(element).backgroundColor),
+  ).toBe('rgb(30, 215, 96)')
   await expect(
     page.locator('#featured-stations .radio-card').nth(1).locator('.radio-card-art img'),
   ).toHaveAttribute('src', /^data:image\/svg\+xml/)
