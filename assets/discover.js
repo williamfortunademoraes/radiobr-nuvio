@@ -31,6 +31,7 @@
     playerMeta: $('#global-player-meta'),
     playerFavorite: $('#global-player-favorite'),
     playerClose: $('#global-player-close'),
+    playerMinimize: $('#global-player-minimize'),
     volume: $('#global-volume'),
     mute: $('#global-mute'),
   }
@@ -358,6 +359,15 @@
     } catch {
       /* session-only fallback */
     }
+  })
+  els.playerMinimize?.addEventListener('click', () => {
+    const minimized = els.player.classList.toggle('is-minimized')
+    els.playerMinimize.textContent = minimized ? '⌃' : '⌄'
+    els.playerMinimize.setAttribute(
+      'aria-label',
+      minimized ? 'Restaurar player' : 'Minimizar player',
+    )
+    els.playerMinimize.setAttribute('aria-expanded', String(!minimized))
   })
   els.volume?.addEventListener('input', () => setVolume(els.volume.value))
   els.mute?.addEventListener('click', () => {

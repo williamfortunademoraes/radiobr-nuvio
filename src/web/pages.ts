@@ -402,6 +402,7 @@ ${header('inicio')}
       <div class="global-player-volume"><button id="global-mute" type="button" aria-label="Silenciar">🔊</button><input id="global-volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume"></div>
       <button class="player-favorite" id="global-player-favorite" type="button" aria-label="Adicionar rádio aos favoritos" aria-pressed="false">☆</button>
       <button class="player-close" id="global-player-close" type="button" aria-label="Fechar player">×</button>
+      <button class="player-minimize" id="global-player-minimize" type="button" aria-label="Minimizar player" aria-expanded="true">⌄</button>
     </div>
     <script src="/assets/discover.js" defer></script>
 ${footer()}`
