@@ -38,6 +38,14 @@
   }
   if (!els.form || !els.featured) return
 
+  const playerIcon = (path) => `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`
+  const collapseIcon = playerIcon('<path d="m6 9 6 6 6-6"/>')
+  const expandIcon = playerIcon('<path d="m6 15 6-6 6 6"/>')
+  els.playerMinimize.innerHTML = collapseIcon
+  els.playerMinimize.title = 'Recolher player'
+  els.playerClose.innerHTML = playerIcon('<path d="m6 6 12 12M6 18 18 6"/>')
+  els.playerClose.title = 'Encerrar reprodução'
+
   const escapeHtml = (value) =>
     String(value ?? '').replace(
       /[&<>'"]/g,
@@ -115,13 +123,13 @@
   function updateMuteButton() {
     if (!els.mute) return
     const muted = els.audio.muted || home.volume === 0
-    els.mute.textContent = muted ? '🔇' : '🔊'
+    els.mute.innerHTML = playerIcon('<path d="M11 5 6 9H3v6h3l5 4z"/>' + (muted ? '<path d="m16 9 5 6m-5 0 5-6"/>' : '<path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/>'))
     els.mute.setAttribute('aria-label', muted ? 'Ativar som' : 'Silenciar')
   }
   function updatePlayToggle() {
     if (!els.playToggle) return
     const playing = !els.audio.paused
-    els.playToggle.textContent = playing ? '❚❚' : '▶'
+    els.playToggle.innerHTML = playerIcon(playing ? '<path d="M8 5v14M16 5v14" stroke-width="4"/>' : '<path d="m9 5 11 7-11 7z" fill="currentColor" stroke="none"/>')
     els.playToggle.setAttribute('aria-label', playing ? 'Pausar' : 'Reproduzir')
     els.player.classList.toggle('is-playing', playing)
   }
@@ -371,7 +379,8 @@
   })
   els.playerMinimize?.addEventListener('click', () => {
     const minimized = els.player.classList.toggle('is-minimized')
-    els.playerMinimize.textContent = minimized ? '⌃' : '⌄'
+    els.playerMinimize.innerHTML = minimized ? expandIcon : collapseIcon
+    els.playerMinimize.title = minimized ? 'Restaurar player' : 'Recolher player'
     els.playerMinimize.setAttribute(
       'aria-label',
       minimized ? 'Restaurar player' : 'Minimizar player',

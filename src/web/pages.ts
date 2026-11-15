@@ -126,7 +126,7 @@ function head(title: string, description: string, configPage = false) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/site.css?v=single-player-2">
+    <link rel="stylesheet" href="/assets/site.css?v=mini-player-3">
     ${configPage ? '<script src="/assets/personalizar.js" defer></script>' : ''}
   </head>
   <body>`
@@ -351,7 +351,7 @@ ${header('inicio')}
         <a class="btn btn-primary btn-lg" href="/personalizar">Personalizar minhas rádios <span aria-hidden="true">→</span></a>
       </section>
     </main>
-    <script src="/assets/discover.js?v=single-player-2" defer></script>
+    <script src="/assets/discover.js?v=mini-player-3" defer></script>
 ${footer()}`
 }
 
@@ -407,7 +407,7 @@ ${header('inicio')}
       <button class="player-close" id="global-player-close" type="button" aria-label="Fechar player">×</button>
       <button class="player-minimize" id="global-player-minimize" type="button" aria-label="Minimizar player" aria-expanded="true">⌄</button>
     </div>
-    <script src="/assets/discover.js?v=single-player-2" defer></script>
+    <script src="/assets/discover.js?v=mini-player-3" defer></script>
 ${footer()}`
 }
 
