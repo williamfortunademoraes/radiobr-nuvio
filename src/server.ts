@@ -75,7 +75,7 @@ export function createApp(options: CreateAppOptions = {}): Express {
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin')
     res.setHeader(
       'Content-Security-Policy',
-      "default-src 'self'; img-src 'self' https: data:; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'",
+      "default-src 'self'; img-src 'self' https: data:; media-src https: http:; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'",
     )
     next()
   })
@@ -87,9 +87,9 @@ export function createApp(options: CreateAppOptions = {}): Express {
   })
   app.get('/api/home', async (_req, res, next) => {
     try {
-      const stations = await (typeof client.searchAllStations === 'function'
-        ? client.searchAllStations()
-        : client.searchStations())
+      // The portal only needs the first ranked page. The addon catalogs keep
+      // using the full aggregate when a client requests them explicitly.
+      const stations = await client.searchStations({ limit: 100 })
       res.setHeader(
         'Cache-Control',
         'public, max-age=60, stale-while-revalidate=300',

@@ -37,6 +37,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 92px;
 }
 
 body {
@@ -2501,6 +2502,9 @@ code {
 /* Radio portal */
 .portal-main {
   padding-bottom: 130px;
+}
+.portal-main > section {
+  scroll-margin-top: 92px;
 }
 .portal-hero {
   display: grid;

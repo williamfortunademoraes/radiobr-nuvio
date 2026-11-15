@@ -132,6 +132,9 @@ it('exposes a process health endpoint without consulting Radio Browser', async (
     const response = await fetch(`${base}/health`)
     expect(response.status).toBe(200)
     expect(await response.json()).toEqual({ status: 'ok' })
+    expect(response.headers.get('content-security-policy')).toContain(
+      'media-src https: http:',
+    )
   } finally {
     server.closeAllConnections()
     await new Promise<void>((resolve) => server.close(() => resolve()))
@@ -172,8 +175,10 @@ it('serves aggregated portal data without changing addon endpoints', async () =>
   const fetcher = vi.fn(() =>
     Promise.resolve(new Response(JSON.stringify([validStation]))),
   )
+  const client = new RadioBrowserClient(undefined, fetcher)
+  const allStations = vi.spyOn(client, 'searchAllStations')
   const app = createApp({
-    client: new RadioBrowserClient(undefined, fetcher),
+    client,
     baseUrl: 'http://127.0.0.1:7002',
   })
   const server = app.listen(0)
@@ -190,6 +195,7 @@ it('serves aggregated portal data without changing addon endpoints', async () =>
         regions: expect.any(Array),
       }),
     )
+    expect(allStations).not.toHaveBeenCalled()
     expect((await fetch(`${base}/manifest.json`)).status).toBe(200)
   } finally {
     server.closeAllConnections()
