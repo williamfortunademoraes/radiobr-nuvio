@@ -399,6 +399,7 @@ ${header('inicio')}
       <div class="global-player-art"><img id="global-player-logo" src="/assets/logo.png" alt=""></div>
       <div class="global-player-info"><span class="global-player-live"><i></i> AO VIVO</span><strong id="global-player-name">Nenhuma rádio selecionada</strong><small id="global-player-meta">Escolha uma rádio para começar</small></div>
       <audio id="global-audio" controls preload="none"></audio>
+      <div class="global-player-volume"><button id="global-mute" type="button" aria-label="Silenciar">🔊</button><input id="global-volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume"></div>
       <button class="player-favorite" id="global-player-favorite" type="button" aria-label="Adicionar rádio aos favoritos" aria-pressed="false">☆</button>
       <button class="player-close" id="global-player-close" type="button" aria-label="Fechar player">×</button>
     </div>

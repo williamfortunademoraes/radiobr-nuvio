@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const fixture = {
+const fixture: any = {
   featured: [
     {
       id: 'radio-br:one',
@@ -48,6 +48,9 @@ const fixture = {
   ],
 }
 
+fixture.genres[0].stations = [fixture.featured[0]]
+fixture.regions[0].stations = [fixture.featured[0]]
+
 test('searches, starts, switches and favorites a radio in the global player', async ({
   page,
 }) => {
@@ -69,6 +72,13 @@ test('searches, starts, switches and favorites a radio in the global player', as
   )
   await page.goto('/')
   await expect(page.locator('#featured-stations .radio-card')).toHaveCount(2)
+  await expect(
+    page.locator('#genre-sections .portal-subsection-content').first(),
+  ).toBeHidden()
+  await page.locator('#genre-sections .portal-section-toggle').first().click()
+  await expect(
+    page.locator('#genre-sections .portal-subsection-content').first(),
+  ).toBeVisible()
   await page.locator('#station-search').fill('Horizonte')
   await page.getByRole('button', { name: 'Buscar' }).click()
   await expect(page.locator('#station-results .radio-card')).toHaveCount(1)
@@ -96,6 +106,9 @@ test('searches, starts, switches and favorites a radio in the global player', as
   await expect(page.locator('#global-player-name')).toHaveText(
     'Rádio Horizonte',
   )
+  await page.locator('#global-volume').fill('0.35')
+  await expect(page.locator('#global-audio')).toHaveJSProperty('volume', 0.35)
+  await expect(page.locator('audio')).toHaveCount(1)
   await page
     .locator('#featured-stations .radio-card')
     .nth(1)

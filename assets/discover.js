@@ -9,6 +9,8 @@
     favorites: new Set(),
     data: null,
     current: null,
+    volume: 0.8,
+    actionsBound: false,
   }
   const els = {
     form: $('#station-search-form'),
@@ -29,6 +31,8 @@
     playerMeta: $('#global-player-meta'),
     playerFavorite: $('#global-player-favorite'),
     playerClose: $('#global-player-close'),
+    volume: $('#global-volume'),
+    mute: $('#global-mute'),
   }
   if (!els.form || !els.featured) return
 
@@ -71,6 +75,33 @@
       /* session-only fallback */
     }
   }
+  function loadVolume() {
+    try {
+      const value = Number(localStorage.getItem('radio-br:volume:v1'))
+      if (Number.isFinite(value)) home.volume = Math.min(1, Math.max(0, value))
+    } catch {
+      /* session-only fallback */
+    }
+    if (els.volume) els.volume.value = String(home.volume)
+  }
+  function updateMuteButton() {
+    if (!els.mute) return
+    const muted = els.audio.muted || home.volume === 0
+    els.mute.textContent = muted ? '🔇' : '🔊'
+    els.mute.setAttribute('aria-label', muted ? 'Ativar som' : 'Silenciar')
+  }
+  function setVolume(value) {
+    home.volume = Math.min(1, Math.max(0, Number(value)))
+    els.audio.volume = home.volume
+    els.audio.muted = false
+    if (els.volume) els.volume.value = String(home.volume)
+    updateMuteButton()
+    try {
+      localStorage.setItem('radio-br:volume:v1', String(home.volume))
+    } catch {
+      /* session-only fallback */
+    }
+  }
   function card(station) {
     home.stations.set(station.id, station)
     const favorite = home.favorites.has(station.id)
@@ -97,10 +128,10 @@
     )
     container.innerHTML = visible.length
       ? visible
-          .map(
-            (section) =>
-              `<section class="portal-subsection" data-section-id="${escapeHtml(section.id)}"><div class="portal-subsection-head"><h3>${escapeHtml(section.title)}</h3></div><div class="radio-grid radio-grid--compact">${section.stations.map(card).join('')}</div></section>`,
-          )
+          .map((section, index) => {
+            const contentId = `${container.id}-${section.id}-${index}`
+            return `<section class="portal-subsection" data-section-id="${escapeHtml(section.id)}"><button class="portal-section-toggle" type="button" data-section-toggle="${escapeHtml(contentId)}" aria-expanded="false" aria-controls="${escapeHtml(contentId)}"><span><strong>${escapeHtml(section.title)}</strong><small>${section.stations.length} rádios disponíveis</small></span><i aria-hidden="true">+</i></button><div class="portal-subsection-content" id="${escapeHtml(contentId)}" hidden><div class="radio-grid radio-grid--compact">${section.stations.map(card).join('')}</div></div></section>`
+          })
           .join('')
       : '<p class="portal-empty">Ainda não há rádios nesta seleção.</p>'
   }
@@ -133,15 +164,21 @@
   function showCurrent(station, autoplay = false) {
     const stream = getStream(station)
     if (!stream || !els.audio) return
+    const audio = els.audio
+    audio.pause()
+    audio.removeAttribute('src')
+    audio.load()
     home.current = station
     els.player.hidden = false
     els.playerName.textContent = station.name
     els.playerMeta.textContent = location(station)
     els.playerLogo.src = station.favicon || '/assets/logo.png'
     els.playerLogo.alt = `Logo de ${station.name}`
-    els.audio.src = stream
+    audio.src = stream
+    audio.volume = home.volume
+    audio.load()
     if (autoplay)
-      els.audio.play().catch(() => {
+      audio.play().catch(() => {
         els.status.textContent =
           'Aperte play no player para iniciar esta rádio.'
       })
@@ -157,19 +194,31 @@
     }
   }
   function bindActions() {
-    document
-      .querySelectorAll('[data-play-station]')
-      .forEach((button) =>
-        button.addEventListener('click', () =>
-          play(home.stations.get(button.dataset.playStation)),
-        ),
-      )
-    document.querySelectorAll('[data-favorite-station]').forEach((button) =>
-      button.addEventListener('click', (event) => {
+    if (home.actionsBound) return
+    home.actionsBound = true
+    document.addEventListener('click', (event) => {
+      if (!(event.target instanceof Element)) return
+      const toggle = event.target.closest('[data-section-toggle]')
+      if (toggle) {
+        const content = document.getElementById(toggle.dataset.sectionToggle)
+        if (!content) return
+        const expanded = toggle.getAttribute('aria-expanded') !== 'true'
+        toggle.setAttribute('aria-expanded', String(expanded))
+        content.hidden = !expanded
+        toggle
+          .closest('.portal-subsection')
+          ?.classList.toggle('is-open', expanded)
+        return
+      }
+      const favorite = event.target.closest('[data-favorite-station]')
+      if (favorite) {
         event.stopPropagation()
-        toggleFavorite(button.dataset.favoriteStation)
-      }),
-    )
+        toggleFavorite(favorite.dataset.favoriteStation)
+        return
+      }
+      const playButton = event.target.closest('[data-play-station]')
+      if (playButton) play(home.stations.get(playButton.dataset.playStation))
+    })
   }
   async function search() {
     const query = els.input.value.trim()
@@ -273,5 +322,18 @@
       /* session-only fallback */
     }
   })
+  els.volume?.addEventListener('input', () => setVolume(els.volume.value))
+  els.mute?.addEventListener('click', () => {
+    els.audio.muted = !els.audio.muted
+    updateMuteButton()
+  })
+  els.audio?.addEventListener('volumechange', updateMuteButton)
+  els.audio?.addEventListener('error', () => {
+    els.status.textContent =
+      'Esta rádio não respondeu. Escolha outra estação para continuar ouvindo.'
+  })
+  loadVolume()
+  els.audio.volume = home.volume
+  updateMuteButton()
   loadHome()
 })()
