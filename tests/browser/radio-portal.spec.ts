@@ -93,6 +93,12 @@ test('searches, starts, switches and favorites a radio in the global player', as
   expect(playerBox).not.toBeNull()
   expect(playerBox!.x).toBe(0)
   expect(playerBox!.y + playerBox!.height).toBe(viewport!.height)
+  const closeBox = await page.locator('#global-player-close').boundingBox()
+  const favoriteBox = await page.locator('#global-player-favorite').boundingBox()
+  expect(closeBox).not.toBeNull()
+  expect(favoriteBox).not.toBeNull()
+  expect(closeBox!.y).toBeLessThan(playerBox!.y + playerBox!.height / 2)
+  expect(favoriteBox!.y).toBeLessThan(playerBox!.y + playerBox!.height / 2)
   await expect(page.locator('#global-player-name')).toHaveText(
     'Rádio Horizonte',
   )
