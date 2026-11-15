@@ -39,9 +39,8 @@ describe('buildHomePortalData', () => {
     expect(
       data.genres.find((section) => section.id === 'rock')?.stations,
     ).toHaveLength(1)
-    expect(
-      data.regions.find((section) => section.id === 'sudeste')?.stations,
-    ).toHaveLength(2)
+    expect(data.regions.find((section) => section.id === 'SP')?.stations).toHaveLength(1)
+    expect(data.regions.find((section) => section.id === 'RJ')?.stations).toHaveLength(1)
     expect(data.featured[0]).toMatchObject({
       id: expect.any(String),
       stationUuid: 'one',
@@ -99,5 +98,26 @@ describe('buildHomePortalData', () => {
     expect(data.featured.map((item) => item.name)).toEqual(
       top25Ranking.map((entry) => entry.name),
     )
+  })
+
+  it('groups states into five population highlights and one compact remainder', () => {
+    const data = buildHomePortalData([
+      station({ stationuuid: 'sp', state: 'SP' }),
+      station({ stationuuid: 'mg', state: 'MG' }),
+      station({ stationuuid: 'rj', state: 'RJ' }),
+      station({ stationuuid: 'ba', state: 'BA' }),
+      station({ stationuuid: 'pr', state: 'PR' }),
+      station({ stationuuid: 'sc', state: 'SC' }),
+    ])
+
+    expect(data.regions.map((section) => section.id)).toEqual([
+      'SP',
+      'MG',
+      'RJ',
+      'BA',
+      'PR',
+      'outros-estados',
+    ])
+    expect(data.regions.at(-1)?.stations).toHaveLength(1)
   })
 })

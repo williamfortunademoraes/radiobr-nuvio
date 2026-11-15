@@ -1,5 +1,5 @@
 import { groupStationsByGenre } from '../catalog/grouping.js'
-import { REGIONS, stationRegion } from '../catalog/geography.js'
+import { STATE_GEOGRAPHY } from '../catalog/geography.js'
 import { genreName, GENRE_IDS, type GenreId } from '../stations/tags.js'
 import { normalizeState, stateName } from '../stations/states.js'
 import type { Station } from '../stations/types.js'
@@ -37,6 +37,8 @@ export interface HomePortalData {
   regions: HomeSection[]
   availableGenres: { id: GenreId; name: string }[]
 }
+
+const HIGHLIGHT_STATE_CODES = ['SP', 'MG', 'RJ', 'BA', 'PR'] as const
 
 function isPlayable(station: Station): boolean {
   return Boolean(station.urlResolved?.trim() || station.url?.trim())
@@ -101,15 +103,32 @@ export function buildHomePortalData(
     stations: groups[id].slice(0, limit).map(toHomeStation),
   }))
 
-  const regions = REGIONS.map((region) => ({
-    id: region.id,
-    title: region.name,
+  const highlightedStates = HIGHLIGHT_STATE_CODES.map((code) => {
+    const state = STATE_GEOGRAPHY.find((item) => item.code === code)!
+    return {
+      id: state.code,
+      title: state.name,
+      kind: 'region' as const,
+      stations: playable
+        .filter((station) => normalizeState(station.state) === state.code)
+        .slice(0, limit)
+        .map(toHomeStation),
+    }
+  })
+  const otherStates = new Set<string>(HIGHLIGHT_STATE_CODES)
+  const compactOthers = {
+    id: 'outros-estados',
+    title: 'Outros estados',
     kind: 'region' as const,
     stations: playable
-      .filter((station) => stationRegion(station) === region.id)
+      .filter((station) => {
+        const state = normalizeState(station.state)
+        return !state || !otherStates.has(state)
+      })
       .slice(0, limit)
       .map(toHomeStation),
-  }))
+  }
+  const regions = [...highlightedStates, compactOthers]
 
   return {
     featured: featured.slice(0, featuredLimit).map(toHomeStation),
