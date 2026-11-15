@@ -126,7 +126,7 @@ function head(title: string, description: string, configPage = false) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/site.css">
+    <link rel="stylesheet" href="/assets/site.css?v=single-player-2">
     ${configPage ? '<script src="/assets/personalizar.js" defer></script>' : ''}
   </head>
   <body>`
@@ -351,7 +351,7 @@ ${header('inicio')}
         <a class="btn btn-primary btn-lg" href="/personalizar">Personalizar minhas rádios <span aria-hidden="true">→</span></a>
       </section>
     </main>
-    <script src="/assets/discover.js" defer></script>
+    <script src="/assets/discover.js?v=single-player-2" defer></script>
 ${footer()}`
 }
 
@@ -400,14 +400,14 @@ ${header('inicio')}
       <div class="global-player-info"><span class="global-player-live"><i></i> AO VIVO</span><strong id="global-player-name">Nenhuma rádio selecionada</strong><small id="global-player-meta">Escolha uma rádio para começar</small></div>
       <div class="global-player-center">
         <button class="player-play-toggle" id="global-play-toggle" type="button" aria-label="Reproduzir">▶</button>
-        <div class="player-track"><div class="player-wave" aria-hidden="true">${Array.from({ length: 28 }, (_, index) => `<i style="--wave-height:${24 + ((index * 17) % 58)}%"></i>`).join('')}</div><audio id="global-audio" controls preload="none"></audio></div>
+        <div class="player-track"><div class="player-wave" aria-hidden="true">${'<i></i>'.repeat(40)}</div></div><audio id="global-audio" preload="none" hidden></audio>
       </div>
       <div class="global-player-volume"><button id="global-mute" type="button" aria-label="Silenciar">🔊</button><input id="global-volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume"></div>
       <button class="player-favorite" id="global-player-favorite" type="button" aria-label="Adicionar rádio aos favoritos" aria-pressed="false">☆</button>
       <button class="player-close" id="global-player-close" type="button" aria-label="Fechar player">×</button>
       <button class="player-minimize" id="global-player-minimize" type="button" aria-label="Minimizar player" aria-expanded="true">⌄</button>
     </div>
-    <script src="/assets/discover.js" defer></script>
+    <script src="/assets/discover.js?v=single-player-2" defer></script>
 ${footer()}`
 }
 

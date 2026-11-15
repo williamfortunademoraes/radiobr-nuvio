@@ -123,7 +123,9 @@ test('searches, starts, switches and favorites a radio in the global player', as
   await expect(page.locator('#global-audio')).toBeHidden()
   await page.getByRole('button', { name: 'Restaurar player' }).click()
   await expect(page.locator('#global-player')).not.toHaveClass(/is-minimized/)
-  await expect(page.locator('#global-audio')).toBeVisible()
+  await expect(page.locator('#global-audio')).toBeHidden()
+  await expect(page.locator('#global-audio')).not.toHaveAttribute('controls')
+  await expect(page.locator('#global-play-toggle')).toBeVisible()
   await expect(page.locator('#global-audio')).toHaveAttribute(
     'src',
     fixture.featured[0].urlResolved,

@@ -104,7 +104,8 @@
   }
   function loadVolume() {
     try {
-      const value = Number(localStorage.getItem('radio-br:volume:v1'))
+      const saved = localStorage.getItem('radio-br:volume:v1')
+      const value = saved === null ? 0.8 : Number(saved)
       if (Number.isFinite(value)) home.volume = Math.min(1, Math.max(0, value))
     } catch {
       /* session-only fallback */
@@ -378,7 +379,10 @@
     els.playerMinimize.setAttribute('aria-expanded', String(!minimized))
   })
   els.playToggle?.addEventListener('click', () => {
-    if (els.audio.paused) els.audio.play().catch(() => {})
+    if (els.audio.paused) els.audio.play().catch(() => {
+      els.status.textContent = 'Não foi possível reproduzir esta rádio. Tente novamente ou escolha outra estação.'
+      updatePlayToggle()
+    })
     else els.audio.pause()
   })
   els.volume?.addEventListener('input', () => setVolume(els.volume.value))
