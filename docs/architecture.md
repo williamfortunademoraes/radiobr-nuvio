@@ -16,7 +16,7 @@ As coleções `radio-br-genres` e `radio-br-regions` fornecem cards com capas lo
 
 `config/addon-config` valida versão, listas permitidas, quantidade, tamanho e opções; rejeita campos desconhecidos. Serializa em ordem canônica usando `encodeURIComponent(JSON.stringify(...))`. `POST /api/configuration` retorna a URL usando `ADDON_BASE_URL` e o manifesto correspondente. Não há registro por usuário.
 
-O manifesto padrão mantém os catálogos existentes, incluindo curadoria editorial. O personalizado inclui coleções e gêneros selecionados; regionais ficam limitados às UFs selecionadas ou às 27 UFs quando não há restrição. Metadados e catálogos omitem poster quando solicitado; o cliente pode exibir substitutos próprios. Streams e IDs permanecem iguais.
+O manifesto padrão expõe apenas as coleções principais — **Rádios em destaque** e **Todas as rádios** — para que a instalação sem personalização não encha o layout do cliente. Gêneros e estados só entram no manifesto quando selecionados explicitamente; o personalizado inclui as coleções escolhidas e as UFs marcadas. Metadados e catálogos omitem poster quando solicitado; o cliente pode exibir substitutos próprios. Streams e IDs permanecem iguais.
 
 Estados usam somente o campo `state` da fonte, normalizado por nomes e UFs explícitos. Cidades não estão no contrato v1; podem ser acrescentadas em versão futura quando houver dados confiáveis. Curadoria filtrada por estado exige estação resolvida com UF da fonte. Gêneros controlam as coleções musicais, sem restringir catálogo geral ou ranking por gênero.
 

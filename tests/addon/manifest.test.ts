@@ -5,27 +5,30 @@ describe('RADIO BR manifest', () => {
   it('declares the stable addon identity and supported resources', () => {
     expect(manifest).toMatchObject({
       id: 'com.williamfortuna.radio-br',
-      version: '0.1.5',
+      version: '0.1.6',
       name: 'Estações de rádios - Brasil',
       resources: ['catalog', 'meta', 'stream'],
       types: ['tv'],
     })
-    expect(manifest.catalogs.map((catalog) => catalog.id)).toEqual(
-      expect.arrayContaining([
-        'radios-em-destaque',
-        'radio-br-genre-sertanejo',
-        'radio-br-state-sp',
-        'radio-br-catalog',
-      ]),
-    )
   })
 
-  it('exposes direct genre sources instead of the redundant genre filter catalog', () => {
-    expect(manifest.catalogs.map((catalog) => catalog.id)).toEqual(
-      expect.arrayContaining(['radio-br-genre-sertanejo']),
-    )
-    expect(manifest.catalogs.map((catalog) => catalog.id)).not.toContain(
-      'radio-br-genre',
+  it('exposes only the two main collections on a default install', () => {
+    expect(manifest.catalogs.map((catalog) => catalog.id)).toEqual([
+      'radios-em-destaque',
+      'radio-br-catalog',
+    ])
+  })
+
+  it('does not expose genre or state sources on a default install', () => {
+    const ids = manifest.catalogs.map((catalog) => catalog.id)
+    expect(ids).not.toEqual(
+      expect.arrayContaining([
+        'radio-br-genre',
+        'radio-br-genre-sertanejo',
+        'radio-br-region',
+        'radio-br-state',
+        'radio-br-state-sp',
+      ]),
     )
   })
 

@@ -118,7 +118,7 @@ export function defaultConfig(): AddonConfig {
   return {
     v: CONFIG_VERSION,
     c: ['editorial', 'all'],
-    g: [...GENRE_IDS],
+    g: [],
     s: [],
     o: { logos: true },
   }
@@ -353,9 +353,7 @@ const searchExtra: ManifestCatalogExtra = {
 export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
   const catalogs: ManifestCatalog[] = []
   const collections = new Set(config.c)
-  const states = config.s.length
-    ? STATES.filter((state) => config.s.includes(state.code))
-    : STATES
+  const states = STATES.filter((state) => config.s.includes(state.code))
 
   if (collections.has('editorial'))
     catalogs.push({
@@ -415,7 +413,7 @@ export function catalogAllowed(id: string, config: AddonConfig): boolean {
     return config.g.some((genre) => id === `radio-br-genre-${genre}`)
   if (id === 'radio-br-region' || id === 'radio-br-state') return true
   if (id.startsWith('radio-br-state-'))
-    return (config.s.length ? config.s : STATE_CODES).some(
+    return config.s.some(
       (state) => id === `radio-br-state-${state.toLowerCase()}`,
     )
   if (REGIONS.some((region) => id === `radio-br-region-${region.id}`))

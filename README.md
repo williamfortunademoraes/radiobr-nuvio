@@ -8,7 +8,7 @@ Descubra estações, filtre por gênero ou estado, consulte metadados e reproduz
 
 ## O que está incluído
 
-- Catálogos de rádios em destaque, rádios por gênero e rádios do Brasil.
+- Catálogos de rádios em destaque, rádios por gênero e rádios do Brasil. Sem personalização, a instalação mostra apenas **Rádios em destaque** e **Todas as rádios**.
 - Pesquisa, metadados e streams pelo protocolo de addons do Stremio.
 - Classificação por gênero baseada apenas nas tags reais da Radio Browser, com aliases explícitos.
 - IDs estáveis derivados de `stationuuid`.

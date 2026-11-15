@@ -1,5 +1,5 @@
 import type { RadioBrowserClient } from '../radio-browser/client.js'
-import { genreDefinitions, resolveGenre } from '../stations/tags.js'
+import { GENRE_IDS, genreDefinitions, resolveGenre } from '../stations/tags.js'
 import { normalizeState, STATES, type StateCode } from '../stations/states.js'
 import type { Station } from '../stations/types.js'
 import {
@@ -284,9 +284,18 @@ export function createCatalogService(
 
       const config = resolveHandlerConfig(args.config)
       if (!config) return { metas: [] }
+      // A default install has no personalization restrictions, so any direct
+      // catalog request keeps working (including catalogs cached by older
+      // clients). Restrictions only apply to an explicit config.
+      const restricted =
+        typeof args.config === 'object' &&
+        args.config !== null &&
+        !Array.isArray(args.config) &&
+        Object.keys(args.config).length > 0
+      const allowed = (id: string) => !restricted || catalogAllowed(id, config)
       if (args.id === 'radio-br-genres')
         return {
-          metas: config.g.map((genre) => ({
+          metas: (restricted ? config.g : GENRE_IDS).map((genre) => ({
             id: `radio-br-genre-${genre}`,
             type: 'tv' as const,
             name:
@@ -312,7 +321,7 @@ export function createCatalogService(
           })),
         }
       if (args.id === 'radios-em-destaque') {
-        if (!catalogAllowed(args.id, config)) return { metas: [] }
+        if (!allowed(args.id)) return { metas: [] }
         if (!radiosEmDestaque.enabled) return { metas: [] }
         const stations = applySnapshot(
           await (typeof client.searchAllStations === 'function'
@@ -360,7 +369,7 @@ export function createCatalogService(
             })),
         }
       }
-      if (!catalogAllowed(args.id, config)) return { metas: [] }
+      if (!allowed(args.id)) return { metas: [] }
 
       const search = args.extra?.search
       const skip = args.extra?.skip ?? 0
@@ -386,7 +395,7 @@ export function createCatalogService(
       const genreCollection = args.id.match(/^radio-br-genre-(.+)$/)?.[1]
       if (genreCollection) {
         const genre = resolveGenre(genreCollection)
-        return genre && config.g.includes(genre)
+        return genre && (!restricted || config.g.includes(genre))
           ? { metas: grouped()[genre].filter(matchesState).map(preview) }
           : { metas: [] }
       }
@@ -484,15 +493,17 @@ export function createCatalogService(
           if (requested) {
             const genre = resolveGenre(requested)
             if (!genre) return { metas: [] }
-            if (!config.g.includes(genre)) return { metas: [] }
+            if (restricted && !config.g.includes(genre)) return { metas: [] }
             return {
               metas: grouped()[genre].filter(matchesState).map(preview),
             }
           }
 
-          // No genre selected: show the union of the configured genres. With
-          // the default config (all genres), this is the full collection, as
-          // it was before personalization existed.
+          // No genre selected: show the union of the configured genres. A
+          // default install serves the full collection, as it was before
+          // personalization existed.
+          if (!restricted)
+            return { metas: stations.filter(matchesState).map(preview) }
           const groups = grouped()
           const union = requestedGenres(config).flatMap(
             (genre) => groups[genre],

@@ -126,8 +126,11 @@ it.each([
 it('rejects malformed percent encoding', async () => {
   expect((await fetch(base + '/%E0%A4%A/manifest.json')).status).toBe(400)
 })
-it('keeps direct regional sources and includes only the selected genres', () => {
-  expect(buildCatalogs(defaultConfig()).map((c) => c.id)).toContain(
+it('keeps direct regional sources when states are explicitly selected', () => {
+  expect(
+    buildCatalogs({ ...defaultConfig(), s: ['SP'] }).map((c) => c.id),
+  ).toContain('radio-br-state-sp')
+  expect(buildCatalogs(defaultConfig()).map((c) => c.id)).not.toContain(
     'radio-br-state-sp',
   )
   const result = validateConfig(payload)

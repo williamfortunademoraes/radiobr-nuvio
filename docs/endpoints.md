@@ -22,11 +22,11 @@ Exemplo de corpo:
 }
 ```
 
-Pelo menos uma coleção ou gênero é obrigatório. Estados vazios significam ausência de filtro. Campos desconhecidos, versões diferentes, valores inválidos e excesso de itens retornam 400; corpo acima do limite retorna 413. Não são aceitas URLs externas ou cidades na configuração.
+Pelo menos uma coleção ou gênero é obrigatório. Estados vazios significam ausência de filtro e não geram coleções por estado; para receber coleções estaduais, selecione os estados explicitamente. Campos desconhecidos, versões diferentes, valores inválidos e excesso de itens retornam 400; corpo acima do limite retorna 413. Não são aceitas URLs externas ou cidades na configuração.
 
 ## Protocolo Stremio
 
-- `GET /manifest.json`: instalação padrão preservada.
+- `GET /manifest.json`: instalação padrão com apenas **Rádios em destaque** e **Todas as rádios**.
 - `GET /:config/manifest.json`: manifesto dinâmico.
 - `GET /:config?/catalog/tv/:catalogId.json`
 - `GET /:config?/catalog/tv/:catalogId/:extra.json`

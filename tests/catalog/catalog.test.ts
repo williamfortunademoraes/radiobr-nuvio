@@ -152,9 +152,10 @@ describe('catalog', () => {
   })
 
   it('exposes each genre as a collection of real stations, never collection cards', async () => {
-    const catalogIds = buildCatalogs(defaultConfig()).map(
-      (catalog) => catalog.id,
-    )
+    const catalogIds = buildCatalogs({
+      ...defaultConfig(),
+      g: ['sertanejo'],
+    }).map((catalog) => catalog.id)
     expect(catalogIds).toContain('radio-br-genre-sertanejo')
     expect(catalogIds).not.toContain('radio-br-genres')
 
@@ -173,7 +174,11 @@ describe('catalog', () => {
   })
 
   it('keeps only the direct genre and state collection sources in the manifest', () => {
-    const ids = buildCatalogs(defaultConfig()).map((catalog) => catalog.id)
+    const ids = buildCatalogs({
+      ...defaultConfig(),
+      g: ['sertanejo'],
+      s: ['AM'],
+    }).map((catalog) => catalog.id)
     expect(ids).toEqual(
       expect.arrayContaining(['radio-br-genre-sertanejo', 'radio-br-state-am']),
     )
