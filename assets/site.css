@@ -3633,15 +3633,9 @@ body::before {
 }
 
 @media (max-width: 1040px) and (min-width: 761px) {
-  .global-player {
-    grid-template-columns:
-      48px minmax(140px, 1fr) minmax(180px, 1fr) minmax(100px, 140px)
-      30px 24px 24px;
-  }
-
   .global-player-art {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
   }
 }
 
@@ -3678,8 +3672,11 @@ body::before {
 
 /* Single playback interface: audio is only the playback engine. */
 .global-player {
-  grid-template-columns: 56px minmax(140px, 1fr) minmax(220px, 2fr) minmax(100px, 150px) 32px 32px 32px;
-  gap: 16px;
+  grid-template-columns:
+    56px minmax(150px, 240px) clamp(280px, 30vw, 420px)
+    clamp(96px, 12vw, 140px) 32px 32px 32px;
+  justify-content: center;
+  gap: 20px;
   padding: 16px 24px;
 }
 .global-player audio { display: none !important; }

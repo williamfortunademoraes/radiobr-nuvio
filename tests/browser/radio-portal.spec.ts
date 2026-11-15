@@ -84,7 +84,10 @@ test('searches, starts, switches and favorites a radio in the global player', as
       .evaluate((element) => getComputedStyle(element).backgroundColor),
   ).toBe('rgb(30, 215, 96)')
   await expect(
-    page.locator('#featured-stations .radio-card').nth(1).locator('.radio-card-art img'),
+    page
+      .locator('#featured-stations .radio-card')
+      .nth(1)
+      .locator('.radio-card-art img'),
   ).toHaveAttribute('src', /^data:image\/svg\+xml/)
   await expect(
     page.locator('#genre-sections .portal-subsection-content').first(),
@@ -108,11 +111,22 @@ test('searches, starts, switches and favorites a radio in the global player', as
   expect(playerBox!.x).toBe(0)
   expect(playerBox!.y + playerBox!.height).toBe(viewport!.height)
   const closeBox = await page.locator('#global-player-close').boundingBox()
-  const favoriteBox = await page.locator('#global-player-favorite').boundingBox()
+  const favoriteBox = await page
+    .locator('#global-player-favorite')
+    .boundingBox()
   expect(closeBox).not.toBeNull()
   expect(favoriteBox).not.toBeNull()
   expect(closeBox!.y).toBeLessThan(playerBox!.y + playerBox!.height / 2)
   expect(favoriteBox!.y).toBeLessThan(playerBox!.y + playerBox!.height / 2)
+  const artBox = await page
+    .locator('#global-player .global-player-art')
+    .boundingBox()
+  const minBox = await page.locator('#global-player-minimize').boundingBox()
+  expect(artBox).not.toBeNull()
+  expect(minBox).not.toBeNull()
+  expect(
+    Math.abs(artBox!.x - (viewport!.width - (minBox!.x + minBox!.width))),
+  ).toBeLessThan(4)
   await expect(page.locator('#global-player-name')).toHaveText(
     'Rádio Horizonte',
   )
