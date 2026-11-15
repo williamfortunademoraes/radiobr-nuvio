@@ -18,7 +18,8 @@ describe('Nuvio collection template', () => {
       'Por Regiões',
     ])
     expect(collections[0].folders.map((folder) => folder.title)).toEqual([
-      'Notícias e esportes',
+      'Jornalismo',
+      'Esportes',
       'Sertanejo',
       'Samba e pagode',
       'Rock',

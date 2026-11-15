@@ -124,12 +124,14 @@ function editorialMeta(
   ]
     .filter(Boolean)
     .join('\n')
-  const poster =
+  const poster = cacheBustedStationArtwork(
     editorial.logoUrl ||
-    curatedPosterForStation(editorial.name, baseUrl) ||
-    item.station?.favicon
-  const background =
-    curatedLandscapePosterForStation(editorial.name, baseUrl) || poster
+      curatedPosterForStation(editorial.name, baseUrl) ||
+      item.station?.favicon,
+  )
+  const background = cacheBustedStationArtwork(
+    curatedLandscapePosterForStation(editorial.name, baseUrl) || poster,
+  )
   return {
     id: `radio-br:editorial:${editorial.id}`,
     type: 'tv',
@@ -153,10 +155,12 @@ export function stationMeta(station: Station, baseUrl?: string) {
     slogan: station.slogan || curatedSlogan(station.name),
     about: station.about || curatedAbout(station.name),
   })
-  const poster =
-    curatedPosterForStation(station.name, baseUrl) || station.favicon
-  const background =
-    curatedLandscapePosterForStation(station.name, baseUrl) || poster
+  const poster = cacheBustedStationArtwork(
+    curatedPosterForStation(station.name, baseUrl) || station.favicon,
+  )
+  const background = cacheBustedStationArtwork(
+    curatedLandscapePosterForStation(station.name, baseUrl) || poster,
+  )
   return {
     id: station.id,
     type: 'tv',
@@ -224,6 +228,15 @@ const translatedGenres: Record<string, string> = {
   'world music': 'Música mundial',
 }
 
+const stationArtworkVersion = 'rounded-logo-v2'
+
+function cacheBustedStationArtwork(url?: string): string | undefined {
+  if (!url || !url.includes('/assets/logos/stations/')) return url
+  const versioned = new URL(url)
+  versioned.searchParams.set('v', stationArtworkVersion)
+  return versioned.href
+}
+
 function displayGenre(tag: string): string {
   const consolidated = classifyTags([tag])[0]
   if (consolidated && consolidated !== 'outros') return genreName(consolidated)
@@ -280,15 +293,27 @@ export function stationDescription(
       : String(station.tags)
           .split(',')
           .map((tag: string) => tag.trim())
-  const genres = tags.filter((tag) => {
+  const genreTags = tags.filter((tag) => {
     const normalized = normalizeTag(tag)
     return normalized && !genericGenreTags.has(normalized)
   })
-  const uniqueGenres = [
-    ...new Map(genres.map((tag) => [normalizeTag(tag), tag])).values(),
-  ]
-  if (uniqueGenres.length)
-    lines.push(`Gênero: ${uniqueGenres.map(displayGenre).join(', ')}`)
+  const genreLabels: string[] = []
+  const seenGenreLabels = new Set<string>()
+  for (const tag of genreTags) {
+    const classified = classifyTags([tag]).filter(
+      (genre) => genre !== 'outros',
+    )
+    const labels = classified.length
+      ? classified.map((genre) => genreName(genre))
+      : [displayGenre(tag)]
+    for (const label of labels) {
+      if (label && !seenGenreLabels.has(normalizeTag(label))) {
+        seenGenreLabels.add(normalizeTag(label))
+        genreLabels.push(label)
+      }
+    }
+  }
+  if (genreLabels.length) lines.push(`Gênero: ${genreLabels.join(', ')}`)
   const format = [
     station.codec,
     station.bitrate ? `${station.bitrate} kbps` : undefined,

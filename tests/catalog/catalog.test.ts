@@ -81,6 +81,15 @@ describe('catalog', () => {
     ['R.VALE VERDE FM 96,66', 'r-vale-verde-fm.jfif'],
     ['Rádio CBN Campinas 99,1 FM', 'cbn-campinas.png'],
     ['Rádio Forró', 'radio-forro.webp'],
+    ['Rádio 104 FM', '104-fm.jfif'],
+    ['Máquina do Tempo (MPB Brasil)', 'radio-mpb-maquina-do-tempo.png'],
+    ['Metal Zone Radio', 'metal-zone-radio.png'],
+    ['Rádio Dance Music 2000', 'radio-dance-music-2000.jfif'],
+    ['Rádio Fita Cassete', 'radio-fita-cassete.jfif'],
+    ['Rádio Itapema FM', 'radio-itapema-fm.jpg'],
+    ['Rádio Massa FM 101.1', 'radio-massa-fm-101-1.jpg'],
+    ['Rádio Mix FM Recife 97.1 FM', 'radio-mix-fm-recife-97-1.png'],
+    ['Sucesso FM 88.3', 'sucesso-fm-88-3.jpg'],
     ['Gospel FM 89.3', 'radio-gospel-fm-89-3.png'],
     ['Máquina do Tempo (Internacional)', 'radio-mpb-maquina-do-tempo.png'],
     ['89 A Rádio Rock Curitiba 89.3 FM', 'radio-89-rock-curitiba.jfif'],
@@ -478,7 +487,7 @@ describe('catalog', () => {
     const result = await createCatalogService(radio).getCatalog({
       type: 'tv',
       id: 'radio-br-genre',
-      extra: { genre: 'Notícias e esportes', search: 'prova' },
+      extra: { genre: 'Jornalismo', search: 'prova' },
     })
     expect(result.metas.map((meta) => meta.name)).toEqual(['Rádio Notícias'])
     expect(

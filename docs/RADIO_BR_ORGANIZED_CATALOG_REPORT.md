@@ -13,7 +13,7 @@
 ## Estrutura final
 
 - `Destaques`: exatamente 25 posições na ordem do ranking editorial.
-- Gêneros consolidados: Notícias e esportes, Samba e pagode, Sertanejo, Rock, Gospel, Pop, MPB, Música eletrônica e Outros gêneros.
+- Gêneros consolidados: Jornalismo, Esportes, Samba e pagode, Sertanejo, Rock, Gospel, Pop, MPB, Música eletrônica e Outros gêneros.
 - Regiões: Norte, Nordeste, Centro-Oeste, Sudeste e Sul.
 - Estados: 26 UFs e DF, preservando os catálogos estaduais existentes.
 - `Todas as rádios`: consulta paginada nacional, com clickcount decrescente quando conhecido e estações sem popularidade ao final.

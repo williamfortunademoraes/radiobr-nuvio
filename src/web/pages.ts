@@ -39,10 +39,16 @@ const SHOWCASE = [
     copy: 'As 25 rádios mais bem posicionadas no ranking nacional.',
   },
   {
-    name: 'Notícias e esportes',
+    name: 'Jornalismo',
     icon: 'news',
     tone: 'blue',
-    copy: 'Jornalismo, futebol, debates e cobertura ao vivo.',
+    copy: 'Notícias, debates, análise e informação ao vivo.',
+  },
+  {
+    name: 'Esportes',
+    icon: 'sports',
+    tone: 'cyan',
+    copy: 'Futebol, campeonatos, opinião e cobertura esportiva.',
   },
   {
     name: 'Sertanejo',

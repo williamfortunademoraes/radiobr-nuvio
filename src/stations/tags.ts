@@ -1,7 +1,7 @@
 export const genreDefinitions = [
   {
-    id: 'noticias-esportes',
-    name: 'Notícias e esportes',
+    id: 'jornalismo',
+    name: 'Jornalismo',
     aliases: [
       'news',
       'noticia',
@@ -13,12 +13,20 @@ export const genreDefinitions = [
       'talk radio',
       'spoken',
       'spoken word',
+      'noticias e esportes',
+    ],
+  },
+  {
+    id: 'esportes',
+    name: 'Esportes',
+    aliases: [
       'sport',
       'sports',
       'esporte',
       'esportes',
       'futebol',
       'football',
+      'noticias e esportes',
     ],
   },
   {

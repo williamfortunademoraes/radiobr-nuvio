@@ -82,7 +82,7 @@ it('serves both catalogs, genre filters, streams and PNG assets through the SDK 
     ])
     const noticias = await (
       await fetch(
-        `${base}/catalog/tv/radio-br-genre/genre=${encodeURIComponent('Notícias e esportes')}.json`,
+        `${base}/catalog/tv/radio-br-genre/genre=${encodeURIComponent('Jornalismo')}.json`,
       )
     ).json()
     expect(noticias.metas.map((meta: { id: string }) => meta.id)).toEqual([

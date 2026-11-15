@@ -6,14 +6,26 @@
     "showAllTab": false,
     "folders": [
       {
-        "id": "radio-br-genero-noticias-esportes",
-        "title": "Notícias e esportes",
+        "id": "radio-br-genero-jornalismo",
+        "title": "Jornalismo",
         "tileShape": "SQUARE",
         "catalogSources": [
           {
             "addonId": "com.williamfortuna.radio-br",
             "type": "tv",
-            "catalogId": "radio-br-genre-noticias-esportes"
+            "catalogId": "radio-br-genre-jornalismo"
+          }
+        ]
+      },
+      {
+        "id": "radio-br-genero-esportes",
+        "title": "Esportes",
+        "tileShape": "SQUARE",
+        "catalogSources": [
+          {
+            "addonId": "com.williamfortuna.radio-br",
+            "type": "tv",
+            "catalogId": "radio-br-genre-esportes"
           }
         ]
       },

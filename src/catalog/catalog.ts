@@ -37,7 +37,7 @@ const curatedEditorialLogoEntries = [
   ['Super Rádio Tupi 96.5 FM', 'tupi-96-5.png'],
   ['Rádio Itatiaia 610 AM 95.7 FM', 'itatiaia-610-am-95-7.jpg'],
   ['Rádio Jovem Pan News', 'jovem-pan-news.png'],
-  ['Rádio CBN São Paulo 90.5 FM', 'cbn-sao-paulo.svg'],
+  ['Rádio CBN São Paulo 90.5 FM', 'cbn-sao-paulo-90-5.png'],
   ['CBN São Paulo', 'cbn-sao-paulo.svg'],
   ['Rádio Band 96.1 FM', 'band-96-1.png'],
   ['Rádio Grenal 95.9 FM', 'grenal-95-9.png'],
@@ -53,8 +53,26 @@ const curatedEditorialLogoEntries = [
   ['R.VALE VERDE FM', 'r-vale-verde-fm.jfif'],
   ['Rádio CBN Campinas 99,1 FM', 'cbn-campinas.png'],
   ['Rádio Forró', 'radio-forro.webp'],
+  ['104 FM', '104-fm.jfif'],
+  ['Rádio 104 FM', '104-fm.jfif'],
   ['Gospel FM 89.3', 'radio-gospel-fm-89-3.png'],
   ['Máquina do Tempo (Internacional)', 'radio-mpb-maquina-do-tempo.png'],
+  ['Máquina do Tempo (MPB Brasil)', 'radio-mpb-maquina-do-tempo.png'],
+  ['Rádio Máquina do Tempo (MPB Brasil)', 'radio-mpb-maquina-do-tempo.png'],
+  ['Metal Zone Radio', 'metal-zone-radio.png'],
+  ['Metal Zone Rádio', 'metal-zone-radio.png'],
+  ['Rádio Dance Music 2000', 'radio-dance-music-2000.jfif'],
+  ['Dance Music 2000', 'radio-dance-music-2000.jfif'],
+  ['Rádio Fita Cassete', 'radio-fita-cassete.jfif'],
+  ['Fita Cassete', 'radio-fita-cassete.jfif'],
+  ['Radio Itapema FM', 'radio-itapema-fm.jpg'],
+  ['Rádio Itapema FM', 'radio-itapema-fm.jpg'],
+  ['Rádio Massa FM 101.1', 'radio-massa-fm-101-1.jpg'],
+  ['Massa FM 101.1', 'radio-massa-fm-101-1.jpg'],
+  ['Rádio Mix FM Recife 97.1 FM', 'radio-mix-fm-recife-97-1.png'],
+  ['Mix FM Recife 97.1 FM', 'radio-mix-fm-recife-97-1.png'],
+  ['Sucesso FM 88.3', 'sucesso-fm-88-3.jpg'],
+  ['Sucesso FM 88,3', 'sucesso-fm-88-3.jpg'],
   ['Rádio Antena 1 94.7 FM', 'antena-1-94-7.jfif'],
   ['Rádio Antena 1 São Paulo 94.7 FM', 'antena-1-94-7.png'],
   ['Rádio Antena 1 Rio de Janeiro 103.7 FM', 'antena-1-rio-103-7.jpg'],
@@ -106,6 +124,7 @@ const curatedEditorialLogoEntries = [
   ['Rádio Mix 106.3 FM', 'mix-106-3.jpg'],
   ['Rádio Jangadeiro 88.9 FM', 'jangadeiro-88-9.jfif'],
   ['Rádio Disney 91.3 FM', 'radio-disney.png'],
+  ['Rádio Disney - Brasil FM 91.3', 'radio-disney.png'],
   ['Rádio Globo - Rio de Janeiro', 'radio-globo.png'],
   ['Mix Rio 102.1 Rio de Janeiro, RJ', 'mix-rio-102-1.jfif'],
   ['Rádio 105 FM', 'radio-105-fm.jfif'],
@@ -443,7 +462,13 @@ export function createCatalogService(
           return { metas: stations.filter(matchesState).map(preview) }
 
         case 'radio-br-news-sports': {
-          const newsSports = grouped()['noticias-esportes']
+          const groups = grouped()
+          const newsSports = [
+            ...groups.jornalismo,
+            ...groups.esportes.filter(
+              (station) => !groups.jornalismo.includes(station),
+            ),
+          ]
           return {
             metas: newsSports.filter(matchesState).map(preview),
           }

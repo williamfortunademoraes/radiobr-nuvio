@@ -11,6 +11,18 @@ import {
   validateConfig,
 } from '../../src/config/addon-config.js'
 
+it('migrates the legacy combined news and sports genre', () => {
+  const result = validateConfig({
+    v: 1,
+    g: ['noticias-esportes'],
+    c: ['all'],
+  })
+  expect(result).toMatchObject({
+    ok: true,
+    config: { g: ['jornalismo', 'esportes'] },
+  })
+})
+
 const config = {
   ...defaultConfig(),
   c: ['editorial'] as const,

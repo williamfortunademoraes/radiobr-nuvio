@@ -31,7 +31,7 @@ describe('addon handlers', () => {
     expect(
       (
         (await addon.get('catalog', 'tv', 'radio-br-genre', {
-          genre: 'Notícias e esportes',
+          genre: 'Jornalismo',
         })) as any
       ).metas,
     ).toHaveLength(1)

@@ -64,10 +64,10 @@ describe('tag classification', () => {
     ['eletrônica', 'eletronica'],
     ['electronic', 'eletronica'],
     ['dance', 'eletronica'],
-    ['notícias', 'noticias-esportes'],
-    ['news', 'noticias-esportes'],
-    ['esportes', 'noticias-esportes'],
-    ['futebol', 'noticias-esportes'],
+    ['notícias', 'jornalismo'],
+    ['news', 'jornalismo'],
+    ['esportes', 'esportes'],
+    ['futebol', 'esportes'],
   ])('classifies %s as %s', (tag, genre) => {
     expect(classifyTags(tag)).toEqual([genre])
   })
@@ -77,6 +77,20 @@ describe('tag classification', () => {
       'sertanejo',
       'pop',
       'eletronica',
+    ])
+  })
+
+  it('classifies combined news and sports labels in both genres', () => {
+    expect(classifyTags('Notícias e esportes')).toEqual([
+      'jornalismo',
+      'esportes',
+    ])
+  })
+
+  it('keeps journalism and sports independent when both tags exist', () => {
+    expect(classifyTags('jornalismo, futebol')).toEqual([
+      'jornalismo',
+      'esportes',
     ])
   })
 
@@ -106,7 +120,8 @@ describe('tag classification', () => {
 describe('genre catalog metadata', () => {
   it('exposes the thirteen categories in canonical order', () => {
     expect(GENRE_NAMES).toEqual([
-      'Notícias e esportes',
+      'Jornalismo',
+      'Esportes',
       'Sertanejo',
       'Samba e pagode',
       'Rock',
@@ -121,6 +136,8 @@ describe('genre catalog metadata', () => {
 
   it('resolves names and ids without accents or case sensitivity', () => {
     expect(resolveGenre('Sertanejo')).toBe('sertanejo')
+    expect(resolveGenre('Jornalismo')).toBe('jornalismo')
+    expect(resolveGenre('Esportes')).toBe('esportes')
     expect(resolveGenre('Música eletrônica')).toBe('eletronica')
     expect(resolveGenre('musica eletronica')).toBe('eletronica')
     expect(resolveGenre('Outros gêneros')).toBe('outros')

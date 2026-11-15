@@ -28,8 +28,8 @@ function onlyGroup(groups: GenreGroups, genre: GenreId): Station[] {
 
 describe('grouping by genre', () => {
   it.each([
-    ['news', 'noticias-esportes'],
-    ['esportes', 'noticias-esportes'],
+    ['news', 'jornalismo'],
+    ['esportes', 'esportes'],
     ['sertanejo', 'sertanejo'],
     ['pagode', 'samba-pagode'],
     ['samba', 'samba-pagode'],

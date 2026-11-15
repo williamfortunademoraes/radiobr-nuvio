@@ -45,8 +45,8 @@ export const COLLECTION_DEFINITIONS = [
   },
   {
     id: 'news-sports',
-    name: 'Notícias e esportes',
-    short: 'Notícias e esportes',
+    name: 'Jornalismo e esportes',
+    short: 'Jornalismo e esportes',
     description: 'Jornalismo, debates, futebol e cobertura esportiva.',
     catalogId: 'radio-br-news-sports',
     icon: 'news',
@@ -67,7 +67,8 @@ export const COLLECTION_IDS = COLLECTION_DEFINITIONS.map(
 ) as CollectionId[]
 
 export const MUSIC_GENRE_IDS = [
-  'noticias-esportes',
+  'jornalismo',
+  'esportes',
   'sertanejo',
   'samba-pagode',
   'rock',
@@ -125,6 +126,18 @@ export function defaultConfig(): AddonConfig {
 
 const collectionSet = new Set<string>(COLLECTION_IDS)
 const genreSet = new Set<string>(GENRE_IDS)
+const legacyGenreAliases: Record<string, string[]> = {
+  'noticias-esportes': ['jornalismo', 'esportes'],
+}
+
+function migrateLegacyGenres(value: unknown): unknown {
+  if (!Array.isArray(value)) return value
+  return value.flatMap((item) =>
+    typeof item === 'string' && legacyGenreAliases[item]
+      ? legacyGenreAliases[item]
+      : [item],
+  )
+}
 
 function failure(error: string): ConfigValidationFailure {
   return { ok: false, error }
@@ -216,7 +229,11 @@ export function validateConfig(value: unknown): ConfigValidation {
   )
   if (!collections) return failure('Seleção de coleções inválida.')
 
-  const genres = readEnumList(value.g, genreSet, GENRE_IDS.length)
+  const genres = readEnumList(
+    migrateLegacyGenres(value.g),
+    genreSet,
+    GENRE_IDS.length,
+  )
   if (!genres) return failure('Seleção de gêneros inválida.')
 
   const states = readStateList(value.s)
@@ -371,7 +388,7 @@ export function buildCatalogs(config: AddonConfig): ManifestCatalog[] {
     catalogs.push({
       type: 'tv',
       id: 'radio-br-news-sports',
-      name: 'Notícias e esportes',
+      name: 'Jornalismo e esportes',
       extra: [searchExtra],
     })
 

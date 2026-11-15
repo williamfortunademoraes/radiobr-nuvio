@@ -23,11 +23,50 @@ describe('metadata', () => {
     )
 
     expect(result).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/tmc-100-1.webp',
+      poster:
+        'https://radio.example/assets/logos/stations/tmc-100-1.webp?v=rounded-logo-v2',
       background:
-        'https://radio.example/assets/logos/stations/tmc-100-1-landscape.jpg',
+        'https://radio.example/assets/logos/stations/tmc-100-1-landscape.jpg?v=rounded-logo-v2',
       posterShape: 'square',
     })
+  })
+
+  it('uses the frequency-specific CBN artwork pair', () => {
+    const result = stationMeta(
+      {
+        ...validStation,
+        id: `radio-br:${validStation.stationuuid}`,
+        stationUuid: validStation.stationuuid!,
+        name: 'Rádio CBN São Paulo 90.5 FM',
+        countryCode: 'BR',
+        tags: [],
+        hls: false,
+      },
+      'https://radio.example',
+    )
+
+    expect(result.poster).toBe(
+      'https://radio.example/assets/logos/stations/cbn-sao-paulo-90-5.png?v=rounded-logo-v2',
+    )
+    expect(result.background).toBe(
+      'https://radio.example/assets/logos/stations/cbn-sao-paulo-90-5-landscape.jpg?v=rounded-logo-v2',
+    )
+  })
+
+  it('normalizes combined news and sports tags in station metadata', () => {
+    const description = stationDescription({
+      ...validStation,
+      id: `radio-br:${validStation.stationuuid}`,
+      stationUuid: validStation.stationuuid!,
+      name: 'Rádio CBN São Paulo 90.5 FM',
+      categories: ['Notícias e esportes'],
+      tags: [],
+      countryCode: 'BR',
+      hls: false,
+    })
+
+    expect(description).toContain('Gênero: Jornalismo, Esportes')
+    expect(description).not.toContain('Gênero: Notícias e esportes')
   })
 
   it('does not manufacture a TV channel for a genre collection', async () => {
@@ -64,7 +103,7 @@ describe('metadata', () => {
     expect(description).not.toContain('Sobre:')
     expect(description).toContain('Cidade: Rio de Janeiro')
     expect(description).toContain('Estado: SP')
-    expect(description).toContain('Gênero: Notícias e esportes')
+    expect(description).toContain('Gênero: Jornalismo')
     expect(description).not.toContain('Slogan:')
     expect(description).not.toContain('https://')
     expect(description).not.toContain('portuguese')
@@ -144,9 +183,10 @@ describe('metadata', () => {
       'https://radio.example',
     ).getMetadata({ type: 'tv', id: station.id })
     expect(result.meta).toMatchObject({
-      poster: 'https://radio.example/assets/logos/stations/fm-o-dia-100-5.png',
+      poster:
+        'https://radio.example/assets/logos/stations/fm-o-dia-100-5.png?v=rounded-logo-v2',
       background:
-        'https://radio.example/assets/logos/stations/fm-o-dia-100-5-landscape.jpg',
+        'https://radio.example/assets/logos/stations/fm-o-dia-100-5-landscape.jpg?v=rounded-logo-v2',
     })
   })
 
@@ -162,7 +202,7 @@ describe('metadata', () => {
     })
 
     expect(description).toContain(
-      'Gênero: Adulto contemporâneo, Jazz suave, Flashback, Notícias e esportes',
+      'Gênero: Adulto contemporâneo, Jazz suave, Flashback, Jornalismo',
     )
     expect(description).not.toContain('adult contemporary')
     expect(description).not.toContain('smooth jazz')
