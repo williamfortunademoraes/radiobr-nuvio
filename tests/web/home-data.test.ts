@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { buildHomePortalData } from '../../src/web/home-data.js'
 import { normalizeStation } from '../../src/stations/normalize.js'
 import { validStation } from '../fixtures/station.js'
+import { top25Ranking } from '../../src/editorial/top-25-ranking.js'
 
 function station(overrides: Record<string, unknown> = {}) {
   const result = normalizeStation({
@@ -70,6 +71,7 @@ describe('buildHomePortalData', () => {
         station({ stationuuid: `station-${index}`, clickcount: 100 - index }),
       ),
       3,
+      3,
     )
 
     expect(data.featured).toHaveLength(3)
@@ -78,6 +80,24 @@ describe('buildHomePortalData', () => {
     )
     expect(data.regions.every((section) => section.stations.length <= 3)).toBe(
       true,
+    )
+  })
+
+  it('uses the editorial top 25 ranking for featured stations', () => {
+    const data = buildHomePortalData(
+      top25Ranking.map((entry, index) =>
+        station({
+          stationuuid: `top-${index}`,
+          name: entry.name,
+          state: entry.location.split('/').at(-1),
+          clickcount: top25Ranking.length - index,
+        }),
+      ),
+    )
+
+    expect(data.featured).toHaveLength(25)
+    expect(data.featured.map((item) => item.name)).toEqual(
+      top25Ranking.map((entry) => entry.name),
     )
   })
 })

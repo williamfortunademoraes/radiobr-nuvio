@@ -87,8 +87,9 @@ export function createApp(options: CreateAppOptions = {}): Express {
   })
   app.get('/api/home', async (_req, res, next) => {
     try {
-      // The portal only needs the first ranked page. The addon catalogs keep
-      // using the full aggregate when a client requests them explicitly.
+      // The portal uses this pool for the editorial Top 25 and compact
+      // genre/region sections. The addon catalogs keep using the full
+      // aggregate when a client requests them explicitly.
       const stations = await client.searchStations({ limit: 100 })
       res.setHeader(
         'Cache-Control',

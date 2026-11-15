@@ -3,6 +3,8 @@ import { REGIONS, stationRegion } from '../catalog/geography.js'
 import { genreName, GENRE_IDS, type GenreId } from '../stations/tags.js'
 import { normalizeState, stateName } from '../stations/states.js'
 import type { Station } from '../stations/types.js'
+import { matchTop25Editorial } from '../editorial/top-25-match.js'
+import { top25Ranking } from '../editorial/top-25-ranking.js'
 
 export interface HomeStation {
   id: string
@@ -73,13 +75,24 @@ function dedupePlayable(stations: readonly Station[]): Station[] {
 export function buildHomePortalData(
   stations: readonly Station[],
   maxPerSection = 12,
+  maxFeatured = 25,
 ): HomePortalData {
   const limit = Math.max(1, Math.trunc(maxPerSection))
+  const featuredLimit = Math.max(1, Math.trunc(maxFeatured))
   const playable = dedupePlayable(stations)
   const ranked = [...playable].sort(
     (left, right) => (right.clickcount ?? 0) - (left.clickcount ?? 0),
   )
   const groups = groupStationsByGenre(playable)
+  const editorialFeatured = matchTop25Editorial(top25Ranking, playable)
+    .map((item) => item.station)
+    .filter((station): station is Station => Boolean(station))
+  const featured = [
+    ...editorialFeatured,
+    ...ranked.filter(
+      (station) => !editorialFeatured.some((item) => item.id === station.id),
+    ),
+  ]
 
   const genres = GENRE_IDS.filter((id) => id !== 'outros').map((id) => ({
     id,
@@ -99,7 +112,7 @@ export function buildHomePortalData(
   }))
 
   return {
-    featured: ranked.slice(0, limit).map(toHomeStation),
+    featured: featured.slice(0, featuredLimit).map(toHomeStation),
     genres,
     regions,
     availableGenres: GENRE_IDS.map((id) => ({ id, name: genreName(id) })),
