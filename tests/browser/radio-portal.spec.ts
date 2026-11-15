@@ -78,6 +78,9 @@ test('searches, starts, switches and favorites a radio in the global player', as
   expect(footerBox!.y - (addonBox!.y + addonBox!.height)).toBeLessThan(80)
   await expect(page.locator('#featured-stations .radio-card')).toHaveCount(2)
   await expect(
+    page.locator('#featured-stations .radio-card').nth(1).locator('.radio-card-art img'),
+  ).toHaveAttribute('src', /^data:image\/svg\+xml/)
+  await expect(
     page.locator('#genre-sections .portal-subsection-content').first(),
   ).toBeHidden()
   await page.locator('#genre-sections .portal-section-toggle').first().click()

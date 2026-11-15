@@ -53,6 +53,31 @@
     [station.city, station.stateName || station.state]
       .filter(Boolean)
       .join(' · ') || 'Brasil'
+  function stationInitials(name) {
+    const words = String(name || 'Rádio')
+      .replace(/\([^)]*\)/g, '')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+    if (words.length === 1) return words[0].slice(0, 2).toUpperCase()
+    return words
+      .slice(0, 2)
+      .map((word) => word[0])
+      .join('')
+      .toUpperCase()
+  }
+  function fallbackLogo(name, id = '') {
+    const initials = stationInitials(name)
+    const hash = `${name}:${id}`.split('').reduce((total, char) => total + char.charCodeAt(0), 0)
+    const hue = hash % 360
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="hsl(${hue} 75% 48%)"/><stop offset="1" stop-color="hsl(${(hue + 55) % 360} 75% 28%)"/></linearGradient></defs><rect width="160" height="160" rx="28" fill="url(#g)"/><circle cx="128" cy="32" r="34" fill="rgba(255,255,255,.14)"/><text x="80" y="94" fill="white" font-family="Arial,sans-serif" font-size="48" font-weight="700" text-anchor="middle">${initials}</text><text x="80" y="124" fill="rgba(255,255,255,.75)" font-family="Arial,sans-serif" font-size="11" letter-spacing="2" text-anchor="middle">RADIO BR</text></svg>`
+    return `data:image/svg+xml,${encodeURIComponent(svg)}`
+  }
+  function stationLogo(station) {
+    const fallback = fallbackLogo(station.name, station.id)
+    const source = station.favicon || fallback
+    return `<img src="${escapeHtml(source)}" data-fallback-src="${escapeHtml(fallback)}" alt="">`
+  }
 
   function loadFavorites() {
     try {
@@ -105,9 +130,7 @@
   function card(station) {
     home.stations.set(station.id, station)
     const favorite = home.favorites.has(station.id)
-    const logo = station.favicon
-      ? `<img src="${escapeHtml(station.favicon)}" alt="">`
-      : '<span aria-hidden="true">♫</span>'
+    const logo = stationLogo(station)
     return `<article class="radio-card" data-station-id="${escapeHtml(station.id)}"><div class="radio-card-art">${logo}</div><div class="radio-card-copy"><strong>${escapeHtml(station.name)}</strong><small>${escapeHtml(location(station))}</small><small>${escapeHtml([station.codec, station.bitrate ? `${station.bitrate} kbps` : ''].filter(Boolean).join(' · ') || 'Rádio ao vivo')}</small></div><button class="radio-card-play" type="button" data-play-station="${escapeHtml(station.id)}" aria-label="Ouvir ${escapeHtml(station.name)}">▶ Ouvir</button><button class="radio-card-favorite${favorite ? ' is-favorite' : ''}" type="button" data-favorite-station="${escapeHtml(station.id)}" aria-label="${favorite ? 'Remover' : 'Adicionar'} ${escapeHtml(station.name)} ${favorite ? 'dos' : 'aos'} favoritos" aria-pressed="${favorite}">${favorite ? '★' : '☆'}</button></article>`
   }
   function renderStations(
@@ -172,7 +195,9 @@
     els.player.hidden = false
     els.playerName.textContent = station.name
     els.playerMeta.textContent = location(station)
-    els.playerLogo.src = station.favicon || '/assets/logo.png'
+    const fallback = fallbackLogo(station.name, station.id)
+    els.playerLogo.src = station.favicon || fallback
+    els.playerLogo.dataset.fallbackSrc = fallback
     els.playerLogo.alt = `Logo de ${station.name}`
     audio.src = stream
     audio.volume = home.volume
@@ -220,6 +245,18 @@
       if (playButton) play(home.stations.get(playButton.dataset.playStation))
     })
   }
+  document.addEventListener(
+    'error',
+    (event) => {
+      const image = event.target
+      if (!image || image.tagName !== 'IMG') return
+      const fallback = image.dataset.fallbackSrc
+      if (!fallback || image.src === fallback) return
+      image.src = fallback
+      image.removeAttribute('data-fallback-src')
+    },
+    true,
+  )
   async function search() {
     const query = els.input.value.trim()
     if (query.length < 2) {
